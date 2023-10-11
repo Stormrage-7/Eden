@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.eden.ui.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_chat" />
+
+    <fragment
+        android:id="@+id/inboxFragment"
+        android:name="com.example.eden.ui.InboxFragment"
+        android:label="InboxFragment"
+        tools:layout="@layout/fragment_inbox" />
+    <fragment
+        android:id="@+id/communitiesFragment"
+        android:name="com.example.eden.CommunitiesFragment"
+        android:label="CommunitiesFragment"
+        tools:layout="@layout/fragment_communities" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.eden.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home" />
+
+</navigation>

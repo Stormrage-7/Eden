@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding = "10sp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/communityImageView"
+        app:shapeAppearanceOverlay="@style/roundedProfileImageView"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        style="@style/roundedImageView"
+        android:src="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.imageview.ShapeableImageView>
+
+    <TextView
+        android:id="@+id/communityNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Community Name"
+        app:layout_constraintStart_toEndOf="@id/communityImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="5sp"/>
+
+    <TextView
+        android:id="@+id/communityMembersTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="100 members"
+        app:layout_constraintStart_toEndOf="@id/communityImageView"
+        app:layout_constraintTop_toBottomOf="@id/communityNameTextView"
+        android:layout_marginStart="5sp"/>
+
+    <Button
+        android:id="@+id/join_button"
+        android:layout_width="wrap_content"
+        android:layout_height="48sp"
+        android:text="Join"
+        android:backgroundTint="@color/azure"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="15sp"
+        android:text="lorem ipsum akjbsdkaj bvjiuhiuq ojfkbdkuhiudf oisjh oduf sodf h s do fhsonnhsf lnlads jskajdn djskaa dasjkdja lkjads alallalaljaljds"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/communityImageView"
+        android:layout_marginTop="5sp"
+        android:layout_marginStart="5sp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
