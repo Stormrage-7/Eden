@@ -7,13 +7,20 @@ import com.example.eden.Enums.mediaType
 
 @Entity(tableName = "Post_Table")
 data class Post (
+    @PrimaryKey(autoGenerate = true)
+    val postId: Int = 0,
+    @ColumnInfo(name = "title")
     val title: String,
 //    val mediaType: mediaType,
+    @ColumnInfo(name = "contains_image")
     val containsImage: Boolean,
+    @ColumnInfo(name = "body_text")
     val bodyText: String,
+    @ColumnInfo(name = "vote_counter")
     val voteCounter: Int = 0,
-    val isPinned: Boolean = false,
-    @PrimaryKey(autoGenerate = true) val postId: Int = 0)
+    @ColumnInfo(name = "is_pinned")
+    val isPinned: Boolean = false
+    )
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),
 //    val commentSectionType: CommentSectionType = CommentSectionType.OPEN,

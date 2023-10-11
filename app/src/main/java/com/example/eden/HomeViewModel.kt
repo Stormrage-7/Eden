@@ -8,16 +8,16 @@ class HomeViewModel: ViewModel() {
         Log.i("Testing", "HomeViewModel Initialized!")
     }
 
-    val postList = mutableListOf(Post("Title 1", false, "description test", 2),
-        Post("Title 1", false, "description test 2", 10),
-        Post("Title 1", true, "description test 3 aidnaosindoa aiondaoisndoaidna aiondoaisdnaoidn ainjgndkljfngd gkdljfngldingldkfgn difngdlofngdlofgind gfidlngldkgnldfkgndglkgfdndlkfgnldgkn difngldfkgndlfkngdlfigndoifgnd dfingldgniglfod", 20),
-        Post("Title 1", false, "description test 4", 220),
-        Post("Title 1", true, "description test 5", 40),
-        Post("Title 1", true, "description test 6", 50),
-        Post("Title 1", true, "description test 7", 270),
-        Post("Title 1", false, "description test 8", 702),
-        Post("Title 1", true, "description test 9", 1000),
-        Post("Title 1", false, "description test 10", 1),
-        Post("Title 1", false, "description test 11", 0),
-        Post("Title 1", false, "description test 12", 5))
+    val postList = mutableListOf(Post(title = "Title 1", containsImage = false, bodyText = "description test", voteCounter = 2),
+        Post(title = "Title 1", containsImage = false, bodyText = "description test 2", voteCounter = 10),
+        Post(title = "Title 1", containsImage = true, bodyText = "description test 3 aidnaosindoa aiondaoisndoaidna aiondoaisdnaoidn ainjgndkljfngd gkdljfngldingldkfgn difngdlofngdlofgind gfidlngldkgnldfkgndglkgfdndlkfgnldgkn difngldfkgndlfkngdlfigndoifgnd dfingldgniglfod", voteCounter = 20),
+        Post(title = "Title 1", containsImage = false, bodyText = "description test 4", voteCounter = 220),
+        Post(title = "Title 1", containsImage = true, bodyText = "description test 5", voteCounter = 40),
+        Post(title = "Title 1", containsImage = true, bodyText = "description test 6", voteCounter = 50),
+        Post(title = "Title 1", containsImage = true, bodyText = "description test 7", voteCounter = 270),
+        Post(title = "Title 1", containsImage = false, bodyText = "description test 8", voteCounter = 702),
+        Post(title = "Title 1", containsImage = true, bodyText = "description test 9", voteCounter = 1000),
+        Post(title = "Title 1", containsImage = false, bodyText = "description test 10", voteCounter = 1),
+        Post(title = "Title 1", containsImage = false, bodyText = "description test 11", voteCounter = 0),
+        Post(title = "Title 1", containsImage = false, bodyText = "description test 12", voteCounter = 5))
 }

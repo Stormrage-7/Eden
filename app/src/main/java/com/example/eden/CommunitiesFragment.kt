@@ -19,21 +19,26 @@ class CommunitiesFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentCommunitiesBinding = FragmentCommunitiesBinding.inflate(layoutInflater)
+//        fragmentCommunitiesBinding = FragmentCommunitiesBinding.inflate(layoutInflater)
         fragmentCommunitiesBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_communities, container, false)
-
         viewModel = ViewModelProvider(this).get(CommunitiesViewModel::class.java)
-        fragmentCommunitiesBinding.textViewCount.text = viewModel.count.toString()
 
-        viewModel.count.observe(viewLifecycleOwner, Observer {updatedCount ->
-            fragmentCommunitiesBinding.textViewCount.text = updatedCount.toString()
-        })
+        fragmentCommunitiesBinding.communitiesViewModel = viewModel
+        fragmentCommunitiesBinding.lifecycleOwner = this //Very Important line of code that allowed LiveData to update the layout
 
-        fragmentCommunitiesBinding.btnIncrease.setOnClickListener {
-            viewModel.increaseCount()
+        // Commented out because of Data Binding with which Direct connection between layout file and data in ViewModel has been created
+
+//        fragmentCommunitiesBinding.textViewCount.text = viewModel.count.toString()
+
+//        viewModel.count.observe(viewLifecycleOwner, Observer {updatedCount ->
+//            fragmentCommunitiesBinding.textViewCount.text = updatedCount.toString()
+//        })
+
+//        fragmentCommunitiesBinding.btnIncrease.setOnClickListener {
+//            viewModel.increaseCount()
 //            updateCountText()
-        }
+//        }
 
         return fragmentCommunitiesBinding.root
     }
