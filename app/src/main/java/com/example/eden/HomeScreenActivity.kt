@@ -32,9 +32,6 @@ class HomeScreenActivity: AppCompatActivity() {
         val homeFragment = HomeFragment()
         val communitiesFragment = CommunitiesFragment()
 
-        appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.HomeFragment, R.id.CommunitiesFragment)
-        )
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
@@ -57,7 +54,7 @@ class HomeScreenActivity: AppCompatActivity() {
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
 
             when(it.itemId){
-                R.id.HomeFragment -> {
+                R.id.miHome -> {
 //                    replaceFragment(homeFragment)
 //                    val navOptions = NavOptions.Builder()
 //                        .setPopUpTo(R.id.homeFragment, true)
@@ -68,7 +65,7 @@ class HomeScreenActivity: AppCompatActivity() {
                     }
 
                 }
-                R.id.CommunitiesFragment -> {
+                R.id.miCommunities -> {
 //                    replaceFragment(communitiesFragment)
                     if( isValidDestination(R.id.communitiesFragment) and !navController.popBackStack(R.id.communitiesFragment, false)) {
                         navController.navigate(R.id.communitiesFragment)
@@ -104,8 +101,8 @@ class HomeScreenActivity: AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id){
-            R.id.homeFragment -> R.id.HomeFragment
-            R.id.communitiesFragment -> R.id.CommunitiesFragment
+            R.id.homeFragment -> R.id.miHome
+            R.id.communitiesFragment -> R.id.miCommunities
             R.id.chatFragment -> R.id.miChat
             R.id.inboxFragment -> R.id.miInbox
             else -> {0}

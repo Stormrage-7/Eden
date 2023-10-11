@@ -6,15 +6,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class CommunitiesViewModel: ViewModel() {
-    val count = MutableLiveData<Int>()
+
+    // Encapsulation of LiveData by using a Backing Property
+    private val _count = MutableLiveData<Int>()
+    val count: LiveData<Int>
+        get() = _count
 
     init {
         Log.i("Testing", "CommunitiesViewModel Initialized!")
-        count.value = Community.count
+        _count.value = Community.count
     }
 
     fun increaseCount(){
-        count.value = (count.value)?.plus(1)
+        _count.value = (count.value)?.plus(1)
     }
 
     override fun onCleared() {

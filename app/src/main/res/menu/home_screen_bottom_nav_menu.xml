@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/HomeFragment"
+        android:id="@+id/miHome"
         android:title="Home"
         android:icon="@drawable/ic_home_24"
 
         />
 
     <item
-        android:id="@+id/CommunitiesFragment"
+        android:id="@+id/miCommunities"
         android:title="Communities"
         android:icon="@drawable/ic_discover_24"
         />
