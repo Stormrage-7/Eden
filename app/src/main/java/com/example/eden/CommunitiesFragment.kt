@@ -31,7 +31,7 @@ class CommunitiesFragment: Fragment() {
 
 //        fragmentCommunitiesBinding.textViewCount.text = viewModel.count.toString()
 
-//        viewModel.count.observe(viewLifecycleOwner, Observer {updatedCount ->
+//        viewModel.count.observe(viewLifecycleOwner, Observer {updated ->
 //            fragmentCommunitiesBinding.textViewCount.text = updatedCount.toString()
 //        })
 

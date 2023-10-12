@@ -10,15 +10,15 @@ import androidx.room.Query
 @Dao
 interface PostDao {
 
-//    @Query("SELECT * FROM post_table")
-//    fun getAll(): List<Post>
-//
-//    @Insert(onConflict = OnConflictStrategy.IGNORE)
-//    suspend fun insert(post: Post)
-//
-//    @Delete
-//    suspend fun delete(post: Post)
+    @Query("SELECT * FROM Post_Table")
+    fun getAll(): List<Post>
 
-//    @Query("DELETE FROM post_table")
-//    suspend fun deleteAll()
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(post: Post)
+
+    @Delete
+    fun delete(post: Post)
+
+    @Query("DELETE FROM Post_Table")
+    fun deleteAll(): Int
 }

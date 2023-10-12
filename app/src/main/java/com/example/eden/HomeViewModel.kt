@@ -20,4 +20,5 @@ class HomeViewModel: ViewModel() {
         Post(title = "Title 1", containsImage = false, bodyText = "description test 10", voteCounter = 1),
         Post(title = "Title 1", containsImage = false, bodyText = "description test 11", voteCounter = 0),
         Post(title = "Title 1", containsImage = false, bodyText = "description test 12", voteCounter = 5))
+
 }

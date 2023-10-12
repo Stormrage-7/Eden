@@ -58,9 +58,9 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.2")
 
     // Room Components
-    implementation ("androidx.room:room-runtime:2.4.1")
-    kapt ("androidx.room:room-compiler:2.4.1")
-    implementation ("androidx.room:room-ktx:2.4.1")
+    implementation ("androidx.room:room-runtime:2.4.3")
+    kapt ("androidx.room:room-compiler:2.4.3")
+    implementation ("androidx.room:room-ktx:2.4.3")
 
     //ViewModel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")

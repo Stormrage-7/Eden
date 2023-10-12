@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.example.eden.databinding.ActivityHomeScreenBinding
 import com.example.eden.databinding.ActivityMainBinding
 import com.example.eden.ui.ChatFragment
@@ -51,6 +53,14 @@ class HomeScreenActivity: AppCompatActivity() {
             }
         }
 
+        // JUST FOR TESTING PURPOSES, I AM ALLOWING DATABASE QUERIES TO BE RUN ON THE MAIN THREAD!
+        val dao: PostDao = Room.inMemoryDatabaseBuilder(this, AppDatabase::class.java)
+                                .allowMainThreadQueries()
+                                .build().postDao()
+        dao.insert(Post(title = "Title 1", containsImage = false, bodyText = "description test 12", voteCounter = 5))
+        val list = dao.getAll()
+        Log.i("HomeScreenActivity", list.toString())
+
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
 
             when(it.itemId){
@@ -63,6 +73,7 @@ class HomeScreenActivity: AppCompatActivity() {
                     if( isValidDestination(R.id.homeFragment) and !navController.popBackStack(R.id.homeFragment, false)) {
                         navController.navigate(R.id.homeFragment)
                     }
+                    //TODO Change to Nested If so that if HOME is pressed again then scroll back to top!
 
                 }
                 R.id.miCommunities -> {
