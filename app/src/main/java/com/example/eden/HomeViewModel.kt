@@ -1,9 +1,12 @@
 package com.example.eden
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel(val database: PostDao,
+                    application: Application): AndroidViewModel(application) {
     init {
         Log.i("Testing", "HomeViewModel Initialized!")
     }

@@ -24,10 +24,15 @@ class HomeFragment: Fragment(){
         fragmentHomeBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
-        val view = fragmentHomeBinding.root
 
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        val application = requireNotNull(this.activity).application
+        val dataSource = AppDatabase.getDatabase(application).postDao()
+        val viewModelFactory = HomeViewModelFactory(dataSource, application)
 
+        viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+
+        fragmentHomeBinding.lifecycleOwner = this
+        fragmentHomeBinding.homeViewModel = viewModel
 
         val adapter = context?.let { PostAdapter(viewModel.postList, it) }
         fragmentHomeBinding.rvPosts.adapter = adapter
@@ -38,6 +43,6 @@ class HomeFragment: Fragment(){
                 LinearLayoutManager(context).orientation
             )
         )
-        return view
+        return fragmentHomeBinding.root
     }
 }

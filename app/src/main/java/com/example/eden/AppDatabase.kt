@@ -6,7 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [Post :: class], version = 1)
+@Database(entities = [Post :: class],
+    version = 1
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun postDao() : PostDao
@@ -22,7 +24,6 @@ abstract class AppDatabase : RoomDatabase() {
                 if (tempInstance != null){
                     return tempInstance
                 }
-
 
                     val instance = Room.databaseBuilder(
                         context.applicationContext,

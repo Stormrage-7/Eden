@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -19,6 +20,7 @@ import androidx.room.RoomDatabase
 import com.example.eden.databinding.ActivityHomeScreenBinding
 import com.example.eden.databinding.ActivityMainBinding
 import com.example.eden.ui.ChatFragment
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class HomeScreenActivity: AppCompatActivity() {
@@ -57,9 +59,11 @@ class HomeScreenActivity: AppCompatActivity() {
         val dao: PostDao = Room.inMemoryDatabaseBuilder(this, AppDatabase::class.java)
                                 .allowMainThreadQueries()
                                 .build().postDao()
-        dao.insert(Post(title = "Title 1", containsImage = false, bodyText = "description test 12", voteCounter = 5))
-        val list = dao.getAll()
-        Log.i("HomeScreenActivity", list.toString())
+        lifecycleScope.launch {
+            dao.upsertPost(Post(title = "Title 1", containsImage = false, bodyText = "description test 12", voteCounter = 5))
+            val list = dao.getAll()
+            Log.i("HomeScreenActivity", list.toString())
+        }
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
 
