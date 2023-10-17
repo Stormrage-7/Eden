@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -27,6 +28,7 @@ class HomeScreenActivity: AppCompatActivity() {
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var navController : NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,30 +42,35 @@ class HomeScreenActivity: AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-//        activityHomeScreenBinding.bottomNavigationView.setupWithNavController(navController)
-
-//        NavigationUI.setupActionBarWithNavController(this, navController)
-
-//        supportFragmentManager.beginTransaction().apply {
-//            replace(activityHomeScreenBinding.navHostFragment.id, homeFragment)
-//            commit()
-//        }
-
-        activityHomeScreenBinding.fabPost.setOnClickListener {
-            Intent(this, NewPostActivity::class.java).apply {
-                startActivity(this)
-            }
-        }
-
         // JUST FOR TESTING PURPOSES, I AM ALLOWING DATABASE QUERIES TO BE RUN ON THE MAIN THREAD!
         val dao: PostDao = Room.inMemoryDatabaseBuilder(this, AppDatabase::class.java)
-                                .allowMainThreadQueries()
-                                .build().postDao()
-        lifecycleScope.launch {
-            dao.upsertPost(Post(title = "Title 1", containsImage = false, bodyText = "description test 12", voteCounter = 5))
-            val list = dao.getAll()
-            Log.i("HomeScreenActivity", list.toString())
+            .allowMainThreadQueries()
+            .build().postDao()
+
+//        lifecycleScope.launch {
+//            dao.upsertPost(Post(title = "Title 1", containsImage = true, bodyText = "description test 12", voteCounter = 5))
+//            val list = dao.getAll()
+//            Log.i("HomeScreenActivity", list.toString())
+//        }
+
+        val application = requireNotNull(this).application
+        val dataSource = AppDatabase.getDatabase(application).postDao()
+        val viewModelFactory = HomeViewModelFactory(dataSource, application)
+
+        Log.i("HomeFragment", AppDatabase.getDatabase(application).isOpen.toString())
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+        Log.i("HomeFragment", homeViewModel.toString())
+
+        activityHomeScreenBinding.fabPost.setOnClickListener {
+            Log.i("HomeScreenFunction", homeViewModel.postList.value.toString())
+            homeViewModel.addPost(Post(title = "Title 2", containsImage = true, bodyText = "description test 12", voteCounter = 5))
+            Log.i("HomeScreenFunction", homeViewModel.postList.value.toString())
+//            Intent(this, NewPostActivity::class.java).apply {
+//                startActivity(this)
+//            }
         }
+
+
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
 

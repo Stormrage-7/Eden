@@ -5,13 +5,16 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.databinding.ItemPostBinding
 
 class PostAdapter(
-    private var postList: List<Post>, private val context: Context): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+    list: LiveData<MutableList<Post>>,
+    val context: Context): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private lateinit var postListener: OnPostClickListener
+    var postList = mutableListOf<Post>()
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -51,6 +54,11 @@ class PostAdapter(
                 }
             }
         }
+    }
+
+    fun update(postList: MutableList<Post>) {
+        this.postList = postList
+        notifyDataSetChanged()
     }
 
     interface OnPostClickListener{

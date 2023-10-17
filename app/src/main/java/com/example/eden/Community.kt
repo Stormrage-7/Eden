@@ -1,6 +1,6 @@
 package com.example.eden
 
-class Community {
+class Community{
     companion object{
         var count = 0
     }
