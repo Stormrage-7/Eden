@@ -8,4 +8,5 @@
     <color name="azure">#0080FE</color>
     <color name="orange">#FFBC6D</color>
     <color name="cerise_red">#DE3163</color>
+    <color name="transparent">#00000000</color>
 </resources>

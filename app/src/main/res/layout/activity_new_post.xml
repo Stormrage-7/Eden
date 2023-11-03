@@ -57,6 +57,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageViewPost"
+        android:layout_width="match_parent"
+        android:layout_height="350sp"
+        android:src="@color/black"
+        android:visibility="gone"
+        android:layout_marginHorizontal="6sp"
+        android:layout_marginVertical="6sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TitleEditTV"
+        app:shapeAppearanceOverlay="@style/roundedImageView" />
+
     <EditText
         android:id="@+id/bodyTextEditTV"
         android:layout_width="match_parent"
@@ -67,7 +81,7 @@
         android:paddingVertical="3sp"
         android:paddingHorizontal="15sp"
         android:gravity="top"
-        app:layout_constraintTop_toBottomOf="@id/TitleEditTV"
+        app:layout_constraintTop_toBottomOf="@id/imageViewPost"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomAppBar"/>

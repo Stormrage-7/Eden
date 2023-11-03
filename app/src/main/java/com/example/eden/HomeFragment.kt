@@ -1,5 +1,6 @@
 package com.example.eden
 
+import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,7 +18,9 @@ import com.example.eden.databinding.FragmentHomeBinding
 class HomeFragment: Fragment(){
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private lateinit var viewModel: HomeViewModel
-
+    private lateinit var database: AppDatabase
+    private lateinit var repository: PostRepository
+    private lateinit var factory: HomeViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,16 +33,17 @@ class HomeFragment: Fragment(){
         )
 
         val application = requireNotNull(this.activity).application
-        val dataSource = AppDatabase.getDatabase(application).postDao()
-        val viewModelFactory = HomeViewModelFactory(dataSource, application)
+        database = AppDatabase.getDatabase(application)
+        repository = PostRepository(database)
+        factory = HomeViewModelFactory(repository, application)
+        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
-        Log.i("HomeFragment", AppDatabase.getDatabase(application).isOpen.toString())
-        viewModel = ViewModelProvider(this.requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
+
+        viewModel = ViewModelProvider(this.requireActivity(), factory).get(HomeViewModel::class.java)
         Log.i("HomeFragment", viewModel.toString())
 
-        fragmentHomeBinding.lifecycleOwner = this
+        fragmentHomeBinding.lifecycleOwner = this   // Important
         fragmentHomeBinding.homeViewModel = viewModel
-
 
 
         val adapter = context?.let { PostAdapter(viewModel.postList, context = it) }

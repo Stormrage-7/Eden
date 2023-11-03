@@ -1,5 +1,7 @@
 package com.example.eden
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -12,7 +14,7 @@ import androidx.room.Query
 interface PostDao {
 
     @Query("SELECT * FROM Post_Table")
-    fun getAll(): List<Post>
+    fun getAll(): LiveData<List<Post>>
 
     @Upsert
     suspend fun upsertPost(post: Post)

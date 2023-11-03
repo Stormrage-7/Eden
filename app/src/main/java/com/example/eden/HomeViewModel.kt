@@ -6,19 +6,24 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class HomeViewModel(val database: PostDao,
+class HomeViewModel(private val repository: PostRepository,
                     application: Application): AndroidViewModel(application) {
 
-    var postList = MutableLiveData<MutableList<Post>>()
-
+//    private var _postList = repository.getAllPosts()
+//
 //    val postList: LiveData<MutableList<Post>>
 //        get() = _postList
 
+    val postList = repository.postList
+
     init {
         Log.i("Testing", "HomeViewModel Initialized!")
-        postList.value = mutableListOf(Post(title = "Title 1", containsImage = false, bodyText = "description test", voteCounter = 2),
-            Post(title = "Title 1", containsImage = false, bodyText = "description test 2", voteCounter = 10),
+        refreshPostListFromRepository()
+//        _postList.value = mutableListOf(Post(title = "Title 1", containsImage = false, bodyText = "description test", voteCounter = 2),
+//            Post(title = "Title 1", containsImage = false, bodyText = "description test 2", voteCounter = 10),
 //        Post(title = "Title 1", containsImage = true, bodyText = "description test 3 aidnaosindoa aiondaoisndoaidna aiondoaisdnaoidn ainjgndkljfngd gkdljfngldingldkfgn difngdlofngdlofgind gfidlngldkgnldfkgndglkgfdndlkfgnldgkn difngldfkgndlfkngdlfigndoifgnd dfingldgniglfod", voteCounter = 20),
 //        Post(title = "Title 1", containsImage = false, bodyText = "description test 4", voteCounter = 220),
 //        Post(title = "Title 1", containsImage = true, bodyText = "description test 5", voteCounter = 40),
@@ -29,13 +34,13 @@ class HomeViewModel(val database: PostDao,
 //        Post(title = "Title 1", containsImage = false, bodyText = "description test 10", voteCounter = 1),
 //        Post(title = "Title 1", containsImage = false, bodyText = "description test 11", voteCounter = 0),
 //        Post(title = "Title 1", containsImage = false, bodyText = "description test 12", voteCounter = 5))
-        )
     }
 
-    fun addPost(post: Post){
-        val tempList = postList.value
-        tempList!!.add(post)
-        postList.value = tempList!!
+    private fun refreshPostListFromRepository(){
+        viewModelScope.launch {
+            repository.refreshPosts()
+            Log.i("Refresh Method", "Refreshed!")
+        }
     }
 
 }

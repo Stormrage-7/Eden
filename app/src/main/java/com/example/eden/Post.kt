@@ -11,9 +11,10 @@ data class Post (
     val postId: Int = 0,
     @ColumnInfo(name = "title")
     val title: String,
-//    val mediaType: mediaType,
     @ColumnInfo(name = "contains_image")
     val containsImage: Boolean,
+    @ColumnInfo(name = "image_uri")
+    val imageUri: String,
     @ColumnInfo(name = "body_text")
     val bodyText: String,
     @ColumnInfo(name = "vote_counter")

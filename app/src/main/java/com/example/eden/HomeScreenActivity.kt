@@ -21,7 +21,9 @@ import androidx.room.RoomDatabase
 import com.example.eden.databinding.ActivityHomeScreenBinding
 import com.example.eden.databinding.ActivityMainBinding
 import com.example.eden.ui.ChatFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class HomeScreenActivity: AppCompatActivity() {
@@ -30,8 +32,15 @@ class HomeScreenActivity: AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var homeViewModel: HomeViewModel
 
+    private lateinit var database: AppDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        database = AppDatabase.getDatabase(application)
+//        lifecycleScope.launch {
+//            clearDB()
+//        }
+
         activityHomeScreenBinding = ActivityHomeScreenBinding.inflate(layoutInflater)
         setContentView(activityHomeScreenBinding.root)
 
@@ -42,32 +51,19 @@ class HomeScreenActivity: AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-        // JUST FOR TESTING PURPOSES, I AM ALLOWING DATABASE QUERIES TO BE RUN ON THE MAIN THREAD!
-        val dao: PostDao = Room.inMemoryDatabaseBuilder(this, AppDatabase::class.java)
-            .allowMainThreadQueries()
-            .build().postDao()
 
-//        lifecycleScope.launch {
-//            dao.upsertPost(Post(title = "Title 1", containsImage = true, bodyText = "description test 12", voteCounter = 5))
-//            val list = dao.getAll()
-//            Log.i("HomeScreenActivity", list.toString())
-//        }
-
-        val application = requireNotNull(this).application
-        val dataSource = AppDatabase.getDatabase(application).postDao()
-        val viewModelFactory = HomeViewModelFactory(dataSource, application)
-
-        Log.i("HomeFragment", AppDatabase.getDatabase(application).isOpen.toString())
-        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
-        Log.i("HomeFragment", homeViewModel.toString())
+//        val application = requireNotNull(this).application
+//        val dataSource = AppDatabase.getDatabase(application).postDao()
+//        val viewModelFactory = HomeViewModelFactory(dataSource, application)
+//
+//        Log.i("HomeFragment", AppDatabase.getDatabase(application).isOpen.toString())
+//        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+//        Log.i("HomeFragment", homeViewModel.toString())
 
         activityHomeScreenBinding.fabPost.setOnClickListener {
-            Log.i("HomeScreenFunction", homeViewModel.postList.value.toString())
-            homeViewModel.addPost(Post(title = "Title 2", containsImage = true, bodyText = "description test 12", voteCounter = 5))
-            Log.i("HomeScreenFunction", homeViewModel.postList.value.toString())
-//            Intent(this, NewPostActivity::class.java).apply {
-//                startActivity(this)
-//            }
+            Intent(this, NewPostActivity::class.java).apply {
+                startActivity(this)
+            }
         }
 
 
@@ -146,5 +142,11 @@ class HomeScreenActivity: AppCompatActivity() {
 //            commit()
 //        }
 //    }
+
+    private suspend fun clearDB(){
+        withContext(Dispatchers.IO) {
+            database.postDao().deleteAll()
+        }
+    }
 
 }

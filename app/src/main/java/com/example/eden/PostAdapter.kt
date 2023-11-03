@@ -2,19 +2,21 @@ package com.example.eden
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.databinding.ItemPostBinding
 
 class PostAdapter(
-    list: LiveData<MutableList<Post>>,
+    list: LiveData<List<Post>>,
     val context: Context): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private lateinit var postListener: OnPostClickListener
-    var postList = mutableListOf<Post>()
+    var postList = listOf<Post>()
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -31,7 +33,11 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.binding.apply {
             textViewTitle.text = postList[position].title
-            if(postList[position].containsImage) imageViewPost.visibility = View.VISIBLE
+            if(postList[position].containsImage){
+                imageViewPost.visibility = View.VISIBLE
+                imageViewPost.setImageURI(Uri.parse(postList[position].imageUri))
+                imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
+            }
             else imageViewPost.visibility = View.GONE
             textViewDescription.text = postList[position].bodyText
             textViewVoteCounter.text = postList[position].voteCounter.toString()
@@ -56,7 +62,7 @@ class PostAdapter(
         }
     }
 
-    fun update(postList: MutableList<Post>) {
+    fun update(postList: List<Post>) {
         this.postList = postList
         notifyDataSetChanged()
     }
