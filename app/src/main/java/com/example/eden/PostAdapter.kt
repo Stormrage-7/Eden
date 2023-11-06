@@ -8,15 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.example.eden.Enums.VoteStatus
 import com.example.eden.databinding.ItemPostBinding
 
 class PostAdapter(
-    list: LiveData<List<Post>>,
-    val context: Context): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+    val context: Context,
+    val clickListener: PostClickListener): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
-    private lateinit var postListener: OnPostClickListener
     var postList: List<Post> = listOf()
 
 
@@ -34,30 +35,78 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.binding.apply {
+            //TITLE
             textViewTitle.text = postList[position].title
+
+            //MEDIA
             if(postList[position].containsImage){
                 imageViewPost.visibility = View.VISIBLE
                 imageViewPost.setImageURI(Uri.parse(postList[position].imageUri))
                 imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
             }
             else imageViewPost.visibility = View.GONE
+
+            //BODY TEXT
             if(postList[position].bodyText.isEmpty()){
                 textViewDescription.visibility = View.GONE
             }
             else{
                 textViewDescription.text = postList[position].bodyText
             }
+
+            //UPVOTE AND DOWNVOTE
+
+                // INITIAL SETTING
             textViewVoteCounter.text = postList[position].voteCounter.toString()
+            if (postList[position].voteStatus == VoteStatus.UPVOTED) {
+                likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
+                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
+            }
+            else if (postList[position].voteStatus == VoteStatus.DOWNVOTED){
+                dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
+                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
+            }
+
+                // CHANGES TO THE VOTE
             likeBtn.setOnClickListener {
-                textViewVoteCounter.text = (textViewVoteCounter.text.toString().toInt() + 1).toString()
+                Log.i("Like", "Button pressed!")
+                if (postList[position].voteStatus != VoteStatus.UPVOTED){
+                    if(postList[position].voteStatus == VoteStatus.DOWNVOTED){
+                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+                    }
+                    likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
+                    holder.binding.textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
+                }
+                else{
+                    Log.i("Like", "Button pressed!")
+                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+                    holder.binding.textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                }
+
+                // TODO As we are sending post item, it needs to be abstracted before being sent
+                clickListener.onUpvoteBtnClick(postList[position])
             }
 
             dislikeBtn.setOnClickListener {
-                textViewVoteCounter.text = (textViewVoteCounter.text.toString().toInt() - 1).toString()
+                Log.i("Dislike", "Button pressed! {}")
+                if (postList[position].voteStatus != VoteStatus.DOWNVOTED){
+                    if(postList[position].voteStatus == VoteStatus.UPVOTED){
+                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+                    }
+                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
+                    holder.binding.textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
+                }
+                else{
+                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+                    holder.binding.textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                }
+
+                clickListener.onDownvoteBtnClick(postList[position])
+                //textViewVoteCounter.text = (textViewVoteCounter.text.toString().toInt() - 1).toString()
             }
 
             shareBtn.setOnClickListener {
-                val intent: Intent = Intent(Intent.ACTION_SEND).apply {
+                val intent: Intent = Intent(Intent.ACTION_MEDIA_SHARED).apply {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TEXT, "HI")
                 }
@@ -75,8 +124,10 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
-    interface OnPostClickListener{
+    interface PostClickListener{
         fun onPostClick(position: Int)
+        fun onUpvoteBtnClick(post: Post)
+        fun onDownvoteBtnClick(post: Post)
         fun onPostLongClick(position: Int)
     }
 

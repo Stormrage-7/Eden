@@ -46,7 +46,26 @@ class HomeFragment: Fragment(){
         fragmentHomeBinding.homeViewModel = viewModel
 
 
-        val adapter = context?.let { PostAdapter(viewModel.postList, context = it) }
+        val adapter = context?.let {
+            PostAdapter(context = it, object : PostAdapter.PostClickListener{
+                // ANONYMOUS CLASS IMPLEMENTATION OF POSTCLICKLISTENER INTERFACE
+            override fun onPostClick(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onUpvoteBtnClick(post: Post) {
+                viewModel.upvotePost(post)
+            }
+
+            override fun onDownvoteBtnClick(post: Post) {
+                viewModel.downvotePost(post)
+            }
+
+            override fun onPostLongClick(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+        }) }
         fragmentHomeBinding.rvPosts.adapter = adapter
         fragmentHomeBinding.rvPosts.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.rvPosts.addItemDecoration(

@@ -3,7 +3,7 @@ package com.example.eden
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.eden.Enums.mediaType
+import com.example.eden.Enums.VoteStatus
 
 @Entity(tableName = "Post_Table")
 data class Post (
@@ -18,7 +18,9 @@ data class Post (
     @ColumnInfo(name = "body_text")
     val bodyText: String,
     @ColumnInfo(name = "vote_counter")
-    val voteCounter: Int = 0,
+    var voteCounter: Int = 0,
+    @ColumnInfo
+    var voteStatus: VoteStatus = VoteStatus.NONE,
     @ColumnInfo(name = "is_pinned")
     val isPinned: Boolean = false
     )

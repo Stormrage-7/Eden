@@ -6,7 +6,9 @@
     <color name="grey">#a6a6a6</color>
     <color name="navyblue">#00008B</color>
     <color name="azure">#0080FE</color>
+    <color name="green">#34D201</color>
     <color name="orange">#FFBC6D</color>
+    <color name="red">#E80C0C</color>
     <color name="cerise_red">#DE3163</color>
     <color name="transparent">#00000000</color>
 </resources>
