@@ -29,8 +29,6 @@ import timber.log.Timber
 class HomeScreenActivity: AppCompatActivity() {
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var navController : NavController
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var homeViewModel: HomeViewModel
 
     private lateinit var database: AppDatabase
 
@@ -51,20 +49,11 @@ class HomeScreenActivity: AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-
-//        val application = requireNotNull(this).application
-//        val dataSource = AppDatabase.getDatabase(application).postDao()
-//        val viewModelFactory = HomeViewModelFactory(dataSource, application)
-//
-//        Log.i("HomeFragment", AppDatabase.getDatabase(application).isOpen.toString())
-//        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
-//        Log.i("HomeFragment", homeViewModel.toString())
-
-        activityHomeScreenBinding.fabPost.setOnClickListener {
-            Intent(this, NewPostActivity::class.java).apply {
-                startActivity(this)
-            }
-        }
+//        activityHomeScreenBinding.fabPost.setOnClickListener {
+//            Intent(this, NewPostActivity::class.java).apply {
+//                startActivity(this)
+//            }
+//        }
 
 
 
@@ -80,6 +69,7 @@ class HomeScreenActivity: AppCompatActivity() {
                     if( isValidDestination(R.id.homeFragment) and !navController.popBackStack(R.id.homeFragment, false)) {
                         navController.navigate(R.id.homeFragment)
                     }
+                    true
                     //TODO Change to Nested If so that if HOME is pressed again then scroll back to top!
 
                 }
@@ -88,22 +78,30 @@ class HomeScreenActivity: AppCompatActivity() {
                     if( isValidDestination(R.id.communitiesFragment) and !navController.popBackStack(R.id.communitiesFragment, false)) {
                         navController.navigate(R.id.communitiesFragment)
                     }
-
+                    true
                 }
-                R.id.miCreatePost -> {}
+                R.id.miCreatePost -> {
+                    Intent(this, NewPostActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                    false
+                }
                 R.id.miChat -> {
                     if( isValidDestination(R.id.chatFragment) and !navController.popBackStack(R.id.chatFragment, false)) {
                         navController.navigate(R.id.chatFragment)
                     }
+                    true
                 }
                 R.id.miInbox -> {
                     if( isValidDestination(R.id.inboxFragment ) and !navController.popBackStack(R.id.inboxFragment, false)) {
                         navController.navigate(R.id.inboxFragment)
                     }
+                    true
                 }
 
+                else -> {false}
             }
-            true
+
         }
     }
 
@@ -130,18 +128,6 @@ class HomeScreenActivity: AppCompatActivity() {
     private fun isValidDestination(destination: Int) : Boolean{
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id
     }
-
-//    private fun replaceFragment(fragment: Fragment){
-//        val fragmentManager = supportFragmentManager
-//        val fragmentTransaction = fragmentManager.beginTransaction()
-//        fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
-//        fragmentTransaction.commit()
-
-//        supportFragmentManager.beginTransaction().apply {
-//            replace(activityHomeScreenBinding.navHostFragment.id, fragment).addToBackStack()
-//            commit()
-//        }
-//    }
 
     private suspend fun clearDB(){
         withContext(Dispatchers.IO) {

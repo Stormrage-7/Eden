@@ -37,8 +37,7 @@
             app:contentInsetStart="0sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:fabAnchorMode="embed">
+            app:layout_constraintStart_toStartOf="parent">
 <!--            app:fabCradleMargin="10sp"-->
 <!--            app:fabCradleRoundedCornerRadius="10sp">-->
 
@@ -56,12 +55,12 @@
 
         </com.google.android.material.bottomappbar.BottomAppBar>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_input_add"
-            app:layout_anchor="@id/bottomAppBar" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab_post"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@android:drawable/ic_input_add"-->
+<!--            app:layout_anchor="@id/bottomAppBar" />-->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

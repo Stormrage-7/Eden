@@ -17,7 +17,7 @@
     <item
         android:id="@+id/miCreatePost"
         android:title="Create"
-        android:icon="@drawable/ic_new_post"
+        android:icon="@drawable/ic_new_post_24"
         />
 
     <item

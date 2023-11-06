@@ -3,6 +3,7 @@ package com.example.eden
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,8 @@ class PostAdapter(
     val context: Context): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private lateinit var postListener: OnPostClickListener
-    var postList = listOf<Post>()
+    var postList: List<Post> = listOf()
+
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -39,7 +41,12 @@ class PostAdapter(
                 imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
             }
             else imageViewPost.visibility = View.GONE
-            textViewDescription.text = postList[position].bodyText
+            if(postList[position].bodyText.isEmpty()){
+                textViewDescription.visibility = View.GONE
+            }
+            else{
+                textViewDescription.text = postList[position].bodyText
+            }
             textViewVoteCounter.text = postList[position].voteCounter.toString()
             likeBtn.setOnClickListener {
                 textViewVoteCounter.text = (textViewVoteCounter.text.toString().toInt() + 1).toString()
@@ -64,6 +71,7 @@ class PostAdapter(
 
     fun update(postList: List<Post>) {
         this.postList = postList
+        Log.i("In Update Method", "Updated Adapter List!")
         notifyDataSetChanged()
     }
 
