@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val intent = Intent(this, HomeScreenActivity::class.java)
-        startActivity(intent)
+//        val intent = Intent(this, HomeScreenActivity::class.java)
+//        startActivity(intent)
     }
 }

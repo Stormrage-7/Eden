@@ -79,6 +79,7 @@ class NewPostActivity: AppCompatActivity()  {
 
             viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText))
             Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+            finish()
         }
 
 //        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

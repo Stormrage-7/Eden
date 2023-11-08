@@ -53,12 +53,12 @@ class HomeFragment: Fragment(){
                 TODO("Not yet implemented")
             }
 
-            override fun onUpvoteBtnClick(post: Post) {
-                viewModel.upvotePost(post)
+            override fun onUpvoteBtnClick(position: Int) {
+                viewModel.upvotePost(position)
             }
 
-            override fun onDownvoteBtnClick(post: Post) {
-                viewModel.downvotePost(post)
+            override fun onDownvoteBtnClick(position: Int) {
+                viewModel.downvotePost(position)
             }
 
             override fun onPostLongClick(position: Int) {
@@ -77,6 +77,9 @@ class HomeFragment: Fragment(){
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {
+//                if(it != adapter!!.postList){
+//                    adapter.update(it)
+//                }
                 adapter!!.update(it)
                 Log.i("Inside PostList Observer", it.toString())
                 Log.i("Inside PostList Observer", adapter.postList.toString())

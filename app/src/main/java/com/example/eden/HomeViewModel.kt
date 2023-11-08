@@ -13,20 +13,15 @@ import kotlinx.coroutines.launch
 class HomeViewModel(private val repository: PostRepository,
                     application: Application): AndroidViewModel(application) {
 
-//    private var _postList = repository.getAllPosts()
-//
-//    val postList: LiveData<MutableList<Post>>
-//        get() = _postList
-
     val postList = repository.postList
 
     init {
         Log.i("Testing", "HomeViewModel Initialized - ${postList.toString()}")
         refreshPostListFromRepository()
-
     }
 
-    fun upvotePost(post: Post){
+    fun upvotePost(position: Int){
+        val post = postList.value!![position]
         val temp = Post(post.postId, post.title, post.containsImage, post.imageUri, post.bodyText, voteCounter = post.voteCounter, voteStatus = post.voteStatus)
         when(temp.voteStatus){
             VoteStatus.UPVOTED -> {
@@ -48,9 +43,10 @@ class HomeViewModel(private val repository: PostRepository,
         }
     }
 
-    fun downvotePost(post: Post){
+    fun downvotePost(position: Int){
+        val post = postList.value!![position]
         val temp = Post(post.postId, post.title, post.containsImage, post.imageUri, post.bodyText, voteCounter = post.voteCounter, voteStatus = post.voteStatus)
-        Log.i("Downvote Post", "${post} , ${temp}")
+        Log.i("Downvote Post", "${post} , ${post}")
         when(temp.voteStatus){
             VoteStatus.UPVOTED -> {
                 temp.voteCounter-=2

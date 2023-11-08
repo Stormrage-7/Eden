@@ -48,20 +48,11 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:outlineProvider="none"
-                android:outlineSpotShadowColor="@android:color/transparent"
                 android:padding="0sp"
                 app:labelVisibilityMode="labeled"
                 app:menu="@menu/home_screen_bottom_nav_menu" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>
-
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/fab_post"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@android:drawable/ic_input_add"-->
-<!--            app:layout_anchor="@id/bottomAppBar" />-->
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
