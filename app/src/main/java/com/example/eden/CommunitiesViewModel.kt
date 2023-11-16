@@ -8,20 +8,20 @@ import androidx.lifecycle.ViewModel
 class CommunitiesViewModel: ViewModel() {
 
     // Encapsulation of LiveData by using a Backing Property
-    private val _count = MutableLiveData<Int>()
-    val count: LiveData<Int>
-        get() = _count
+
+    private var _communityList = MutableLiveData<List<Community>>()
+    val communityList : LiveData<List<Community>>
+        get() = _communityList
 
     init {
         Log.i("Testing", "CommunitiesViewModel Initialized!")
-        _count.value = Community.count
+        _communityList.value = Community.communityList
     }
 
-    fun increaseCount(){
-        _count.value = (count.value)?.plus(1)
-    }
+//    override fun onCleared() {
+//    }
 
-    override fun onCleared() {
-        Community.count = count.value ?: 0
+    fun setCommunityList(communityList: List<Community>) {
+        _communityList.value = communityList
     }
 }

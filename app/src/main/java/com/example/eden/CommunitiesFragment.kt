@@ -8,6 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.databinding.FragmentCommunitiesBinding
 
 class CommunitiesFragment: Fragment() {
@@ -27,18 +30,27 @@ class CommunitiesFragment: Fragment() {
         fragmentCommunitiesBinding.communitiesViewModel = viewModel
         fragmentCommunitiesBinding.lifecycleOwner = this //Very Important line of code that allowed LiveData to update the layout
 
-        // Commented out because of Data Binding with which Direct connection between layout file and data in ViewModel has been created
+//        viewModel.setCommunityList(communityList)
 
-//        fragmentCommunitiesBinding.textViewCount.text = viewModel.count.toString()
+        val adapter = context?.let {
+            CommunityAdapter(context = it) }
 
-//        viewModel.count.observe(viewLifecycleOwner, Observer {updated ->
-//            fragmentCommunitiesBinding.textViewCount.text = updatedCount.toString()
-//        })
+        fragmentCommunitiesBinding.rvCommunities.apply {
+            this.adapter = adapter
+            this.layoutManager = LinearLayoutManager(context)
+            addItemDecoration(
+                DividerItemDecoration(
+                context,
+                LinearLayoutManager(context).orientation
+                )
+            )
+        }
 
-//        fragmentCommunitiesBinding.btnIncrease.setOnClickListener {
-//            viewModel.increaseCount()
-//            updateCountText()
-//        }
+        viewModel.communityList.observe(this.requireActivity(), Observer{
+            it.let {
+                adapter!!.updateAdapter(it)
+            }
+        })
 
         return fragmentCommunitiesBinding.root
     }

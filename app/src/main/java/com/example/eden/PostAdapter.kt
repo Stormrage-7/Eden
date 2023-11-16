@@ -128,6 +128,7 @@ class PostAdapter(
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
         this.postList = postList
+        Log.i("In Update Method", "Local List: ${this.postList}")
         notifyDataSetChanged()
     }
 

@@ -1,5 +1,5 @@
 package com.example.eden
 
-enum class SubredditType {
+enum class CommunityType {
     PUBLIC, RESTRICTED, PRIVATE
 }

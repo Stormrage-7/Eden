@@ -77,9 +77,6 @@ class HomeFragment: Fragment(){
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {
-//                if(it != adapter!!.postList){
-//                    adapter.update(it)
-//                }
                 adapter!!.update(it)
                 Log.i("Inside PostList Observer", it.toString())
                 Log.i("Inside PostList Observer", adapter.postList.toString())
