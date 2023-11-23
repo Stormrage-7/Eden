@@ -77,9 +77,19 @@ class HomeFragment: Fragment(){
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {
-                adapter!!.update(it)
-                Log.i("Inside PostList Observer", it.toString())
-                Log.i("Inside PostList Observer", adapter.postList.toString())
+                if(it.isEmpty()){
+                    fragmentHomeBinding.rvPosts.visibility = View.GONE
+                    fragmentHomeBinding.tempImgView.visibility = View.VISIBLE
+                    fragmentHomeBinding.tempTextView.visibility = View.VISIBLE
+                }
+                else {
+                    fragmentHomeBinding.rvPosts.visibility = View.VISIBLE
+                    fragmentHomeBinding.tempImgView.visibility = View.GONE
+                    fragmentHomeBinding.tempTextView.visibility = View.GONE
+                    adapter!!.update(it)
+                    Log.i("Inside PostList Observer", it.toString())
+                    Log.i("Inside PostList Observer", adapter.postList.toString())
+                }
             }
         })
 
