@@ -1,8 +1,9 @@
-package com.example.eden
+package com.example.eden.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.eden.R
 
 @Entity(tableName = "Community_Table")
 class Community(
@@ -18,7 +19,9 @@ class Community(
     val containsImage: Boolean = false,
     @ColumnInfo(name = "image_uri")
     var imageUri: String = "",
-    var imageSrc: Int = 0
+    @ColumnInfo(name = "image_src")
+    var imageSrc: Int = 0,
+    var isJoined: Boolean = false
 //    val membersList: MutableList<Int>, // Should go in helper class which will act as crossreference between two classes (Post and Subreddit)
 //    val subredditType: SubredditType,
 //    val flairs: MutableList<String>,

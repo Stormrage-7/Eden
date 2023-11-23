@@ -28,27 +28,42 @@ class CommunitiesFragment: Fragment() {
         viewModel = ViewModelProvider(this).get(CommunitiesViewModel::class.java)
 
         fragmentCommunitiesBinding.communitiesViewModel = viewModel
-        fragmentCommunitiesBinding.lifecycleOwner = this //Very Important line of code that allowed LiveData to update the layout
+        fragmentCommunitiesBinding.lifecycleOwner = this.requireActivity() //Very Important line of code that allowed LiveData to update the layout
 
 //        viewModel.setCommunityList(communityList)
 
         val adapter = context?.let {
-            CommunityAdapter(context = it) }
+            CommunityAdapter(context = it, object : CommunityAdapter.CommunityClickListener{
+                override fun onClick(position: Int) {
+                    //TODO
+                }
+
+                override fun onJoinClick(position: Int) {
+                    viewModel.onJoinClick(position)
+                }
+
+            }) }
 
         fragmentCommunitiesBinding.rvCommunities.apply {
-            this.adapter = adapter
-            this.layoutManager = LinearLayoutManager(context)
-            addItemDecoration(
-                DividerItemDecoration(
-                context,
-                LinearLayoutManager(context).orientation
-                )
-            )
+
+
         }
 
         viewModel.communityList.observe(this.requireActivity(), Observer{
             it.let {
                 adapter!!.updateAdapter(it)
+            }
+            if(fragmentCommunitiesBinding.rvCommunities.adapter!=adapter){
+                fragmentCommunitiesBinding.rvCommunities.apply {
+                    this.adapter = adapter
+                    this.layoutManager = LinearLayoutManager(context)
+                    addItemDecoration(
+                        DividerItemDecoration(
+                            context,
+                            LinearLayoutManager(context).orientation
+                        )
+                    )
+                }
             }
         })
 

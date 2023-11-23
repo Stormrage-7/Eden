@@ -1,13 +1,11 @@
 package com.example.eden
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Upsert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.eden.entities.Post
 
 
 @Dao

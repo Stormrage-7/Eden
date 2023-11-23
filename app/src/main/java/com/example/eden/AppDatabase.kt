@@ -4,14 +4,23 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.eden.entities.Community
+import com.example.eden.entities.Post
+import com.example.eden.entities.relations.PostCommunityCrossRef
 
 
-@Database(entities = [Post :: class],
-    version = 3
+@Database(
+    entities = [
+        Post :: class,
+        Community::class,
+        PostCommunityCrossRef::class
+    ],
+    version = 6
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun postDao() : PostDao
+    abstract fun communityDao() : CommunityDao
 
     companion object{
 

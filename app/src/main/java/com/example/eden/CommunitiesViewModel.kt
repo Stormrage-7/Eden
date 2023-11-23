@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.eden.entities.Community
 
 class CommunitiesViewModel: ViewModel() {
 
@@ -23,5 +24,9 @@ class CommunitiesViewModel: ViewModel() {
 
     fun setCommunityList(communityList: List<Community>) {
         _communityList.value = communityList
+    }
+
+    fun onJoinClick(position: Int) {
+        _communityList.value!![position].isJoined = !_communityList.value!![position].isJoined
     }
 }

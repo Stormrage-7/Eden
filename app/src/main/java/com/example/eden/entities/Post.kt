@@ -1,9 +1,9 @@
-package com.example.eden
+package com.example.eden.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.eden.Enums.VoteStatus
+import com.example.eden.enums.VoteStatus
 
 @Entity(tableName = "Post_Table")
 data class Post (

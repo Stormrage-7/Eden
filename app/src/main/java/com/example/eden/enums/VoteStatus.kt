@@ -1,4 +1,4 @@
-package com.example.eden.Enums
+package com.example.eden.enums
 
 enum class VoteStatus {
     UPVOTED, DOWNVOTED, NONE

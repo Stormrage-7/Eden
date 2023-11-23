@@ -3,10 +3,8 @@ package com.example.eden
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eden.entities.Post
 import kotlinx.coroutines.launch
 
 class NewPostViewModel(private val repository: PostRepository,

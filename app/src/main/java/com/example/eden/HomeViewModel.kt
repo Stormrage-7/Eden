@@ -3,11 +3,9 @@ package com.example.eden
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.eden.Enums.VoteStatus
+import com.example.eden.entities.Post
+import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: PostRepository,

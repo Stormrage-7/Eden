@@ -1,9 +1,8 @@
 package com.example.eden
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.eden.entities.Post
 
 class PostRepository(private val database: AppDatabase) {
 
