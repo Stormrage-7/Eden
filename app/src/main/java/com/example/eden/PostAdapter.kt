@@ -78,37 +78,12 @@ class PostAdapter(
                 // CHANGES TO THE VOTE
             likeBtn.setOnClickListener {
                 Log.i("Like", "Button pressed!")
-//                if (postList[position].voteStatus != VoteStatus.UPVOTED){
-//                    if(postList[position].voteStatus == VoteStatus.DOWNVOTED){
-//                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-//                    }
-//                    likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-//                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
-//                }
-//                else{
-//                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-//                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
-//                }
-
-                // TODO As we are sending post item, it needs to be abstracted before being sent
                 clickListener.onUpvoteBtnClick(position)
             }
 
             dislikeBtn.setOnClickListener {
                 Log.i("Dislike", "Button pressed! ${position}")
-//                if (postList[position].voteStatus != VoteStatus.DOWNVOTED){
-//                    if(postList[position].voteStatus == VoteStatus.UPVOTED){
-//                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-//                    }
-//                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-//                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
-//                }
-//                else{
-//                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-//                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
-//                }
                 clickListener.onDownvoteBtnClick(position)
-                //textViewVoteCounter.text = (textViewVoteCounter.text.toString().toInt() - 1).toString()
             }
 
             shareBtn.setOnClickListener {

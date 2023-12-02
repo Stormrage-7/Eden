@@ -40,8 +40,37 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:id="@+id/community_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/TopBarConstraintLayout"
+        android:paddingHorizontal="12sp"
+        android:visibility="gone"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageViewCommunity"
+            app:shapeAppearanceOverlay="@style/roundedProfileImageView"
+            android:layout_width="25sp"
+            android:layout_height="25sp"
+            style="@style/roundedImageView"
+            android:src="@drawable/icon_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Community Name"
+            android:textSize="18sp"
+            android:paddingLeft="5sp"/>
+
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/TitleEditTV"
@@ -52,8 +81,8 @@
         android:textSize="30sp"
         android:textStyle="bold"
         android:paddingVertical="6sp"
-        android:paddingHorizontal="15sp"
-        app:layout_constraintTop_toBottomOf="@id/TopBarConstraintLayout"
+        android:paddingHorizontal="12sp"
+        app:layout_constraintTop_toBottomOf="@id/community_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -96,12 +125,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/insert_link_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/insert_link_24"
-            android:backgroundTint="@color/white"/>
+<!--        <ImageButton-->
+<!--            android:id="@+id/insert_link_btn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/insert_link_24"-->
+<!--            android:backgroundTint="@color/white"/>-->
 
         <ImageButton
             android:id="@+id/insert_images_btn"

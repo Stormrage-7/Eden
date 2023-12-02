@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.eden.entities.Post
 import kotlinx.coroutines.launch
 
-class NewPostViewModel(private val repository: PostRepository,
-    application: Application): AndroidViewModel(application) {
+class NewPostViewModel(private val repository: AppRepository,
+                       application: Application): AndroidViewModel(application) {
 
     init {
         Log.i("NewPostViewModel", "NewPostViewModel Initialized!")

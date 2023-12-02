@@ -21,11 +21,13 @@ class HomeScreenActivity: AppCompatActivity() {
     private lateinit var navController : NavController
 
     private lateinit var database: AppDatabase
+    private lateinit var databaseDao: EdenDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         database = AppDatabase.getDatabase(application)
+//        databaseDao = (this.application as Eden)
 //        lifecycleScope.launch {
 //            clearDB()
 //        }
@@ -108,7 +110,7 @@ class HomeScreenActivity: AppCompatActivity() {
 
     private suspend fun clearDB(){
         withContext(Dispatchers.IO) {
-            database.postDao().deleteAll()
+//            database.postDao().deleteAll()
         }
     }
 

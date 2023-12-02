@@ -4,15 +4,14 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class NewPostViewModelFactory(
-    private val repository: PostRepository,
-    private val application: Application): ViewModelProvider.Factory {
+class ViewModelFactory(
+    private val repository: AppRepository): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(NewPostViewModel::class.java)){
-            return NewPostViewModel(repository, application) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel Class!")
-
+//        if (modelClass.isAssignableFrom(NewPostViewModel::class.java)){
+//            return NewPostViewModel(repository, application) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel Class!")
+        return modelClass.getConstructor(AppRepository::class.java).newInstance(repository)
     }
 }

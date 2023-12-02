@@ -1,6 +1,5 @@
 package com.example.eden
 
-import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.databinding.FragmentHomeBinding
@@ -18,9 +16,9 @@ import com.example.eden.databinding.FragmentHomeBinding
 class HomeFragment: Fragment(){
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private lateinit var viewModel: HomeViewModel
-    private lateinit var database: AppDatabase
-    private lateinit var repository: PostRepository
-    private lateinit var factory: HomeViewModelFactory
+//    private lateinit var database: AppDatabase
+    private lateinit var repository: AppRepository
+    private lateinit var factory: ViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,10 +30,8 @@ class HomeFragment: Fragment(){
             inflater, R.layout.fragment_home, container, false
         )
 
-        val application = requireNotNull(this.activity).application
-        database = AppDatabase.getDatabase(application)
-        repository = PostRepository(database)
-        factory = HomeViewModelFactory(repository, application)
+        val application = requireActivity().application as Eden
+        factory = application.viewModelFactory
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
 

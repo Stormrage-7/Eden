@@ -9,7 +9,7 @@ import com.example.eden.entities.Post
 
 
 @Dao
-interface PostDao {
+interface EdenDao {
 
     @Query("SELECT * FROM Post_Table")
     fun getAll(): LiveData<List<Post>>

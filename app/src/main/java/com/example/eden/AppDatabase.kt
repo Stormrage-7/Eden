@@ -15,12 +15,13 @@ import com.example.eden.entities.relations.PostCommunityCrossRef
         Community::class,
         PostCommunityCrossRef::class
     ],
-    version = 6
+    version = 7
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun postDao() : PostDao
-    abstract fun communityDao() : CommunityDao
+    abstract fun edenDao(): EdenDao
+//    abstract fun postDao() : PostDao
+//    abstract fun communityDao() : CommunityDao
 
     companion object{
 

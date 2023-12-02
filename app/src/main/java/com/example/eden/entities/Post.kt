@@ -2,27 +2,24 @@ package com.example.eden.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.util.foreignKeyCheck
 import com.example.eden.enums.VoteStatus
 
 @Entity(tableName = "Post_Table")
 data class Post (
     @PrimaryKey(autoGenerate = true)
     val postId: Int = 0,
-    @ColumnInfo(name = "title")
     val title: String,
-    @ColumnInfo(name = "contains_image")
     val containsImage: Boolean,
     @ColumnInfo(name = "image_uri")
     val imageUri: String,
-    @ColumnInfo(name = "body_text")
     val bodyText: String,
-    @ColumnInfo(name = "vote_counter")
     var voteCounter: Int = 0,
-    @ColumnInfo
     var voteStatus: VoteStatus = VoteStatus.NONE,
-    @ColumnInfo(name = "is_pinned")
-    val isPinned: Boolean = false
+    val isPinned: Boolean = false,
+    val communityId: Int
     )
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),

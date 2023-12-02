@@ -21,19 +21,18 @@ class NewPostActivity: AppCompatActivity()  {
     private lateinit var activityNewPostBinding: ActivityNewPostBinding
     private lateinit var viewModel: NewPostViewModel
     private lateinit var database: AppDatabase
-    private lateinit var repository: PostRepository
-    private lateinit var factory: NewPostViewModelFactory
+    private lateinit var repository: AppRepository
+    private lateinit var factory: ViewModelFactory
     private var isImageAttached = false
     private var imageUri = ""
+    private var imageUriList = listOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityNewPostBinding = ActivityNewPostBinding.inflate(layoutInflater)
         setContentView(activityNewPostBinding.root)
 
-        database = AppDatabase.getDatabase(this)
-        repository = PostRepository(database)
-        factory = NewPostViewModelFactory(repository, application)
+        factory = (this.application as Eden).viewModelFactory
         viewModel = ViewModelProvider(this, factory)[NewPostViewModel::class.java]
 
 
@@ -74,7 +73,8 @@ class NewPostActivity: AppCompatActivity()  {
             val titleText = activityNewPostBinding.TitleEditTV.text.toString()
             val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
 
-            viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText))
+
+            viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = 1))
             Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
             finish()
         }
@@ -87,13 +87,15 @@ class NewPostActivity: AppCompatActivity()  {
 //        }
 
         activityNewPostBinding.insertImagesBtn.setOnClickListener {
-            val pickImage = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            val pickImage = Intent().apply {
                 type = "image/*"
-                if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    action = Intent.ACTION_GET_CONTENT;
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    action = Intent.ACTION_GET_CONTENT
                 } else {
-                    action = Intent.ACTION_OPEN_DOCUMENT;
-                    addCategory(Intent.CATEGORY_OPENABLE);
+                    action = Intent.ACTION_OPEN_DOCUMENT
+                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                    addCategory(Intent.CATEGORY_OPENABLE)
+
                 }
             }
 //            resultLauncher.launch(pickImage)
@@ -103,18 +105,32 @@ class NewPostActivity: AppCompatActivity()  {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == 100 && data != null){
-            activityNewPostBinding.imageViewPost.setImageURI(data.data)
+            var lastUri = ""
+            val takeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+
+            if (data?.clipData != null) {
+                var count = data.clipData?.itemCount
+
+                for (i in 0 until count!!) {
+                    val current = data.clipData!!.getItemAt(i).uri.toString()
+                    application.contentResolver.takePersistableUriPermission(Uri.parse(current), takeFlags)
+                    imageUri = "$imageUri+$current"
+                    lastUri = current
+                }
+
+            } else if (data?.data != null) {
+                // if single image is selected
+                imageUri = data.data.toString()
+                lastUri = imageUri
+                application.contentResolver.takePersistableUriPermission(Uri.parse(imageUri), takeFlags)
+            }
+
+            activityNewPostBinding.imageViewPost.setImageURI(Uri.parse(lastUri))
             activityNewPostBinding.imageViewPost.visibility = View.VISIBLE
             activityNewPostBinding.imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
             isImageAttached = true
-            imageUri = data.data.toString()
-            val takeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            if (imageUri.isNotEmpty()){
-                application.contentResolver.takePersistableUriPermission(Uri.parse(imageUri), takeFlags)
-            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-
 
 }

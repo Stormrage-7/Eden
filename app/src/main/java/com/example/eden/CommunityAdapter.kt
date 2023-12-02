@@ -11,7 +11,7 @@ import com.example.eden.databinding.ItemCommunityBinding
 
 class CommunityAdapter(val context: Context, val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
-    var communityList = listOf<Community>()
+    private var communityList = listOf<Community>()
     inner class CommunityViewHolder(val binding: ItemCommunityBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommunityViewHolder {
@@ -53,18 +53,6 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
             joinButton.setOnClickListener {
                 clickListener.onJoinClick(position)
                 notifyDataSetChanged()
-//                if (joinButton.text == "Join") {
-//                    joinButton.text = "Joined"
-//                    joinButton.backgroundTintList = ColorStateList.valueOf(
-//                        ResourcesCompat.getColor(context.resources, R.color.grey, null)
-//                    )
-//                }
-//                else{
-//                    joinButton.text = "Join"
-//                    joinButton.backgroundTintList = ColorStateList.valueOf(
-//                        ResourcesCompat.getColor(context.resources, R.color.azure, null)
-//                    )
-//                }
             }
         }
     }
