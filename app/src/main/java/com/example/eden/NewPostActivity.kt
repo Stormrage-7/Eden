@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -22,17 +23,22 @@ class NewPostActivity: AppCompatActivity()  {
     private lateinit var viewModel: NewPostViewModel
     private lateinit var database: AppDatabase
     private lateinit var repository: AppRepository
-    private lateinit var factory: ViewModelFactory
+    private lateinit var factory: NewPostViewModelFactory
     private var isImageAttached = false
     private var imageUri = ""
     private var imageUriList = listOf<String>()
+
+    private val PICK_IMAGE = 100
+    private val PICK_COMMUNITY = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityNewPostBinding = ActivityNewPostBinding.inflate(layoutInflater)
         setContentView(activityNewPostBinding.root)
 
-        factory = (this.application as Eden).viewModelFactory
+        database = AppDatabase.getDatabase(applicationContext as Eden)
+        repository = AppRepository(database.edenDao())
+        factory = NewPostViewModelFactory(repository, application)
         viewModel = ViewModelProvider(this, factory)[NewPostViewModel::class.java]
 
 
@@ -99,12 +105,12 @@ class NewPostActivity: AppCompatActivity()  {
                 }
             }
 //            resultLauncher.launch(pickImage)
-            startActivityForResult(pickImage, 100)
+            startActivityForResult(pickImage, PICK_IMAGE)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == 100 && data != null){
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE && data != null){
             var lastUri = ""
             val takeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
@@ -125,6 +131,7 @@ class NewPostActivity: AppCompatActivity()  {
                 application.contentResolver.takePersistableUriPermission(Uri.parse(imageUri), takeFlags)
             }
 
+            Log.i("IMAGE URI", lastUri)
             activityNewPostBinding.imageViewPost.setImageURI(Uri.parse(lastUri))
             activityNewPostBinding.imageViewPost.visibility = View.VISIBLE
             activityNewPostBinding.imageViewPost.scaleType = ImageView.ScaleType.FIT_XY

@@ -3,6 +3,7 @@ package com.example.eden
 import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,12 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
                 imageViewCommunity.setImageResource(R.drawable.icon_logo)
             }
 
+            //For Select Community Activity
+            if(context is SelectCommunityActivity){
+                joinButton.visibility = View.GONE
+            }
+
+            //Setting Join Status
             if (currentItem.isJoined){
                 joinButton.text = "Joined"
                 joinButton.backgroundTintList = ColorStateList.valueOf(
@@ -52,7 +59,8 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
             textViewDescription.text = currentItem.description
             joinButton.setOnClickListener {
                 clickListener.onJoinClick(position)
-                notifyDataSetChanged()
+                notifyItemChanged(position)
+//                notifyDataSetChanged()
             }
         }
     }

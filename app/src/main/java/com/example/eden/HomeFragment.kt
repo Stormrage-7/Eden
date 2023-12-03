@@ -18,7 +18,7 @@ class HomeFragment: Fragment(){
     private lateinit var viewModel: HomeViewModel
 //    private lateinit var database: AppDatabase
     private lateinit var repository: AppRepository
-    private lateinit var factory: ViewModelFactory
+    private lateinit var factory: HomeViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +31,8 @@ class HomeFragment: Fragment(){
         )
 
         val application = requireActivity().application as Eden
-        factory = application.viewModelFactory
+        repository = AppRepository(AppDatabase.getDatabase(application.applicationContext).edenDao())
+        factory = HomeViewModelFactory(repository, application)
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
 

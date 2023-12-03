@@ -1,32 +1,50 @@
 package com.example.eden
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.eden.entities.Community
+import kotlinx.coroutines.launch
 
-class CommunitiesViewModel: ViewModel() {
+class CommunitiesViewModel(private val repository: AppRepository,
+    private val application: Eden): AndroidViewModel(application) {
 
     // Encapsulation of LiveData by using a Backing Property
 
-    private var _communityList = MutableLiveData<List<Community>>()
-    val communityList : LiveData<List<Community>>
-        get() = _communityList
+    val communityList = repository.communityList
 
     init {
         Log.i("Testing", "CommunitiesViewModel Initialized!")
-        _communityList.value = Community.communityList
+        refreshCommunityListFromRepository()
     }
 
 //    override fun onCleared() {
 //    }
 
-    fun setCommunityList(communityList: List<Community>) {
-        _communityList.value = communityList
-    }
+//    fun setCommunityList(communityList: List<Community>) {
+//        _communityList.value = communityList
+//    }
 
     fun onJoinClick(position: Int) {
-        _communityList.value!![position].isJoined = !_communityList.value!![position].isJoined
+//        _communityList.value!![position].isJoined = !_communityList.value!![position].isJoined
+        val community = communityList.value!![position]
+        val temp: Community = when(community.isJoined){
+                true -> community.copy(isJoined = false)
+                false -> community.copy(isJoined = true)
+            }
+        viewModelScope.launch{
+            repository.upsertCommunity(temp)
+        }
+
+    }
+
+    private fun refreshCommunityListFromRepository(){
+        viewModelScope.launch {
+            repository.refreshCommunities()
+        }
     }
 }

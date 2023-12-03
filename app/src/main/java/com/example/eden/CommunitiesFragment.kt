@@ -1,5 +1,6 @@
 package com.example.eden
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,11 @@ class CommunitiesFragment: Fragment() {
 //        fragmentCommunitiesBinding = FragmentCommunitiesBinding.inflate(layoutInflater)
         fragmentCommunitiesBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_communities, container, false)
-        viewModel = ViewModelProvider(this).get(CommunitiesViewModel::class.java)
+
+        val application = this.requireActivity().application.applicationContext as Eden
+        val repository = application.repository
+        val viewModelFactory = CommunityViewModelFactory(repository, application)
+        viewModel = ViewModelProvider(this, viewModelFactory)[CommunitiesViewModel::class.java]
 
         fragmentCommunitiesBinding.communitiesViewModel = viewModel
         fragmentCommunitiesBinding.lifecycleOwner = this.requireActivity() //Very Important line of code that allowed LiveData to update the layout
@@ -44,10 +49,6 @@ class CommunitiesFragment: Fragment() {
 
             }) }
 
-        fragmentCommunitiesBinding.rvCommunities.apply {
-
-
-        }
 
         viewModel.communityList.observe(this.requireActivity(), Observer{
             it.let {

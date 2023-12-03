@@ -9,7 +9,7 @@ import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: AppRepository,
-                    application: Application): AndroidViewModel(application) {
+                    application: Eden): AndroidViewModel(application) {
 
     val postList = repository.postList
 

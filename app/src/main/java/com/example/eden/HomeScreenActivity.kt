@@ -65,18 +65,18 @@ class HomeScreenActivity: AppCompatActivity() {
                     }
                     false
                 }
-                R.id.miChat -> {
-                    if( isValidDestination(R.id.chatFragment) and !navController.popBackStack(R.id.chatFragment, false)) {
-                        navController.navigate(R.id.chatFragment)
-                    }
-                    true
-                }
-                R.id.miInbox -> {
-                    if( isValidDestination(R.id.inboxFragment ) and !navController.popBackStack(R.id.inboxFragment, false)) {
-                        navController.navigate(R.id.inboxFragment)
-                    }
-                    true
-                }
+//                R.id.miChat -> {
+//                    if( isValidDestination(R.id.chatFragment) and !navController.popBackStack(R.id.chatFragment, false)) {
+//                        navController.navigate(R.id.chatFragment)
+//                    }
+//                    true
+//                }
+//                R.id.miInbox -> {
+//                    if( isValidDestination(R.id.inboxFragment ) and !navController.popBackStack(R.id.inboxFragment, false)) {
+//                        navController.navigate(R.id.inboxFragment)
+//                    }
+//                    true
+//                }
 
                 else -> {false}
             }
@@ -98,8 +98,8 @@ class HomeScreenActivity: AppCompatActivity() {
         activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id){
             R.id.homeFragment -> R.id.miHome
             R.id.communitiesFragment -> R.id.miCommunities
-            R.id.chatFragment -> R.id.miChat
-            R.id.inboxFragment -> R.id.miInbox
+//            R.id.chatFragment -> R.id.miChat
+//            R.id.inboxFragment -> R.id.miInbox
             else -> {0}
         }
     }
