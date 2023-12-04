@@ -96,12 +96,12 @@ class PostAdapter(
                 // CHANGES TO THE VOTE
             likeBtn.setOnClickListener {
                 Log.i("Like", "Button pressed!")
-                postListener.onUpvoteBtnClick(position)
+                postListener.onUpvoteBtnClick(post)
             }
 
             dislikeBtn.setOnClickListener {
                 Log.i("Dislike", "Button pressed! ${position}")
-                postListener.onDownvoteBtnClick(position)
+                postListener.onDownvoteBtnClick(post)
             }
 
             shareBtn.setOnClickListener {
@@ -114,6 +114,10 @@ class PostAdapter(
                     context.startActivity(intent)
                 }
             }
+        }
+
+        holder.itemView.setOnClickListener {
+            postListener.onPostClick(post)
         }
     }
 
@@ -148,9 +152,9 @@ class PostAdapter(
 
     interface PostListener{
         fun getCommunityIdFromPostId(position: Int): Int
-        fun onPostClick(position: Int)
-        fun onUpvoteBtnClick(position: Int)
-        fun onDownvoteBtnClick(position: Int)
+        fun onPostClick(post: Post)
+        fun onUpvoteBtnClick(post: Post)
+        fun onDownvoteBtnClick(post: Post)
         fun onPostLongClick(position: Int)
     }
 

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
+import com.example.eden.entities.Post
 
 class HomeFragment: Fragment(){
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
@@ -50,16 +51,16 @@ class HomeFragment: Fragment(){
                 return 1
             }
 
-            override fun onPostClick(position: Int) {
+            override fun onPostClick(post: Post) {
                 TODO("Not yet implemented")
             }
 
-            override fun onUpvoteBtnClick(position: Int) {
-                viewModel.upvotePost(position)
+            override fun onUpvoteBtnClick(post: Post) {
+                viewModel.upvotePost(post)
             }
 
-            override fun onDownvoteBtnClick(position: Int) {
-                viewModel.downvotePost(position)
+            override fun onDownvoteBtnClick(post: Post) {
+                viewModel.downvotePost(post)
             }
 
             override fun onPostLongClick(position: Int) {
@@ -110,13 +111,6 @@ class HomeFragment: Fragment(){
                 }
             }
         })
-
-
-
-
-
-
-
 
         return fragmentHomeBinding.root
     }

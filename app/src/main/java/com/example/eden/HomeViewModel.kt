@@ -35,8 +35,8 @@ class HomeViewModel(private val repository: AppRepository,
     }
 
 
-    fun upvotePost(position: Int){
-        val post = postList.value!![position]
+    fun upvotePost(post: Post){
+//        val post = postList.value!![position]
 
         val temp : Post = when(post.voteStatus){
             VoteStatus.UPVOTED -> post.copy(voteCounter = post.voteCounter-1, voteStatus = VoteStatus.NONE)
@@ -49,8 +49,8 @@ class HomeViewModel(private val repository: AppRepository,
         }
     }
 
-    fun downvotePost(position: Int){
-        val post = postList.value!![position]
+    fun downvotePost(post: Post){
+//        val post = postList.value!![position]
 
         val temp : Post = when(post.voteStatus){
             VoteStatus.UPVOTED -> post.copy(voteCounter = post.voteCounter-2, voteStatus = VoteStatus.DOWNVOTED)
