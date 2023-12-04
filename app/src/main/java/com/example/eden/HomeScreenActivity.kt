@@ -27,9 +27,9 @@ class HomeScreenActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         databaseDao = (application as Eden).edenDao
-//        lifecycleScope.launch {
-//            clearDB()
-//        }
+        lifecycleScope.launch {
+            clearDB()
+        }
 
         activityHomeScreenBinding = ActivityHomeScreenBinding.inflate(layoutInflater)
         setContentView(activityHomeScreenBinding.root)

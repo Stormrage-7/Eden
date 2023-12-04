@@ -91,8 +91,9 @@ class NewPostActivity: AppCompatActivity()  {
                 val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
 
 
-                val postId = viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId))
-                viewModel.insertPostCommunityCrossRef(PostCommunityCrossRef(postId, communityId))
+                viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId))
+                (application as Eden).postId+=1
+                viewModel.insertPostCommunityCrossRef(PostCommunityCrossRef((application as Eden).postId, communityId))
                 Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                 finish()
             }

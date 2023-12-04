@@ -75,23 +75,14 @@ class HomeFragment: Fragment(){
                 LinearLayoutManager(context).orientation
             )
         )
+        viewModel.joinedCommunitiesList.observe(this.requireActivity(), Observer {
+            Log.i("HomeFragment", "${it.toString()}")
+            adapter!!.updateJoinedCommunityList(it)
+        })
 
-        viewModel.postList.observe(this.requireActivity(), Observer {
-            it.let {
-                if(it.isEmpty()){
-                    fragmentHomeBinding.rvPosts.visibility = View.GONE
-                    fragmentHomeBinding.tempImgView.visibility = View.VISIBLE
-                    fragmentHomeBinding.tempTextView.visibility = View.VISIBLE
-                }
-                else {
-                    fragmentHomeBinding.rvPosts.visibility = View.VISIBLE
-                    fragmentHomeBinding.tempImgView.visibility = View.GONE
-                    fragmentHomeBinding.tempTextView.visibility = View.GONE
-                    adapter!!.updatePostList(it)
-                    Log.i("Inside PostList Observer", it.toString())
-                    Log.i("Inside PostList Observer", adapter.postList.toString())
-                }
-            }
+        viewModel.postCommunityCrossRefList.observe(this.requireActivity(), Observer {
+            Log.i("HomeFragment", "${it.toString()}")
+            adapter!!.updatePostCommunityCrossRefList(it)
         })
 
         viewModel.communityList.observe(this.requireActivity(), Observer {
@@ -99,6 +90,32 @@ class HomeFragment: Fragment(){
             adapter!!.updateCommunityList(it)
 //            Log.i("HomeFragment", "${viewModel.localCommunityList}")
         })
+
+        viewModel.postList.observe(this.requireActivity(), Observer {
+            it.let {
+                if(it.isEmpty()){
+                    fragmentHomeBinding.rvPosts.visibility = View.GONE
+                    fragmentHomeBinding.tempImgView.visibility = View.VISIBLE
+                    fragmentHomeBinding.tempTextView.visibility = View.VISIBLE
+                    adapter!!.updatePostList(it)
+                }
+                else {
+                    fragmentHomeBinding.rvPosts.visibility = View.VISIBLE
+                    fragmentHomeBinding.tempImgView.visibility = View.GONE
+                    fragmentHomeBinding.tempTextView.visibility = View.GONE
+//                    it.filter { post -> adapter!!.joinedCommunitiesList.contains(post.communityId) }
+                    adapter!!.updatePostList(it)
+                    Log.i("Inside PostList Observer", it.toString())
+                    Log.i("Inside PostList Observer", adapter.postList.toString())
+                }
+            }
+        })
+
+
+
+
+
+
 
 
         return fragmentHomeBinding.root

@@ -21,6 +21,8 @@ class HomeViewModel(private val repository: AppRepository,
 
     val postList = repository.postList
     val communityList = repository.communityList
+    val postCommunityCrossRefList = repository.postCommunityCrossRefList
+    val joinedCommunitiesList = repository.joinedCommunitiesList
 //    var localCommunityList = listOf<Community>()
 //    var communityId: Int = -1
 
@@ -28,7 +30,10 @@ class HomeViewModel(private val repository: AppRepository,
         Log.i("Testing", "HomeViewModel Initialized - ${postList.toString()}")
         refreshCommunityListFromRepository()
         refreshPostListFromRepository()
+        refreshPostCommunityCrossRefListFromRepository()
+        refreshJoinedCommunitiesListFromRepository()
     }
+
 
     fun upvotePost(position: Int){
         val post = postList.value!![position]
@@ -70,6 +75,18 @@ class HomeViewModel(private val repository: AppRepository,
             repository.refreshCommunities()
             Log.i("Refresh Method", "Communities Refreshed! ${communityList.value.toString()}")
 
+        }
+    }
+
+    private fun refreshPostCommunityCrossRefListFromRepository() {
+        viewModelScope.launch {
+            repository.refreshPostCommunityCrossRef()
+        }
+    }
+
+    private fun refreshJoinedCommunitiesListFromRepository() {
+        viewModelScope.launch{
+            repository.refreshJoinedCommunities()
         }
     }
 

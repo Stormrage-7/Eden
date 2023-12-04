@@ -34,4 +34,11 @@ class NewPostViewModel(private val repository: AppRepository,
         }
     }
 
+//    fun insertPost(post: Post): Int {
+//        viewModelScope.launch(Dispatchers.Default) {
+//            postId = repository.insertPost(post)
+//        }
+//        return postId
+//    }
+
 }

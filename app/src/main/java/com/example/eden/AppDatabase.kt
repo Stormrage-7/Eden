@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.eden.entities.Community
+import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import kotlinx.coroutines.GlobalScope
@@ -15,9 +16,10 @@ import kotlinx.coroutines.launch
     entities = [
         Post :: class,
         Community::class,
-        PostCommunityCrossRef::class
+        PostCommunityCrossRef::class,
+        JoinedCommunities :: class
     ],
-    version = 9
+    version = 14
 )
 abstract class AppDatabase : RoomDatabase() {
 

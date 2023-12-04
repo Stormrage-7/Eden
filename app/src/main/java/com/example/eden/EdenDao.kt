@@ -3,10 +3,12 @@ package com.example.eden
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
 import androidx.room.Upsert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.eden.entities.Community
+import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.relations.CommunityWithPosts
 import com.example.eden.entities.relations.PostCommunityCrossRef
@@ -19,6 +21,9 @@ interface EdenDao {
     @Query("SELECT * FROM Post_Table")
     fun getAllPosts(): LiveData<List<Post>>
 
+    @Insert
+    suspend fun insertPost(post: Post): Long
+
     @Upsert
     suspend fun upsertPost(post: Post): Long
 
@@ -27,6 +32,15 @@ interface EdenDao {
 
     @Query("DELETE FROM Post_Table")
     fun deleteAllPosts(): Int
+
+    @Insert
+    suspend fun insertJoinedCommunity(joinedCommunities: JoinedCommunities)
+
+    @Query("DELETE FROM Joined_Communities_Table WHERE communityId = :communityId")
+    suspend fun deleteJoinedCommunity(communityId: Int)
+
+    @Query("SELECT communityId FROM Joined_Communities_Table")
+    fun getAllJoinedCommunities(): LiveData<List<Int>>
 
     @Query("SELECT * FROM Community_Table")
     fun getAllCommunities(): LiveData<List<Community>>
@@ -51,6 +65,9 @@ interface EdenDao {
 
     @Upsert
     suspend fun upsertPostCommunityCrossRef(crossRef: PostCommunityCrossRef)
+
+    @Query("SELECT * FROM PostCommunityCrossRef")
+    fun getAllPostCommunityCrossRef(): LiveData<List<PostCommunityCrossRef>>
 
     @Transaction
     @Query("SELECT * FROM community_table WHERE communityId = :communityId")

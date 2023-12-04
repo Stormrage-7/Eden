@@ -14,13 +14,16 @@ import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
+import com.example.eden.entities.relations.PostCommunityCrossRef
 
 class PostAdapter(
     val context: Context,
     private val postListener: PostListener): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
+    var joinedCommunitiesList: List<Int> = listOf()
     var postList: List<Post> = listOf()
     var communityList: List<Community> = listOf()
+    var postCommunityCrossRefList: List<PostCommunityCrossRef> = listOf()
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -34,14 +37,19 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+        val post = postList[position]
+        val communityId = post.communityId
+        val community = communityList.find { it.communityId == communityId }!!
+//        if (!joinedCommunitiesList.contains(post.communityId)) return
 
         holder.binding.apply {
             //COMMUNITY DETAILS
-            val community = communityList.find { it.communityId == postList[position].communityId }!!
+
             textViewCommunityName.text = community.communityName
 //            if(community.containsImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
 //            else imageViewCommunity.setImageResource(community.imageSrc)
-            imageViewCommunity.setImageResource(community.imageSrc)
+            if (community.containsImage) imageViewCommunity.setImageResource(community.imageSrc)
+            else imageViewCommunity.setImageResource(R.drawable.icon_logo)
 
             //TITLE
             textViewTitle.text = postList[position].title
@@ -112,13 +120,29 @@ class PostAdapter(
     fun updatePostList(postList: List<Post>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
-        this.postList = postList
+        Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
+        this.postList = postList.filter { post -> joinedCommunitiesList.contains(post.communityId) }
         Log.i("In Update Method", "Local List: ${this.postList}")
         notifyDataSetChanged()
     }
 
     fun updateCommunityList(communityList: List<Community>){
         this.communityList = communityList
+        notifyDataSetChanged()
+    }
+
+    fun updatePostCommunityCrossRefList(crossRefList: List<PostCommunityCrossRef>){
+        this.postCommunityCrossRefList = crossRefList
+        notifyDataSetChanged()
+    }
+
+    fun updateJoinedCommunityList(joinedCommunitiesList: List<Int>?) {
+        if (joinedCommunitiesList != null) {
+            this.joinedCommunitiesList = joinedCommunitiesList
+            Log.i("PostAdapter", "${this.postList}")
+            this.postList = postList.filter { post -> this.joinedCommunitiesList.contains(post.communityId) }
+        }
+        Log.i("PostAdapter", "${this.postList}")
         notifyDataSetChanged()
     }
 
@@ -129,6 +153,13 @@ class PostAdapter(
         fun onDownvoteBtnClick(position: Int)
         fun onPostLongClick(position: Int)
     }
+
+    private fun getCommunityIdFromPostId(postId: Int): Int{
+        Log.i("PostAdapter", "$postId")
+        Log.i("PostAdapter", "${postCommunityCrossRefList.toString()}")
+        return postCommunityCrossRefList.find { it.postId == postId }!!.communityId
+    }
+
 
 
 }

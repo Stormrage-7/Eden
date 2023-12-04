@@ -34,8 +34,18 @@ class CommunitiesViewModel(private val repository: AppRepository,
 //        _communityList.value!![position].isJoined = !_communityList.value!![position].isJoined
         val community = communityList.value!![position]
         val temp: Community = when(community.isJoined){
-                true -> community.copy(isJoined = false)
-                false -> community.copy(isJoined = true)
+                true -> {
+                    viewModelScope.launch{
+                        repository.deleteFromJoinedCommunities(community.communityId)
+                    }
+                    community.copy(isJoined = false)
+                }
+                false -> {
+                    viewModelScope.launch {
+                        repository.insertIntoJoinedCommunities(community.communityId)
+                    }
+                    community.copy(isJoined = true)
+                }
             }
         viewModelScope.launch{
             repository.upsertCommunity(temp)
