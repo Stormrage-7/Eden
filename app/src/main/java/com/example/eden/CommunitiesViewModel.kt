@@ -11,15 +11,16 @@ import com.example.eden.entities.Community
 import kotlinx.coroutines.launch
 
 class CommunitiesViewModel(private val repository: AppRepository,
-    private val application: Eden): AndroidViewModel(application) {
+    application: Eden): AndroidViewModel(application) {
 
-    // Encapsulation of LiveData by using a Backing Property
 
     val communityList = repository.communityList
 
     init {
+        Log.i("Community List", "${communityList.value.toString()}")
         Log.i("Testing", "CommunitiesViewModel Initialized!")
         refreshCommunityListFromRepository()
+        Log.i("Community List", "${repository.communityList.value.toString()}")
     }
 
 //    override fun onCleared() {

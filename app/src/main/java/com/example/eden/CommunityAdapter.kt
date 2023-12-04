@@ -63,6 +63,9 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
 //                notifyDataSetChanged()
             }
         }
+        holder.itemView.setOnClickListener {
+            clickListener.onClick(position)
+        }
     }
 
     fun updateAdapter(communityList: List<Community>){

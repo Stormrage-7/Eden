@@ -17,6 +17,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.entities.Post
 import com.example.eden.databinding.ActivityNewPostBinding
+import com.example.eden.entities.relations.PostCommunityCrossRef
+import kotlin.properties.Delegates
 
 class NewPostActivity: AppCompatActivity()  {
     private lateinit var activityNewPostBinding: ActivityNewPostBinding
@@ -27,6 +29,7 @@ class NewPostActivity: AppCompatActivity()  {
     private var isImageAttached = false
     private var imageUri = ""
     private var imageUriList = listOf<String>()
+    private var communityId = -1
 
     private val PICK_IMAGE = 100
     private val PICK_COMMUNITY = 101
@@ -76,14 +79,25 @@ class NewPostActivity: AppCompatActivity()  {
         })
 
         activityNewPostBinding.nextButton.setOnClickListener {
-            val titleText = activityNewPostBinding.TitleEditTV.text.toString()
-            val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
+            if(communityId==-1){
+                Log.i("Inside Next Button!", "HELLO!")
+                Intent(this, SelectCommunityActivity::class.java).apply {
+                    startActivityForResult(this, PICK_COMMUNITY)
+                }
+            }
+            else{
+                Log.i("Inside Join Button!", "HELLO!")
+                val titleText = activityNewPostBinding.TitleEditTV.text.toString()
+                val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
 
 
-            viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = 1))
-            Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
-            finish()
+                val postId = viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId))
+                viewModel.insertPostCommunityCrossRef(PostCommunityCrossRef(postId, communityId))
+                Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+                finish()
+            }
         }
+
 
 //        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 //            if (result.resultCode == Activity.RESULT_OK) {
@@ -110,16 +124,20 @@ class NewPostActivity: AppCompatActivity()  {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE && data != null){
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE && data != null) {
             var lastUri = ""
-            val takeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            val takeFlags =
+                (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
             if (data?.clipData != null) {
                 var count = data.clipData?.itemCount
 
                 for (i in 0 until count!!) {
                     val current = data.clipData!!.getItemAt(i).uri.toString()
-                    application.contentResolver.takePersistableUriPermission(Uri.parse(current), takeFlags)
+                    application.contentResolver.takePersistableUriPermission(
+                        Uri.parse(current),
+                        takeFlags
+                    )
                     imageUri = "$imageUri+$current"
                     lastUri = current
                 }
@@ -128,7 +146,10 @@ class NewPostActivity: AppCompatActivity()  {
                 // if single image is selected
                 imageUri = data.data.toString()
                 lastUri = imageUri
-                application.contentResolver.takePersistableUriPermission(Uri.parse(imageUri), takeFlags)
+                application.contentResolver.takePersistableUriPermission(
+                    Uri.parse(imageUri),
+                    takeFlags
+                )
             }
 
             Log.i("IMAGE URI", lastUri)
@@ -137,6 +158,21 @@ class NewPostActivity: AppCompatActivity()  {
             activityNewPostBinding.imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
             isImageAttached = true
         }
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_COMMUNITY && data!=null){
+            activityNewPostBinding.apply {
+                communityBar.visibility = View.VISIBLE
+                communityId = data.getIntExtra("CommunityId", -1)
+                Log.d("NewPostActivity", communityId.toString())
+                val containsCustomImage = data.getBooleanExtra("CommunityContainsImage", false)
+                imageViewCommunity.setImageResource(data.getIntExtra("CommunityImageSrc", 0))
+//                if (containsCustomImage) imageViewCommunity.setImageResource(data.getIntExtra("CommunityImageSrc", 0))
+//                else imageViewCommunity.setImageResource(Integer.parseInt(data.getStringExtra("CommunityImageSrc")))
+                textViewCommunityName.text = data.getStringExtra("CommunityName")
+                nextButton.text = "Post"
+            }
+        }
+
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 

@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.entities.relations.PostCommunityCrossRef
+import kotlinx.coroutines.Dispatchers
 
 class AppRepository(private val databaseDao: EdenDao) {
 
@@ -11,10 +13,12 @@ class AppRepository(private val databaseDao: EdenDao) {
     var communityList: LiveData<List<Community>> = databaseDao.getAllCommunities()
 
     init {
-        Log.i("Repo Creation", "${postList.toString()}")
+        refreshPosts()
+        Log.i("Repo Creation", "${postList.value.toString()}")
+        Log.i("Repo Creation", "${communityList.value.toString()}")
     }
-    suspend fun upsertPost(post: Post){
-        databaseDao.upsertPost(post)
+    suspend fun upsertPost(post: Post): Long {
+        return databaseDao.upsertPost(post)
     }
 
     fun refreshPosts(){
@@ -26,6 +30,14 @@ class AppRepository(private val databaseDao: EdenDao) {
     }
     fun refreshCommunities() {
         communityList = databaseDao.getAllCommunities()
+    }
+
+    suspend fun insertPostCommunityCrossRef(postCommunityCrossRef: PostCommunityCrossRef) {
+        databaseDao.upsertPostCommunityCrossRef(postCommunityCrossRef)
+    }
+
+    suspend fun getCommunityIdFromPostId(postId: Int): Int {
+        return databaseDao.getCommunityIdFromPostId(postId)
     }
 
 }

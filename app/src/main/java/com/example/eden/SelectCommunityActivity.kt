@@ -1,6 +1,8 @@
 package com.example.eden
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,20 +16,36 @@ class SelectCommunityActivity: AppCompatActivity() {
     private lateinit var databaseDao: EdenDao
     private lateinit var repository: AppRepository
     private lateinit var viewModel: CommunitiesViewModel
-//    private lateinit var factory: SelectC
+    private lateinit var factory: CommunityViewModelFactory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activitySelectCommunityBinding = ActivitySelectCommunityBinding.inflate(layoutInflater)
         setContentView(activitySelectCommunityBinding.root)
 
-        val viewModelFactory = CommunityViewModelFactory(repository, application as Eden)
-        viewModel = ViewModelProvider(this, viewModelFactory)[CommunitiesViewModel::class.java]
+
+        repository = (application as Eden).repository
+        factory = CommunityViewModelFactory(repository, application as Eden)
+        viewModel = ViewModelProvider(this, factory)[CommunitiesViewModel::class.java]
+
         activitySelectCommunityBinding.communitiesViewModel = viewModel
         activitySelectCommunityBinding.lifecycleOwner = this
 
         val adapter = CommunityAdapter(context = this, object : CommunityAdapter.CommunityClickListener{
         override fun onClick(position: Int) {
+            Log.d("SelectCommunityActivity", position.toString())
+            val output = Intent().apply {
+                val community = viewModel.communityList.value!![position]
+                putExtra("CommunityId", community.communityId)
+                putExtra("CommunityName", community.communityName)
+                putExtra("CommunityContainsImage", community.containsImage)
+//                if(community.containsImage) putExtra("CommunityImageUri", community.imageUri)
+//                else putExtra("CommunityImageSrc", community.imageSrc.toString())
+                if(community.containsImage) putExtra("CommunityImageSrc", community.imageSrc)
+                else putExtra("CommunityImageSrc", R.drawable.icon_logo)
 
+            }
+            setResult(RESULT_OK, output)
+            finish()
         }
 
         override fun onJoinClick(position: Int) {

@@ -13,5 +13,5 @@ data class PostWithCommunities(
         entityColumn = "communityId",
         associateBy = Junction(PostCommunityCrossRef::class)
     )
-    val communities: List<Community>
+    val communities: Community
 )

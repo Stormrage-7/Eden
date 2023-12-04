@@ -34,6 +34,11 @@
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
+        <activity
+            android:name=".SelectCommunityActivity"
+            android:theme="@style/Theme.Eden.CreatePostScreen">
+        </activity>
+
     </application>
 
 </manifest>

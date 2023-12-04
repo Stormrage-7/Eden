@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.databinding.FragmentHomeBinding
+import com.example.eden.entities.Community
 
 class HomeFragment: Fragment(){
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
@@ -31,21 +32,24 @@ class HomeFragment: Fragment(){
         )
 
         val application = requireActivity().application as Eden
-        repository = AppRepository(AppDatabase.getDatabase(application.applicationContext).edenDao())
+        repository = application.repository
         factory = HomeViewModelFactory(repository, application)
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
 
         viewModel = ViewModelProvider(this.requireActivity(), factory).get(HomeViewModel::class.java)
-        Log.i("HomeFragment", viewModel.toString())
 
         fragmentHomeBinding.lifecycleOwner = this   // Important
         fragmentHomeBinding.homeViewModel = viewModel
 
 
         val adapter = context?.let {
-            PostAdapter(context = it, object : PostAdapter.PostClickListener{
+            PostAdapter(context = it, object : PostAdapter.PostListener{
                 // ANONYMOUS CLASS IMPLEMENTATION OF POSTCLICKLISTENER INTERFACE
+            override fun getCommunityIdFromPostId(position: Int): Int {
+                return 1
+            }
+
             override fun onPostClick(position: Int) {
                 TODO("Not yet implemented")
             }
@@ -83,11 +87,17 @@ class HomeFragment: Fragment(){
                     fragmentHomeBinding.rvPosts.visibility = View.VISIBLE
                     fragmentHomeBinding.tempImgView.visibility = View.GONE
                     fragmentHomeBinding.tempTextView.visibility = View.GONE
-                    adapter!!.update(it)
+                    adapter!!.updatePostList(it)
                     Log.i("Inside PostList Observer", it.toString())
                     Log.i("Inside PostList Observer", adapter.postList.toString())
                 }
             }
+        })
+
+        viewModel.communityList.observe(this.requireActivity(), Observer {
+            Log.i("HomeFragment", "${it.toString()}")
+            adapter!!.updateCommunityList(it)
+//            Log.i("HomeFragment", "${viewModel.localCommunityList}")
         })
 
 

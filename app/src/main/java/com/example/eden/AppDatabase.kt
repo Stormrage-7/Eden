@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
         Community::class,
         PostCommunityCrossRef::class
     ],
-    version = 7
+    version = 9
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -42,7 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         "app_database"
                     )
-//                        .fallbackToDestructiveMigration()
+                        .fallbackToDestructiveMigration()
                         .build()
 //                    INSTANCE = instance
                     GlobalScope.launch {

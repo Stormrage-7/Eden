@@ -7,6 +7,36 @@
     android:background="@color/white"
     android:padding="5sp">
 
+    <LinearLayout
+        android:id="@+id/community_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        android:paddingHorizontal="2sp"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageViewCommunity"
+            app:shapeAppearanceOverlay="@style/roundedProfileImageView"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            style="@style/roundedImageView"
+            android:src="@drawable/icon_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/textViewCommunityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="Community Name"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="match_parent"
@@ -16,10 +46,10 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginStart="6sp"
+        app:layout_constraintTop_toBottomOf="@id/community_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageViewPost"

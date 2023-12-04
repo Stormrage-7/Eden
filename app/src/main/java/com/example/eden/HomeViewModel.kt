@@ -3,18 +3,30 @@ package com.example.eden
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class HomeViewModel(private val repository: AppRepository,
                     application: Eden): AndroidViewModel(application) {
 
     val postList = repository.postList
+    val communityList = repository.communityList
+//    var localCommunityList = listOf<Community>()
+//    var communityId: Int = -1
 
     init {
         Log.i("Testing", "HomeViewModel Initialized - ${postList.toString()}")
+        refreshCommunityListFromRepository()
         refreshPostListFromRepository()
     }
 
@@ -52,4 +64,26 @@ class HomeViewModel(private val repository: AppRepository,
             Log.i("Refresh Method", "Refreshed!")
         }
     }
+
+    fun refreshCommunityListFromRepository(){
+        viewModelScope.launch {
+            repository.refreshCommunities()
+            Log.i("Refresh Method", "Communities Refreshed! ${communityList.value.toString()}")
+
+        }
+    }
+
+
+//    fun getCommunityIdFromPostId(position: Int) {
+//        val postId = postList.value!![position].postId
+//        val communityId = viewModelScope.async{
+//            repository.getCommunityIdFromPostId(postId)
+//        }
+//        communityId.invokeOnCompletion {
+//            if (it == null){
+//
+//            }
+//        }
+//    }
+
 }

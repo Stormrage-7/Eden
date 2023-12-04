@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
 import com.example.eden.databinding.ItemPostBinding
+import com.example.eden.entities.Community
 
 class PostAdapter(
     val context: Context,
-    private val clickListener: PostClickListener): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+    private val postListener: PostListener): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     var postList: List<Post> = listOf()
+    var communityList: List<Community> = listOf()
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -32,7 +34,15 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+
         holder.binding.apply {
+            //COMMUNITY DETAILS
+            val community = communityList.find { it.communityId == postList[position].communityId }!!
+            textViewCommunityName.text = community.communityName
+//            if(community.containsImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+//            else imageViewCommunity.setImageResource(community.imageSrc)
+            imageViewCommunity.setImageResource(community.imageSrc)
+
             //TITLE
             textViewTitle.text = postList[position].title
 
@@ -78,12 +88,12 @@ class PostAdapter(
                 // CHANGES TO THE VOTE
             likeBtn.setOnClickListener {
                 Log.i("Like", "Button pressed!")
-                clickListener.onUpvoteBtnClick(position)
+                postListener.onUpvoteBtnClick(position)
             }
 
             dislikeBtn.setOnClickListener {
                 Log.i("Dislike", "Button pressed! ${position}")
-                clickListener.onDownvoteBtnClick(position)
+                postListener.onDownvoteBtnClick(position)
             }
 
             shareBtn.setOnClickListener {
@@ -99,7 +109,7 @@ class PostAdapter(
         }
     }
 
-    fun update(postList: List<Post>) {
+    fun updatePostList(postList: List<Post>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
         this.postList = postList
@@ -107,7 +117,13 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
-    interface PostClickListener{
+    fun updateCommunityList(communityList: List<Community>){
+        this.communityList = communityList
+        notifyDataSetChanged()
+    }
+
+    interface PostListener{
+        fun getCommunityIdFromPostId(position: Int): Int
         fun onPostClick(position: Int)
         fun onUpvoteBtnClick(position: Int)
         fun onDownvoteBtnClick(position: Int)

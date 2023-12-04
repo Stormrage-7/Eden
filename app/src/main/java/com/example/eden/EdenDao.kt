@@ -20,7 +20,7 @@ interface EdenDao {
     fun getAllPosts(): LiveData<List<Post>>
 
     @Upsert
-    suspend fun upsertPost(post: Post)
+    suspend fun upsertPost(post: Post): Long
 
     @Delete
     suspend fun deletePost(post: Post)
@@ -30,6 +30,12 @@ interface EdenDao {
 
     @Query("SELECT * FROM Community_Table")
     fun getAllCommunities(): LiveData<List<Community>>
+
+    @Query("SELECT * FROM Community_Table WHERE communityId = :communityId")
+    suspend fun getCommunityById(communityId: Int): Community
+
+    @Query("SELECT communityId FROM PostCommunityCrossRef WHERE postId = :postId")
+    suspend fun getCommunityIdFromPostId(postId: Int): Int
 
     @Query("SELECT COUNT(communityId) FROM community_table")
     fun getCommunityCount(): Int

@@ -2,6 +2,7 @@ package com.example.eden
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,7 @@ class CommunitiesFragment: Fragment() {
 
         viewModel.communityList.observe(this.requireActivity(), Observer{
             it.let {
+                Log.i("CommunitiesFragment", "${it.toString()}")
                 adapter!!.updateAdapter(it)
             }
             if(fragmentCommunitiesBinding.rvCommunities.adapter!=adapter){
