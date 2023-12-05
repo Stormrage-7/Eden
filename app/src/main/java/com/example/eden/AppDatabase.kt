@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
         PostCommunityCrossRef::class,
         JoinedCommunities :: class
     ],
-    version = 14
+    version = 15
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -53,9 +53,9 @@ abstract class AppDatabase : RoomDatabase() {
                             if(it.edenDao().getCommunityCount()==0){
                             it.edenDao().upsertCommunity(Community(0, "PS5", "Description 1", 10, true, imageSrc = R.drawable.playstation_logo))
                             it.edenDao().upsertCommunity(Community(0, "Xbox", "Description 2", 25, true, imageSrc = R.drawable.xbox_logo))
-                            it.edenDao().upsertCommunity(Community(0, "Android", "Description 3", 100, false))
-                            it.edenDao().upsertCommunity(Community(0, "IOS", "Description 4", 500, false))
-                            it.edenDao().upsertCommunity(Community(0, "PCMasterRace", "Description 5", 3, false))
+                            it.edenDao().upsertCommunity(Community(0, "Android", "Description 3", 100, true, imageSrc = R.drawable.android_logo))
+                            it.edenDao().upsertCommunity(Community(0, "IOS", "Description 4", 500, true, imageSrc = R.drawable.icon_logo))
+                            it.edenDao().upsertCommunity(Community(0, "PCMasterRace", "Description 5", 3, true, imageSrc = R.drawable.icon_logo))
                             }
 //                            it.edenDao().upsertCommunity(Community(0, "Science", "Description 6", 90, false))
 //                            it.edenDao().upsertCommunity(Community(0, "Test 7", "Description 7", 780, false))

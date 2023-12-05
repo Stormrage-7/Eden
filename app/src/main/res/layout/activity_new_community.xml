@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingVertical="10sp"
+    android:theme="@style/Theme.Eden.CreatePostScreen">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/TopBarConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingEnd="12sp">
+
+        <ImageButton
+            android:id="@+id/close_btn"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:src="@drawable/ic_close_24"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:text="Next"
+            android:backgroundTint="@color/grey"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <EditText
+        android:id="@+id/communityNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="Community Name"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:paddingVertical="6sp"
+        android:paddingHorizontal="12sp"
+        app:layout_constraintTop_toBottomOf="@id/TopBarConstraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageViewPost"
+        android:layout_width="240sp"
+        android:layout_height="240sp"
+        android:src="@drawable/icon_logo"
+        android:visibility="visible"
+        android:layout_marginTop="60sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/communityNameEditText"
+        app:shapeAppearanceOverlay="@style/roundedProfileImageView" />
+
+    <ImageButton
+        android:id="@+id/insert_image_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_close_48"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/communityNameEditText" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

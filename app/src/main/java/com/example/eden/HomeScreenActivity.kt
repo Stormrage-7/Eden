@@ -27,9 +27,9 @@ class HomeScreenActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         databaseDao = (application as Eden).edenDao
-        lifecycleScope.launch {
-            clearDB()
-        }
+//        lifecycleScope.launch {
+//            clearDB()
+//        }
 
         activityHomeScreenBinding = ActivityHomeScreenBinding.inflate(layoutInflater)
         setContentView(activityHomeScreenBinding.root)
@@ -38,6 +38,7 @@ class HomeScreenActivity: AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
+        setSupportActionBar(findViewById(R.id.CustomToolBar))
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
 
