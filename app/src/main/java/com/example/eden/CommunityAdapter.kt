@@ -2,6 +2,7 @@ package com.example.eden
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,11 +29,11 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
         holder.binding.apply {
             val currentItem = communityList[position]
 
-            if (currentItem.containsImage) {
-                imageViewCommunity.setImageResource(currentItem.imageSrc)
+            if (currentItem.isCustomImage) {
+                imageViewCommunity.setImageURI(Uri.parse(currentItem.imageUri))
             }
             else{
-                imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                imageViewCommunity.setImageResource(currentItem.imageUri.toInt())
             }
 
             //For Select Community Activity

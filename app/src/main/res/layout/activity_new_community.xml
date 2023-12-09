@@ -70,7 +70,7 @@
         app:shapeAppearanceOverlay="@style/roundedProfileImageView" />
 
     <ImageButton
-        android:id="@+id/insert_image_btn"
+        android:id="@+id/delete_image_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"

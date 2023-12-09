@@ -16,11 +16,11 @@ data class Community(
     @ColumnInfo
     val noOfMembers: Int,
     @ColumnInfo(name = "contains_image")
-    val containsImage: Boolean = false,
+    val isCustomImage: Boolean = false,
     @ColumnInfo(name = "image_uri")
     var imageUri: String = "",
-    @ColumnInfo(name = "image_src")
-    var imageSrc: Int = 0,
+//    @ColumnInfo(name = "image_src")
+//    var imageSrc: Int = 0,
     var isJoined: Boolean = false
 //    val membersList: MutableList<Int>, // Should go in helper class which will act as crossreference between two classes (Post and Subreddit)
 //    val subredditType: SubredditType,

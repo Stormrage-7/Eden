@@ -37,11 +37,10 @@ class SelectCommunityActivity: AppCompatActivity() {
                 val community = viewModel.communityList.value!![position]
                 putExtra("CommunityId", community.communityId)
                 putExtra("CommunityName", community.communityName)
-                putExtra("CommunityContainsImage", community.containsImage)
-//                if(community.containsImage) putExtra("CommunityImageUri", community.imageUri)
-//                else putExtra("CommunityImageSrc", community.imageSrc.toString())
-                if(community.containsImage) putExtra("CommunityImageSrc", community.imageSrc)
-                else putExtra("CommunityImageSrc", R.drawable.icon_logo)
+                putExtra("CommunityIsCustomImage", community.isCustomImage)
+                putExtra("CommunityImageUri", community.imageUri)
+//                if(community.containsImage) putExtra("CommunityImageSrc", community.imageSrc)
+//                else putExtra("CommunityImageSrc", R.drawable.icon_logo)
 
             }
             setResult(RESULT_OK, output)
