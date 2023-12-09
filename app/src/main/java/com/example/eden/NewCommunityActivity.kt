@@ -98,6 +98,7 @@ class NewCommunityActivity: AppCompatActivity()  {
 //            }
 //        }
 
+
         activityNewCommunityBinding.imageViewPost.setOnClickListener {
             val pickImage = Intent().apply {
                 type = "image/*"
@@ -105,7 +106,7 @@ class NewCommunityActivity: AppCompatActivity()  {
                     action = Intent.ACTION_GET_CONTENT
                 } else {
                     action = Intent.ACTION_OPEN_DOCUMENT
-                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                     addCategory(Intent.CATEGORY_OPENABLE)
 
                 }
@@ -121,20 +122,7 @@ class NewCommunityActivity: AppCompatActivity()  {
             val takeFlags =
                 (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
-            if (data?.clipData != null) {
-                var count = data.clipData?.itemCount
-
-                for (i in 0 until count!!) {
-                    val current = data.clipData!!.getItemAt(i).uri.toString()
-                    application.contentResolver.takePersistableUriPermission(
-                        Uri.parse(current),
-                        takeFlags
-                    )
-                    imageUri = "$imageUri+$current"
-                    lastUri = current
-                }
-
-            } else if (data?.data != null) {
+            if (data?.data != null) {
                 // if single image is selected
                 imageUri = data.data.toString()
                 lastUri = imageUri
