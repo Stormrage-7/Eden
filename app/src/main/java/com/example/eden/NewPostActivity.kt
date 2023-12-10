@@ -165,9 +165,8 @@ class NewPostActivity: AppCompatActivity()  {
                 communityId = data.getIntExtra("CommunityId", -1)
                 Log.d("NewPostActivity", communityId.toString())
                 val containsCustomImage = data.getBooleanExtra("CommunityContainsImage", false)
-                imageViewCommunity.setImageResource(data.getIntExtra("CommunityImageSrc", 0))
-//                if (containsCustomImage) imageViewCommunity.setImageResource(data.getIntExtra("CommunityImageSrc", 0))
-//                else imageViewCommunity.setImageResource(Integer.parseInt(data.getStringExtra("CommunityImageSrc")))
+                if (containsCustomImage) imageViewCommunity.setImageURI(Uri.parse(data.getStringExtra("CommunityImageUri")))
+                else imageViewCommunity.setImageResource(Integer.parseInt(data.getStringExtra("CommunityImageUri")))
                 textViewCommunityName.text = data.getStringExtra("CommunityName")
                 nextButton.text = "Post"
             }

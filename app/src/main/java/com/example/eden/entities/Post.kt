@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.util.foreignKeyCheck
 import com.example.eden.enums.VoteStatus
+import java.io.Serializable
 
 @Entity(tableName = "Post_Table")
 data class Post (
@@ -20,7 +21,7 @@ data class Post (
     var voteStatus: VoteStatus = VoteStatus.NONE,
     val isPinned: Boolean = false,
     val communityId: Int
-    )
+    ) : Serializable
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),
 //    val commentSectionType: CommentSectionType = CommentSectionType.OPEN,

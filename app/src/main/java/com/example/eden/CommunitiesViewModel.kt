@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eden.entities.Community
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CommunitiesViewModel(private val repository: AppRepository,
@@ -15,6 +16,7 @@ class CommunitiesViewModel(private val repository: AppRepository,
 
 
     val communityList = repository.communityList
+    var communityNameList = mutableListOf<String>()
 
     init {
         Log.i("Community List", "${communityList.value.toString()}")
@@ -50,12 +52,23 @@ class CommunitiesViewModel(private val repository: AppRepository,
         viewModelScope.launch{
             repository.upsertCommunity(temp)
         }
+    }
 
+    fun upsertCommunity(community: Community) {
+        viewModelScope.launch {
+            repository.upsertCommunity(community)
+        }
     }
 
     private fun refreshCommunityListFromRepository(){
-        viewModelScope.launch {
-            repository.refreshCommunities()
-        }
+        Log.i("Inside Refresh Community", "Community viewmodel")
+        repository.refreshCommunities()
     }
+
+    fun updateCommunityNameList(communityList: List<Community>){
+        communityNameList = mutableListOf()
+        communityList.forEach { community -> communityNameList.add(community.communityName) }
+        Log.i("NEW COMMUNITY in function", communityNameList.toString())
+    }
+
 }

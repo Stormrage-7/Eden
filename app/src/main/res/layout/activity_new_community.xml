@@ -31,7 +31,7 @@
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="40sp"
-            android:text="Next"
+            android:text="Create"
             android:backgroundTint="@color/grey"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -54,6 +54,20 @@
         android:paddingVertical="6sp"
         android:paddingHorizontal="12sp"
         app:layout_constraintTop_toBottomOf="@id/TopBarConstraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/communityDescriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="Description (Optional)"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:paddingVertical="6sp"
+        android:paddingHorizontal="12sp"
+        app:layout_constraintTop_toBottomOf="@id/communityNameEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

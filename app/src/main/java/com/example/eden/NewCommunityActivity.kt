@@ -14,11 +14,15 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.databinding.ActivityNewCommunityBinding
-import com.example.eden.databinding.ActivitySelectCommunityBinding
-import com.example.eden.entities.Post
-import com.example.eden.entities.relations.PostCommunityCrossRef
+import com.example.eden.entities.Community
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 
 class NewCommunityActivity: AppCompatActivity()  {
     private lateinit var activityNewCommunityBinding: ActivityNewCommunityBinding
@@ -27,7 +31,8 @@ class NewCommunityActivity: AppCompatActivity()  {
     private lateinit var repository: AppRepository
     private lateinit var factory: CommunityViewModelFactory
     private var isImageAttached = false
-    private var imageUri = ""
+    private var imageUri = R.drawable.icon_logo.toString()
+    private var communityNameList = mutableListOf<String>()
 
     private val PICK_IMAGE = 100
 
@@ -41,23 +46,46 @@ class NewCommunityActivity: AppCompatActivity()  {
         factory = CommunityViewModelFactory(repository, application as Eden)
         viewModel = ViewModelProvider(this, factory)[CommunitiesViewModel::class.java]
 
+        viewModel.communityList.observe(this, Observer {
+            viewModel.updateCommunityNameList(it)
+        })
+
+        Log.i("NEW COMMUNITY out function", viewModel.communityNameList.toString())
 
 
+        //CLOSE BUTTON
+        activityNewCommunityBinding.closeBtn.setOnClickListener {
+            finish()
+        }
 
+        activityNewCommunityBinding.nextButton.apply {
+            isEnabled = false
+        }
+
+        //REMOVE IMAGE BUTTON
+        activityNewCommunityBinding.deleteImageBtn.visibility = View.GONE
+        activityNewCommunityBinding.deleteImageBtn.setOnClickListener {
+            isImageAttached = false
+            imageUri = R.drawable.icon_logo.toString()
+            activityNewCommunityBinding.imageViewPost.setImageResource(imageUri.toInt())
+            activityNewCommunityBinding.deleteImageBtn.visibility = View.GONE
+        }
+
+        //COMMUNITY NAME EDIT-TEXT
         activityNewCommunityBinding.communityNameEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 //                TODO("Not yet implemented")
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (p0?.isNotEmpty() == true) {
-                    activityNewPostBinding.nextButton.isEnabled = true
-                    activityNewPostBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
+                if (p0?.trim()?.isNotEmpty() == true) {
+                    activityNewCommunityBinding.nextButton.isEnabled = true
+                    activityNewCommunityBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
                         ResourcesCompat.getColor(resources, R.color.azure, null)
                     )
                 } else {
-                    activityNewPostBinding.nextButton.isEnabled = false
-                    activityNewPostBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
+                    activityNewCommunityBinding.nextButton.isEnabled = false
+                    activityNewCommunityBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
                         ResourcesCompat.getColor(getResources(), R.color.grey, null)
                     )
                 }
@@ -69,34 +97,23 @@ class NewCommunityActivity: AppCompatActivity()  {
 
         })
 
+        //COMMUNITY CREATE BUTTON
         activityNewCommunityBinding.nextButton.setOnClickListener {
-            if(communityId==-1){
-                Log.i("Inside Next Button!", "HELLO!")
-                Intent(this, SelectCommunityActivity::class.java).apply {
-                    startActivityForResult(this, PICK_COMMUNITY)
-                }
+            val communityName = activityNewCommunityBinding.communityNameEditText.text.toString()
+            if(viewModel.communityNameList.contains(communityName)){
+                Toast.makeText(this, "Community already exists! Please try again...", Toast.LENGTH_LONG).show()
             }
             else{
-                Log.i("Inside Join Button!", "HELLO!")
-                val titleText = activityNewPostBinding.TitleEditTV.text.toString()
-                val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
+                Log.i("Inside Create Button!", "HELLO!")
+                val community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
+//                if (isImageAttached) community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
+//                else community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
 
-
-                viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId))
-                (application as Eden).postId+=1
-                viewModel.insertPostCommunityCrossRef(PostCommunityCrossRef((application as Eden).postId, communityId))
+                viewModel.upsertCommunity(community)
                 Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                 finish()
             }
         }
-
-
-//        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//            if (result.resultCode == Activity.RESULT_OK) {
-//                // There are no request codes
-//                val data: Intent? = result.data
-//            }
-//        }
 
 
         activityNewCommunityBinding.imageViewPost.setOnClickListener {
@@ -114,45 +131,29 @@ class NewCommunityActivity: AppCompatActivity()  {
 //            resultLauncher.launch(pickImage)
             startActivityForResult(pickImage, PICK_IMAGE)
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE && data != null) {
-            var lastUri = ""
             val takeFlags =
                 (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
             if (data?.data != null) {
                 // if single image is selected
                 imageUri = data.data.toString()
-                lastUri = imageUri
+//                lastUri = imageUri
                 application.contentResolver.takePersistableUriPermission(
                     Uri.parse(imageUri),
                     takeFlags
                 )
-            }
-
-            Log.i("IMAGE URI", lastUri)
-            activityNewPostBinding.imageViewPost.setImageURI(Uri.parse(lastUri))
-            activityNewPostBinding.imageViewPost.visibility = View.VISIBLE
-            activityNewPostBinding.imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
-            isImageAttached = true
-        }
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_COMMUNITY && data!=null){
-            activityNewPostBinding.apply {
-                communityBar.visibility = View.VISIBLE
-                communityId = data.getIntExtra("CommunityId", -1)
-                Log.d("NewPostActivity", communityId.toString())
-                val containsCustomImage = data.getBooleanExtra("CommunityContainsImage", false)
-                imageViewCommunity.setImageResource(data.getIntExtra("CommunityImageSrc", 0))
-//                if (containsCustomImage) imageViewCommunity.setImageResource(data.getIntExtra("CommunityImageSrc", 0))
-//                else imageViewCommunity.setImageResource(Integer.parseInt(data.getStringExtra("CommunityImageSrc")))
-                textViewCommunityName.text = data.getStringExtra("CommunityName")
-                nextButton.text = "Post"
+                Log.i("IMAGE URI before setting", imageUri)
+                activityNewCommunityBinding.imageViewPost.setImageURI(Uri.parse(imageUri))
+                activityNewCommunityBinding.imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
+                activityNewCommunityBinding.deleteImageBtn.visibility = View.VISIBLE
+                isImageAttached = true
             }
         }
-
-
         super.onActivityResult(requestCode, resultCode, data)
     }
 

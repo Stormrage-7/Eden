@@ -48,8 +48,8 @@ class PostAdapter(
             textViewCommunityName.text = community.communityName
 //            if(community.containsImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
 //            else imageViewCommunity.setImageResource(community.imageSrc)
-            if (community.containsImage) imageViewCommunity.setImageResource(community.imageSrc)
-            else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+            if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+            else imageViewCommunity.setImageResource(community.imageUri.toInt())
 
             //TITLE
             textViewTitle.text = postList[position].title
@@ -117,7 +117,7 @@ class PostAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            postListener.onPostClick(post)
+            postListener.onPostClick(post, community)
         }
     }
 
@@ -152,7 +152,7 @@ class PostAdapter(
 
     interface PostListener{
         fun getCommunityIdFromPostId(position: Int): Int
-        fun onPostClick(post: Post)
+        fun onPostClick(post: Post, community: Community)
         fun onUpvoteBtnClick(post: Post)
         fun onDownvoteBtnClick(post: Post)
         fun onPostLongClick(position: Int)

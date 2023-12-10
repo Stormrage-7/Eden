@@ -1,5 +1,6 @@
 package com.example.eden
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,10 +36,9 @@ class HomeFragment: Fragment(){
         val application = requireActivity().application as Eden
         repository = application.repository
         factory = HomeViewModelFactory(repository, application)
-        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+//        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
-
-        viewModel = ViewModelProvider(this.requireActivity(), factory).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this.requireActivity(), factory)[HomeViewModel::class.java]
 
         fragmentHomeBinding.lifecycleOwner = this   // Important
         fragmentHomeBinding.homeViewModel = viewModel
@@ -51,8 +51,13 @@ class HomeFragment: Fragment(){
                 return 1
             }
 
-            override fun onPostClick(post: Post) {
-                TODO("Not yet implemented")
+            override fun onPostClick(post: Post, community: Community) {
+//                Toast.makeText(requireActivity(), "${post.toString()}", Toast.LENGTH_SHORT).show()
+                Intent(requireActivity(), PostDetailedActivity::class.java).apply {
+                    putExtra("PostObject", post)
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
+                }
             }
 
             override fun onUpvoteBtnClick(post: Post) {

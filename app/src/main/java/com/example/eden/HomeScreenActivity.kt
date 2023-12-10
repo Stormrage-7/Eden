@@ -40,6 +40,12 @@ class HomeScreenActivity: AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.CustomToolBar))
 
+        activityHomeScreenBinding.topAppBar.addCommunityBtn.setOnClickListener {
+            Intent(this, NewCommunityActivity::class.java).apply {
+                startActivity(this)
+            }
+        }
+
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
 
             when(it.itemId){

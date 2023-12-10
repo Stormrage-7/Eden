@@ -4,21 +4,22 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.eden.R
+import java.io.Serializable
 
 @Entity(tableName = "Community_Table")
 data class Community(
     @PrimaryKey(autoGenerate = true)
-    val communityId: Int = 0,
+    val communityId: Int,
     @ColumnInfo
     val communityName: String,
     @ColumnInfo
     val description: String,
     @ColumnInfo
-    val noOfMembers: Int,
+    val noOfMembers: Int = 0,
     @ColumnInfo(name = "contains_image")
-    val isCustomImage: Boolean = false,
+    val isCustomImage: Boolean,
     @ColumnInfo(name = "image_uri")
-    var imageUri: String = "",
+    var imageUri: String,
 //    @ColumnInfo(name = "image_src")
 //    var imageSrc: Int = 0,
     var isJoined: Boolean = false
@@ -28,5 +29,5 @@ data class Community(
 //    val moderators: MutableList<Int>,  //User IDs
 //    val rules: HashMap<Int, String>,
 //    val avatar: Serializable
-) {
+): Serializable {
 }
