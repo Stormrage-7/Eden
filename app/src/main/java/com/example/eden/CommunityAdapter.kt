@@ -65,7 +65,7 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
             }
         }
         holder.itemView.setOnClickListener {
-            clickListener.onClick(position)
+            clickListener.onClick(communityList[position])
         }
     }
 
@@ -75,7 +75,7 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
     }
 
     interface CommunityClickListener{
-        fun onClick(position: Int)
+        fun onClick(community: Community)
         fun onJoinClick(position: Int)
     }
 }

@@ -24,6 +24,7 @@ class PostAdapter(
     var postList: List<Post> = listOf()
     var communityList: List<Community> = listOf()
     var postCommunityCrossRefList: List<PostCommunityCrossRef> = listOf()
+    lateinit var currentCommunity: Community
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -39,12 +40,15 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = postList[position]
         val communityId = post.communityId
-        val community = communityList.find { it.communityId == communityId }!!
+        val community: Community
+
+        if (context is HomeScreenActivity) community = communityList.find { it.communityId == communityId }!!
+        else community = currentCommunity
+
 //        if (!joinedCommunitiesList.contains(post.communityId)) return
 
         holder.binding.apply {
             //COMMUNITY DETAILS
-
             textViewCommunityName.text = community.communityName
 //            if(community.containsImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
 //            else imageViewCommunity.setImageResource(community.imageSrc)
@@ -121,11 +125,12 @@ class PostAdapter(
         }
     }
 
-    fun updatePostList(postList: List<Post>) {
+    fun updatePostList(postList: List<Post>, context: String) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
         Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
-        this.postList = postList.filter { post -> joinedCommunitiesList.contains(post.communityId) }
+        if (context == "CustomFeed") this.postList = postList.filter { post -> joinedCommunitiesList.contains(post.communityId) }
+        else this.postList = postList
         Log.i("In Update Method", "Local List: ${this.postList}")
         notifyDataSetChanged()
     }
@@ -157,13 +162,5 @@ class PostAdapter(
         fun onDownvoteBtnClick(post: Post)
         fun onPostLongClick(position: Int)
     }
-
-    private fun getCommunityIdFromPostId(postId: Int): Int{
-        Log.i("PostAdapter", "$postId")
-        Log.i("PostAdapter", "${postCommunityCrossRefList.toString()}")
-        return postCommunityCrossRefList.find { it.postId == postId }!!.communityId
-    }
-
-
 
 }

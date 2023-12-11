@@ -6,10 +6,10 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.example.eden.ui.ChatFragment"
-        android:label="ChatFragment"
-        tools:layout="@layout/fragment_chat" />
+        android:id="@+id/customFeedFragment"
+        android:name="com.example.eden.ui.CustomFeedFragment"
+        android:label="CustomFeedFragment"
+        tools:layout="@layout/fragment_custom_feed" />
 
     <fragment
         android:id="@+id/inboxFragment"

@@ -1,6 +1,7 @@
 package com.example.eden
 
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.databinding.FragmentCommunitiesBinding
+import com.example.eden.entities.Community
 
 class CommunitiesFragment: Fragment() {
     private lateinit var fragmentCommunitiesBinding: FragmentCommunitiesBinding
@@ -36,12 +38,13 @@ class CommunitiesFragment: Fragment() {
         fragmentCommunitiesBinding.communitiesViewModel = viewModel
         fragmentCommunitiesBinding.lifecycleOwner = this.requireActivity() //Very Important line of code that allowed LiveData to update the layout
 
-//        viewModel.setCommunityList(communityList)
-
         val adapter = context?.let {
             CommunityAdapter(context = it, object : CommunityAdapter.CommunityClickListener{
-                override fun onClick(position: Int) {
-                    //TODO
+                override fun onClick(community: Community) {
+                    Intent(requireActivity(), CommunityDetailedActivity:: class.java).apply {
+                        putExtra("CommunityObject", community)
+                        startActivity(this)
+                    }
                 }
 
                 override fun onJoinClick(position: Int) {

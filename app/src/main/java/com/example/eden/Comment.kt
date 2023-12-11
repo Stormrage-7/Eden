@@ -1,17 +1,14 @@
 package com.example.eden
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
 
-class Comment (
+@Entity(tableName = "Comments_Table")
+data class Comment (
+    @PrimaryKey(autoGenerate = true)
     val commentId: Int,
-    val commentPosterId: Int,
     val text: String,
-    val replyComments: MutableList<Comment>,
-    val url: String,
-    val ImageOrGif: Serializable,
-    val getReplyNotification: Boolean,
-    val isCollapsed: Boolean,
-    val isPinned: Boolean,
-    val awardList: MutableList<Award>
+    val postId: Int
 ){
 }

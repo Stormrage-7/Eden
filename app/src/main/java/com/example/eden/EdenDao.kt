@@ -69,11 +69,19 @@ interface EdenDao {
     @Query("SELECT * FROM PostCommunityCrossRef")
     fun getAllPostCommunityCrossRef(): LiveData<List<PostCommunityCrossRef>>
 
-    @Transaction
-    @Query("SELECT * FROM community_table WHERE communityId = :communityId")
-    suspend fun getPostsOfCommunity(communityId: Int): List<CommunityWithPosts>
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId")
+    fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>>
 
     @Transaction
     @Query("SELECT * FROM post_table WHERE postId = :postId")
     suspend fun getCommunitiesOfPost(postId: Int): List<PostWithCommunities>
+
+    @Query("SELECT * FROM post_table WHERE postId = :postId")
+    fun getPostWithId(postId: Int): LiveData<Post>
+
+    @Query("SELECT * FROM comments_table WHERE postId = :postId")
+    fun getCommentListForPost(postId: Int): LiveData<List<Comment>>
+
+    @Upsert
+    suspend fun upsertComment(comment: Comment)
 }

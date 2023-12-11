@@ -23,6 +23,7 @@ class HomeViewModel(private val repository: AppRepository,
     val communityList = repository.communityList
     val postCommunityCrossRefList = repository.postCommunityCrossRefList
     val joinedCommunitiesList = repository.joinedCommunitiesList
+    lateinit var detailedPost: LiveData<Post>
 //    var localCommunityList = listOf<Community>()
 //    var communityId: Int = -1
 
@@ -89,18 +90,5 @@ class HomeViewModel(private val repository: AppRepository,
             repository.refreshJoinedCommunities()
         }
     }
-
-
-//    fun getCommunityIdFromPostId(position: Int) {
-//        val postId = postList.value!![position].postId
-//        val communityId = viewModelScope.async{
-//            repository.getCommunityIdFromPostId(postId)
-//        }
-//        communityId.invokeOnCompletion {
-//            if (it == null){
-//
-//            }
-//        }
-//    }
 
 }

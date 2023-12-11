@@ -39,7 +39,7 @@ class NewCommunityActivity: AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityNewCommunityBinding = ActivityNewCommunityBinding.inflate(layoutInflater)
-        setContentView(activityNewCommunityBinding.root)
+
 
         database = AppDatabase.getDatabase(application as Eden)
         repository = AppRepository(database.edenDao())
@@ -48,6 +48,7 @@ class NewCommunityActivity: AppCompatActivity()  {
 
         viewModel.communityList.observe(this, Observer {
             viewModel.updateCommunityNameList(it)
+            setContentView(activityNewCommunityBinding.root)
         })
 
         Log.i("NEW COMMUNITY out function", viewModel.communityNameList.toString())
@@ -110,7 +111,7 @@ class NewCommunityActivity: AppCompatActivity()  {
 //                else community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
 
                 viewModel.upsertCommunity(community)
-                Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Community has been created!", Toast.LENGTH_LONG).show()
                 finish()
             }
         }

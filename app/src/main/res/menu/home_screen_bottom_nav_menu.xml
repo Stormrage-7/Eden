@@ -15,16 +15,17 @@
         />
 
     <item
+        android:id="@+id/miCustomFeed"
+        android:title="Your Feed"
+        android:icon="@drawable/ic_custom_feed_24"
+        />
+
+    <item
         android:id="@+id/miCommunities"
         android:title="Communities"
         android:icon="@drawable/ic_discover_24"
         />
 
-<!--    <item-->
-<!--        android:id="@+id/miChat"-->
-<!--        android:title="Chat"-->
-<!--        android:icon="@drawable/ic_chat_24"-->
-<!--        />-->
 
 <!--    <item-->
 <!--        android:id="@+id/miInbox"-->

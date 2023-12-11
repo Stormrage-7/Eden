@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.databinding.ActivityNewPostBinding
 import com.example.eden.databinding.ActivitySelectCommunityBinding
+import com.example.eden.entities.Community
 
 class SelectCommunityActivity: AppCompatActivity() {
     private lateinit var activitySelectCommunityBinding: ActivitySelectCommunityBinding
@@ -31,10 +32,8 @@ class SelectCommunityActivity: AppCompatActivity() {
         activitySelectCommunityBinding.lifecycleOwner = this
 
         val adapter = CommunityAdapter(context = this, object : CommunityAdapter.CommunityClickListener{
-        override fun onClick(position: Int) {
-            Log.d("SelectCommunityActivity", position.toString())
+        override fun onClick(community: Community) {
             val output = Intent().apply {
-                val community = viewModel.communityList.value!![position]
                 putExtra("CommunityId", community.communityId)
                 putExtra("CommunityName", community.communityName)
                 putExtra("CommunityIsCustomImage", community.isCustomImage)

@@ -14,6 +14,9 @@ class AppRepository(private val databaseDao: EdenDao) {
     var postCommunityCrossRefList: LiveData<List<PostCommunityCrossRef>> = databaseDao.getAllPostCommunityCrossRef()
     var communityList: LiveData<List<Community>> = databaseDao.getAllCommunities()
     var joinedCommunitiesList: LiveData<List<Int>> = databaseDao.getAllJoinedCommunities()
+    fun getCommentListForPost(postId: Int): LiveData<List<Comment>> = databaseDao.getCommentListForPost(postId)
+    fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>> = databaseDao.getPostsOfCommunity(communityId)
+
 
     init {
         refreshPosts()
@@ -64,5 +67,14 @@ class AppRepository(private val databaseDao: EdenDao) {
     suspend fun deleteFromJoinedCommunities(communityId: Int) {
         databaseDao.deleteJoinedCommunity(communityId)
     }
+
+    fun getPostWithId(postId: Int): LiveData<Post> {
+        return databaseDao.getPostWithId(postId)
+    }
+
+    suspend fun upsertComment(comment: Comment) {
+        databaseDao.upsertComment(comment)
+    }
+
 
 }

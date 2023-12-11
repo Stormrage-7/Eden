@@ -19,8 +19,6 @@ import timber.log.Timber
 class HomeScreenActivity: AppCompatActivity() {
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var navController : NavController
-
-    private lateinit var database: AppDatabase
     private lateinit var databaseDao: EdenDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,12 +69,12 @@ class HomeScreenActivity: AppCompatActivity() {
                     }
                     false
                 }
-//                R.id.miChat -> {
-//                    if( isValidDestination(R.id.chatFragment) and !navController.popBackStack(R.id.chatFragment, false)) {
-//                        navController.navigate(R.id.chatFragment)
-//                    }
-//                    true
-//                }
+                R.id.miCustomFeed -> {
+                    if( isValidDestination(R.id.customFeedFragment) and !navController.popBackStack(R.id.customFeedFragment, false)) {
+                        navController.navigate(R.id.customFeedFragment)
+                    }
+                    true
+                }
 //                R.id.miInbox -> {
 //                    if( isValidDestination(R.id.inboxFragment ) and !navController.popBackStack(R.id.inboxFragment, false)) {
 //                        navController.navigate(R.id.inboxFragment)
@@ -104,7 +102,7 @@ class HomeScreenActivity: AppCompatActivity() {
         activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id){
             R.id.homeFragment -> R.id.miHome
             R.id.communitiesFragment -> R.id.miCommunities
-//            R.id.chatFragment -> R.id.miChat
+            R.id.customFeedFragment -> R.id.miCustomFeed
 //            R.id.inboxFragment -> R.id.miInbox
             else -> {0}
         }

@@ -17,9 +17,10 @@ import kotlinx.coroutines.launch
         Post :: class,
         Community::class,
         PostCommunityCrossRef::class,
-        JoinedCommunities :: class
+        JoinedCommunities :: class,
+        Comment :: class
     ],
-    version = 16
+    version = 18
 )
 abstract class AppDatabase : RoomDatabase() {
 

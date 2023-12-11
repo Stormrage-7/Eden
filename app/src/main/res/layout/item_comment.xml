@@ -1,31 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5sp">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageViewProfile"
-        app:shapeAppearanceOverlay="@style/roundedProfileImageView"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        style="@style/roundedImageView"
-        android:src="@drawable/icon_logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/textViewUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        app:layout_constraintLeft_toRightOf="@id/imageViewProfile"
-        />
-
-    <TextView
-        android:id="@+id/textViewComment"
+    <LinearLayout
+        android:id="@+id/user_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        android:paddingHorizontal="2sp"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageViewUser"
+            app:shapeAppearanceOverlay="@style/roundedProfileImageView"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            style="@style/roundedImageView"
+            android:src="@drawable/icon_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/textViewUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="User Name"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/commentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="comment"
+        app:layout_constraintTop_toBottomOf="@id/user_bar"
+        android:textSize="16sp"
+        android:paddingHorizontal="3sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
