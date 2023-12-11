@@ -8,6 +8,7 @@ import java.io.Serializable
 data class Comment (
     @PrimaryKey(autoGenerate = true)
     val commentId: Int,
+    val posterName: String = "Sharan",
     val text: String,
     val postId: Int
 ){

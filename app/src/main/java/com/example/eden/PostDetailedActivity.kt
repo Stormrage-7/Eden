@@ -106,7 +106,7 @@ class PostDetailedActivity: AppCompatActivity(){
 
             postCommentButton.setOnClickListener {
                 val commentText = commentEditText.text.toString()
-                viewModel.addComment(Comment(0, commentText, viewModel.post.postId))
+                viewModel.addComment(Comment(0, text = commentText, postId = viewModel.post.postId))
                 commentEditText.text.clear()
             }
         }

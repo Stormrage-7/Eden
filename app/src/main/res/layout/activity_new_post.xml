@@ -79,6 +79,8 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:hint="Title"
+        android:inputType="text"
+        android:scrollHorizontally="true"
         android:textSize="30sp"
         android:textStyle="bold"
         android:paddingVertical="6sp"

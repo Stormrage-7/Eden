@@ -209,9 +209,11 @@
             android:id="@+id/commentEditText"
             android:layout_width="0sp"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:hint="Add Comment..."
             android:paddingLeft="5sp"
-            android:textSize="12sp"
+            android:textSize="19sp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/post_comment_button"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -225,7 +227,6 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

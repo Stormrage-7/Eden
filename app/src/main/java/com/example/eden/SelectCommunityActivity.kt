@@ -34,13 +34,7 @@ class SelectCommunityActivity: AppCompatActivity() {
         val adapter = CommunityAdapter(context = this, object : CommunityAdapter.CommunityClickListener{
         override fun onClick(community: Community) {
             val output = Intent().apply {
-                putExtra("CommunityId", community.communityId)
-                putExtra("CommunityName", community.communityName)
-                putExtra("CommunityIsCustomImage", community.isCustomImage)
-                putExtra("CommunityImageUri", community.imageUri)
-//                if(community.containsImage) putExtra("CommunityImageSrc", community.imageSrc)
-//                else putExtra("CommunityImageSrc", R.drawable.icon_logo)
-
+                putExtra("CommunityObject", community)
             }
             setResult(RESULT_OK, output)
             finish()

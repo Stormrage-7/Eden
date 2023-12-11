@@ -40,13 +40,13 @@ class CommunitiesViewModel(private val repository: AppRepository,
                     viewModelScope.launch{
                         repository.deleteFromJoinedCommunities(community.communityId)
                     }
-                    community.copy(isJoined = false)
+                    community.copy(noOfMembers = community.noOfMembers-1, isJoined = false)
                 }
                 false -> {
                     viewModelScope.launch {
                         repository.insertIntoJoinedCommunities(community.communityId)
                     }
-                    community.copy(isJoined = true)
+                    community.copy(noOfMembers = community.noOfMembers+1, isJoined = true)
                 }
             }
         viewModelScope.launch{

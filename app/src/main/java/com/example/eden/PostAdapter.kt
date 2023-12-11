@@ -125,12 +125,11 @@ class PostAdapter(
         }
     }
 
-    fun updatePostList(postList: List<Post>, context: String) {
+    fun updatePostList(postList: List<Post>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
         Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
-        if (context == "CustomFeed") this.postList = postList.filter { post -> joinedCommunitiesList.contains(post.communityId) }
-        else this.postList = postList
+        this.postList = postList
         Log.i("In Update Method", "Local List: ${this.postList}")
         notifyDataSetChanged()
     }

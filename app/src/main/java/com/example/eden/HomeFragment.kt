@@ -103,14 +103,14 @@ class HomeFragment: Fragment(){
                     fragmentHomeBinding.rvPosts.visibility = View.GONE
                     fragmentHomeBinding.tempImgView.visibility = View.VISIBLE
                     fragmentHomeBinding.tempTextView.visibility = View.VISIBLE
-                    adapter!!.updatePostList(it, "Home")
+                    adapter!!.updatePostList(it)
                 }
                 else {
                     fragmentHomeBinding.rvPosts.visibility = View.VISIBLE
                     fragmentHomeBinding.tempImgView.visibility = View.GONE
                     fragmentHomeBinding.tempTextView.visibility = View.GONE
 //                    it.filter { post -> adapter!!.joinedCommunitiesList.contains(post.communityId) }
-                    adapter!!.updatePostList(it, "Home")
+                    adapter!!.updatePostList(it)
                     Log.i("Inside PostList Observer", it.toString())
                     Log.i("Inside PostList Observer", adapter.postList.toString())
                 }

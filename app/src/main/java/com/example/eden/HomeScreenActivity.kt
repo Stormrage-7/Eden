@@ -1,7 +1,11 @@
 package com.example.eden
 
+import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.View
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +16,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.eden.databinding.ActivityHomeScreenBinding
 import com.example.eden.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -44,6 +50,22 @@ class HomeScreenActivity: AppCompatActivity() {
             }
         }
 
+        activityHomeScreenBinding.topAppBar.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Intent(this@HomeScreenActivity, SearchableActivity:: class.java).apply {
+                    putExtra(SearchManager.QUERY, query)
+                    startActivity(this)
+                }
+                activityHomeScreenBinding.topAppBar.homeScreenSearchView.setQuery("", false)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
+
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
 
             when(it.itemId){
@@ -75,13 +97,6 @@ class HomeScreenActivity: AppCompatActivity() {
                     }
                     true
                 }
-//                R.id.miInbox -> {
-//                    if( isValidDestination(R.id.inboxFragment ) and !navController.popBackStack(R.id.inboxFragment, false)) {
-//                        navController.navigate(R.id.inboxFragment)
-//                    }
-//                    true
-//                }
-
                 else -> {false}
             }
 
@@ -93,18 +108,25 @@ class HomeScreenActivity: AppCompatActivity() {
         Timber.i("This is a log message!")
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        val inflater = menuInflater
+//        inflater.inflate(R.menu.appbar_menu, menu)
+//        return true
+//    }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id){
-            R.id.homeFragment -> R.id.miHome
-            R.id.communitiesFragment -> R.id.miCommunities
-            R.id.customFeedFragment -> R.id.miCustomFeed
+        if (!activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified){
+            activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
+        }
+        else {
+            super.onBackPressed()
+            activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id){
+                R.id.homeFragment -> R.id.miHome
+                R.id.communitiesFragment -> R.id.miCommunities
+                R.id.customFeedFragment -> R.id.miCustomFeed
 //            R.id.inboxFragment -> R.id.miInbox
-            else -> {0}
+                else -> {0}
+            }
         }
     }
 

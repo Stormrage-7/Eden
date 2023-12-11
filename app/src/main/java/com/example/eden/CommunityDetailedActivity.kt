@@ -99,13 +99,13 @@ class CommunityDetailedActivity: AppCompatActivity() {
                     detailedCommunityViewBinding.rvPosts.visibility = View.GONE
                     detailedCommunityViewBinding.tempImgView.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempTextView.visibility = View.VISIBLE
-                    adapter!!.updatePostList(it, "CommunityDetailedActivity")
+                    adapter!!.updatePostList(it)
                 }
                 else {
                     detailedCommunityViewBinding.rvPosts.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempImgView.visibility = View.GONE
                     detailedCommunityViewBinding.tempTextView.visibility = View.GONE
-                    adapter!!.updatePostList(it, "CommunityDetailedActivity")
+                    adapter!!.updatePostList(it)
                     Log.i("Inside PostList Observer", it.toString())
                     Log.i("Inside PostList Observer", adapter.postList.toString())
                 }

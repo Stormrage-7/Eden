@@ -35,6 +35,7 @@ class CommentAdapter(
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         holder.binding.apply {
             val comment = commentList[position]
+            textViewUserName.text = comment.posterName
             commentTextView.text = comment.text
         }
     }

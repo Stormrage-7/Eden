@@ -20,7 +20,7 @@
             android:layout_width="20sp"
             android:layout_height="20sp"
             style="@style/roundedImageView"
-            android:src="@drawable/icon_logo"
+            android:src="@drawable/ic_profile_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

@@ -17,6 +17,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.entities.Post
 import com.example.eden.databinding.ActivityNewPostBinding
+import com.example.eden.entities.Community
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import kotlin.properties.Delegates
 
@@ -162,12 +163,12 @@ class NewPostActivity: AppCompatActivity()  {
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_COMMUNITY && data!=null){
             activityNewPostBinding.apply {
                 communityBar.visibility = View.VISIBLE
-                communityId = data.getIntExtra("CommunityId", -1)
+                val community = data.getSerializableExtra("CommunityObject") as Community
+                communityId = community.communityId
                 Log.d("NewPostActivity", communityId.toString())
-                val containsCustomImage = data.getBooleanExtra("CommunityContainsImage", false)
-                if (containsCustomImage) imageViewCommunity.setImageURI(Uri.parse(data.getStringExtra("CommunityImageUri")))
-                else imageViewCommunity.setImageResource(Integer.parseInt(data.getStringExtra("CommunityImageUri")))
-                textViewCommunityName.text = data.getStringExtra("CommunityName")
+                if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                else imageViewCommunity.setImageResource(Integer.parseInt(community.imageUri))
+                textViewCommunityName.text = community.communityName
                 nextButton.text = "Post"
             }
         }

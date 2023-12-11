@@ -97,18 +97,19 @@ class CustomFeedFragment: Fragment() {
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {
-                if(it.isEmpty()){
+                val filteredList = it.filter { post -> adapter?.joinedCommunitiesList?.contains(post.communityId) ?: false }
+                if(filteredList.isEmpty()){
                     fragmentCustomFeedBinding.rvPosts.visibility = View.GONE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.VISIBLE
-                    adapter!!.updatePostList(it, "CustomFeed")
+                    adapter!!.updatePostList(filteredList)
                 }
                 else {
                     fragmentCustomFeedBinding.rvPosts.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.GONE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.GONE
 //                    it.filter { post -> adapter!!.joinedCommunitiesList.contains(post.communityId) }
-                    adapter!!.updatePostList(it, "CustomFeed")
+                    adapter!!.updatePostList(filteredList)
                     Log.i("Inside PostList Observer", it.toString())
                     Log.i("Inside PostList Observer", adapter.postList.toString())
                 }

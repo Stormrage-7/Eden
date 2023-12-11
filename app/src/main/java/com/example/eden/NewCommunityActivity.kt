@@ -68,8 +68,9 @@ class NewCommunityActivity: AppCompatActivity()  {
         activityNewCommunityBinding.deleteImageBtn.setOnClickListener {
             isImageAttached = false
             imageUri = R.drawable.icon_logo.toString()
-            activityNewCommunityBinding.imageViewPost.setImageResource(imageUri.toInt())
+            activityNewCommunityBinding.imageViewCommunity.setImageResource(imageUri.toInt())
             activityNewCommunityBinding.deleteImageBtn.visibility = View.GONE
+            activityNewCommunityBinding.tempTextView.visibility = View.VISIBLE
         }
 
         //COMMUNITY NAME EDIT-TEXT
@@ -101,12 +102,13 @@ class NewCommunityActivity: AppCompatActivity()  {
         //COMMUNITY CREATE BUTTON
         activityNewCommunityBinding.nextButton.setOnClickListener {
             val communityName = activityNewCommunityBinding.communityNameEditText.text.toString()
+            val communityDescription = activityNewCommunityBinding.communityDescriptionEditText.text.toString()
             if(viewModel.communityNameList.contains(communityName)){
                 Toast.makeText(this, "Community already exists! Please try again...", Toast.LENGTH_LONG).show()
             }
             else{
                 Log.i("Inside Create Button!", "HELLO!")
-                val community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
+                val community = Community(0, communityName = communityName, description = communityDescription, isCustomImage = isImageAttached, imageUri = imageUri)
 //                if (isImageAttached) community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
 //                else community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
 
@@ -117,7 +119,7 @@ class NewCommunityActivity: AppCompatActivity()  {
         }
 
 
-        activityNewCommunityBinding.imageViewPost.setOnClickListener {
+        activityNewCommunityBinding.imageViewCommunity.setOnClickListener {
             val pickImage = Intent().apply {
                 type = "image/*"
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -149,9 +151,10 @@ class NewCommunityActivity: AppCompatActivity()  {
                     takeFlags
                 )
                 Log.i("IMAGE URI before setting", imageUri)
-                activityNewCommunityBinding.imageViewPost.setImageURI(Uri.parse(imageUri))
-                activityNewCommunityBinding.imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
+                activityNewCommunityBinding.imageViewCommunity.setImageURI(Uri.parse(imageUri))
+                activityNewCommunityBinding.imageViewCommunity.scaleType = ImageView.ScaleType.CENTER_CROP
                 activityNewCommunityBinding.deleteImageBtn.visibility = View.VISIBLE
+                activityNewCommunityBinding.tempTextView.visibility = View.GONE
                 isImageAttached = true
             }
         }
