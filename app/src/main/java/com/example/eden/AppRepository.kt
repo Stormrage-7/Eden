@@ -2,11 +2,11 @@ package com.example.eden
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.relations.PostCommunityCrossRef
-import kotlinx.coroutines.Dispatchers
 
 class AppRepository(private val databaseDao: EdenDao) {
 
@@ -74,6 +74,14 @@ class AppRepository(private val databaseDao: EdenDao) {
 
     suspend fun upsertComment(comment: Comment) {
         databaseDao.upsertComment(comment)
+    }
+
+    fun getPostsMatchingQuery(searchQuery: String): LiveData<List<Post>> {
+        return databaseDao.getPostsMatchingQuery(searchQuery)
+    }
+
+    fun getCommunitiesMatchingQuery(searchQuery: String): LiveData<List<Community>> {
+        return databaseDao.getCommunitiesMatchingQuery(searchQuery)
     }
 
 

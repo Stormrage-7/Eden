@@ -33,7 +33,6 @@ class CommunitiesViewModel(private val repository: AppRepository,
 //    }
 
     fun onJoinClick(position: Int) {
-//        _communityList.value!![position].isJoined = !_communityList.value!![position].isJoined
         val community = communityList.value!![position]
         val temp: Community = when(community.isJoined){
                 true -> {

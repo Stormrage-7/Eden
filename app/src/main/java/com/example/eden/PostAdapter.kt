@@ -40,18 +40,15 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = postList[position]
         val communityId = post.communityId
-        val community: Community
 
-        if (context is HomeScreenActivity) community = communityList.find { it.communityId == communityId }!!
-        else community = currentCommunity
+        val community: Community = if (context is HomeScreenActivity || context is SearchableActivity) communityList.find { it.communityId == communityId }!!
+        else currentCommunity
 
-//        if (!joinedCommunitiesList.contains(post.communityId)) return
+
 
         holder.binding.apply {
             //COMMUNITY DETAILS
             textViewCommunityName.text = community.communityName
-//            if(community.containsImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
-//            else imageViewCommunity.setImageResource(community.imageSrc)
             if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
             else imageViewCommunity.setImageResource(community.imageUri.toInt())
 
@@ -76,10 +73,9 @@ class PostAdapter(
             }
 
             //UPVOTE AND DOWNVOTE
-
-                // INITIAL SETTING
             Log.i("Binding View", "Binding View to Holder!")
             textViewVoteCounter.text = postList[position].voteCounter.toString()
+
             if (postList[position].voteStatus == VoteStatus.UPVOTED) {
                 likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
                 dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
@@ -95,6 +91,14 @@ class PostAdapter(
                 likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
                 dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
                 textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+            }
+
+            if(context is SearchableActivity){
+                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                likeBtn.visibility = View.GONE
+                dislikeBtn.visibility = View.GONE
+                shareBtn.visibility = View.GONE
+                textView.visibility = View.VISIBLE
             }
 
                 // CHANGES TO THE VOTE

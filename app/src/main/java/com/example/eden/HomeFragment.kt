@@ -40,7 +40,7 @@ class HomeFragment: Fragment(){
 
         viewModel = ViewModelProvider(this.requireActivity(), factory)[HomeViewModel::class.java]
 
-        fragmentHomeBinding.lifecycleOwner = this   // Important
+        fragmentHomeBinding.lifecycleOwner = viewLifecycleOwner   // Important
         fragmentHomeBinding.homeViewModel = viewModel
 
 
@@ -81,20 +81,10 @@ class HomeFragment: Fragment(){
                 LinearLayoutManager(context).orientation
             )
         )
-        viewModel.joinedCommunitiesList.observe(this.requireActivity(), Observer {
-            Log.i("HomeFragment", "${it.toString()}")
-            adapter!!.updateJoinedCommunityList(it)
-        })
-
-        viewModel.postCommunityCrossRefList.observe(this.requireActivity(), Observer {
-            Log.i("HomeFragment", "${it.toString()}")
-            adapter!!.updatePostCommunityCrossRefList(it)
-        })
 
         viewModel.communityList.observe(this.requireActivity(), Observer {
             Log.i("HomeFragment", "${it.toString()}")
             adapter!!.updateCommunityList(it)
-//            Log.i("HomeFragment", "${viewModel.localCommunityList}")
         })
 
         viewModel.postList.observe(this.requireActivity(), Observer {

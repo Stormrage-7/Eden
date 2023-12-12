@@ -1,12 +1,10 @@
 package com.example.eden
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.databinding.ActivityDetailedPostViewBinding
+import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus

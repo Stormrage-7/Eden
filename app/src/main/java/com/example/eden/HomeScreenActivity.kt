@@ -45,6 +45,7 @@ class HomeScreenActivity: AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.CustomToolBar))
 
         activityHomeScreenBinding.topAppBar.addCommunityBtn.setOnClickListener {
+            activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
             Intent(this, NewCommunityActivity::class.java).apply {
                 startActivity(this)
             }
@@ -52,11 +53,13 @@ class HomeScreenActivity: AppCompatActivity() {
 
         activityHomeScreenBinding.topAppBar.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
+                activityHomeScreenBinding.topAppBar.homeScreenSearchView.setQuery("", false)
+                activityHomeScreenBinding.topAppBar.homeScreenSearchView.clearFocus()
+                activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
                 Intent(this@HomeScreenActivity, SearchableActivity:: class.java).apply {
                     putExtra(SearchManager.QUERY, query)
                     startActivity(this)
                 }
-                activityHomeScreenBinding.topAppBar.homeScreenSearchView.setQuery("", false)
                 return true
             }
 
@@ -67,7 +70,7 @@ class HomeScreenActivity: AppCompatActivity() {
         })
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
-
+            activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
             when(it.itemId){
                 R.id.miHome -> {
 

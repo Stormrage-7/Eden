@@ -3,6 +3,7 @@ package com.example.eden
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus

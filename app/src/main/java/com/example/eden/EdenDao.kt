@@ -7,10 +7,10 @@ import androidx.room.Insert
 import androidx.room.Upsert
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
-import com.example.eden.entities.relations.CommunityWithPosts
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.entities.relations.PostWithCommunities
 
@@ -84,4 +84,9 @@ interface EdenDao {
 
     @Upsert
     suspend fun upsertComment(comment: Comment)
+
+    @Query("SELECT * FROM post_table WHERE title LIKE '%' || :searchQuery || '%'")
+    fun getPostsMatchingQuery(searchQuery: String): LiveData<List<Post>>
+    @Query("SELECT * FROM community_table WHERE communityName LIKE '%' || :searchQuery || '%'")
+    fun getCommunitiesMatchingQuery(searchQuery: String): LiveData<List<Community>>
 }

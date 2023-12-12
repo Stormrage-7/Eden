@@ -1,4 +1,4 @@
-package com.example.eden
+package com.example.eden.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

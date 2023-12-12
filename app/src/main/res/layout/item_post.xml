@@ -102,8 +102,24 @@
         android:textAlignment="center"
         android:paddingTop="10sp"
         android:paddingBottom="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/shareBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/likeBtn"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="upvotes"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewVoteCounter"
         app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
     <ImageButton
