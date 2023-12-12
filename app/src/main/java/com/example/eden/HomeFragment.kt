@@ -36,8 +36,6 @@ class HomeFragment: Fragment(){
         val application = requireActivity().application as Eden
         repository = application.repository
         factory = HomeViewModelFactory(repository, application)
-//        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
-
         viewModel = ViewModelProvider(this.requireActivity(), factory)[HomeViewModel::class.java]
 
         fragmentHomeBinding.lifecycleOwner = viewLifecycleOwner   // Important
