@@ -5,7 +5,7 @@
     <data>
         <variable
             name="communitiesViewModel"
-            type="com.example.eden.CommunitiesViewModel" />
+            type="com.example.eden.viewmodels.CommunitiesViewModel" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout

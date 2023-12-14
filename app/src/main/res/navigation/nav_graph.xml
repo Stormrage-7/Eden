@@ -18,12 +18,12 @@
         tools:layout="@layout/fragment_inbox" />
     <fragment
         android:id="@+id/communitiesFragment"
-        android:name="com.example.eden.CommunitiesFragment"
+        android:name="com.example.eden.ui.CommunitiesFragment"
         android:label="CommunitiesFragment"
         tools:layout="@layout/fragment_communities" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.eden.HomeFragment"
+        android:name="com.example.eden.ui.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" />
 

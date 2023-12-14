@@ -4,14 +4,14 @@
     <data>
         <variable
             name="communitiesViewModel"
-            type="com.example.eden.CommunitiesViewModel" />
+            type="com.example.eden.viewmodels.CommunitiesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".CommunitiesFragment">
+        tools:context=".ui.CommunitiesFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCommunities"

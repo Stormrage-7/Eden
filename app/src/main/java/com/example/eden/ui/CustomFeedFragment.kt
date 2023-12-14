@@ -11,12 +11,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.eden.AppRepository
+import com.example.eden.database.AppRepository
 import com.example.eden.Eden
-import com.example.eden.HomeViewModel
-import com.example.eden.HomeViewModelFactory
-import com.example.eden.PostAdapter
-import com.example.eden.PostDetailedActivity
+import com.example.eden.viewmodels.HomeViewModel
+import com.example.eden.viewmodels.HomeViewModelFactory
+import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.FragmentCustomFeedBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
@@ -30,47 +29,46 @@ class CustomFeedFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentCustomFeedBinding = FragmentCustomFeedBinding.inflate(layoutInflater)
 
         val application = requireActivity().application as Eden
         repository = application.repository
-        factory = HomeViewModelFactory(repository, application)
+        factory = HomeViewModelFactory(repository, requireActivity())
         viewModel = ViewModelProvider(this.requireActivity(), factory)[HomeViewModel::class.java]
 
-        fragmentCustomFeedBinding.lifecycleOwner = this   // Important
+        fragmentCustomFeedBinding.lifecycleOwner = viewLifecycleOwner   // Important
         fragmentCustomFeedBinding.customFeedViewModel = viewModel
 
 
-        val adapter = context?.let {
-            PostAdapter(context = it, object : PostAdapter.PostListener{
-                // ANONYMOUS CLASS IMPLEMENTATION OF POSTCLICKLISTENER INTERFACE
-                override fun getCommunityIdFromPostId(position: Int): Int {
-                    return 1
-                }
+        val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener{
+            // ANONYMOUS CLASS IMPLEMENTATION OF POSTCLICKLISTENER INTERFACE
+            override fun getCommunityIdFromPostId(position: Int): Int {
+                return 1
+            }
 
-                override fun onPostClick(post: Post, community: Community) {
+            override fun onPostClick(post: Post, community: Community) {
 //                Toast.makeText(requireActivity(), "${post.toString()}", Toast.LENGTH_SHORT).show()
-                    Intent(requireActivity(), PostDetailedActivity::class.java).apply {
-                        putExtra("PostObject", post)
-                        putExtra("CommunityObject", community)
-                        startActivity(this)
-                    }
+                Intent(requireActivity(), PostDetailedActivity::class.java).apply {
+                    putExtra("PostObject", post)
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
                 }
+            }
 
-                override fun onUpvoteBtnClick(post: Post) {
-                    viewModel.upvotePost(post)
-                }
+            override fun onUpvoteBtnClick(post: Post) {
+                viewModel.upvotePost(post)
+            }
 
-                override fun onDownvoteBtnClick(post: Post) {
-                    viewModel.downvotePost(post)
-                }
+            override fun onDownvoteBtnClick(post: Post) {
+                viewModel.downvotePost(post)
+            }
 
-                override fun onPostLongClick(position: Int) {
-                    TODO("Not yet implemented")
-                }
+            override fun onPostLongClick(position: Int) {
+                TODO("Not yet implemented")
+            }
 
-            }) }
+        })
         fragmentCustomFeedBinding.rvPosts.adapter = adapter
         fragmentCustomFeedBinding.rvPosts.layoutManager = LinearLayoutManager(context)
         fragmentCustomFeedBinding.rvPosts.addItemDecoration(
@@ -81,37 +79,28 @@ class CustomFeedFragment: Fragment() {
         )
         viewModel.joinedCommunitiesList.observe(this.requireActivity(), Observer {
             Log.i("HomeFragment", "${it.toString()}")
-            adapter!!.updateJoinedCommunityList(it)
-        })
-
-        viewModel.postCommunityCrossRefList.observe(this.requireActivity(), Observer {
-            Log.i("HomeFragment", "${it.toString()}")
-            adapter!!.updatePostCommunityCrossRefList(it)
+            adapter.updateJoinedCommunityList(it)
         })
 
         viewModel.communityList.observe(this.requireActivity(), Observer {
             Log.i("HomeFragment", "${it.toString()}")
-            adapter!!.updateCommunityList(it)
-//            Log.i("HomeFragment", "${viewModel.localCommunityList}")
+            adapter.updateCommunityList(it)
         })
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {
-                val filteredList = it.filter { post -> adapter?.joinedCommunitiesList?.contains(post.communityId) ?: false }
+                val filteredList = it.filter { post -> adapter.joinedCommunitiesList?.contains(post.communityId) ?: false }
                 if(filteredList.isEmpty()){
                     fragmentCustomFeedBinding.rvPosts.visibility = View.GONE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.VISIBLE
-                    adapter!!.updatePostList(filteredList)
+                    adapter.updatePostList(filteredList)
                 }
                 else {
                     fragmentCustomFeedBinding.rvPosts.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.GONE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.GONE
-//                    it.filter { post -> adapter!!.joinedCommunitiesList.contains(post.communityId) }
-                    adapter!!.updatePostList(filteredList)
-                    Log.i("Inside PostList Observer", it.toString())
-                    Log.i("Inside PostList Observer", adapter.postList.toString())
+                    adapter.updatePostList(filteredList)
                 }
             }
         })

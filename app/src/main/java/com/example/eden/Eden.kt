@@ -1,6 +1,9 @@
 package com.example.eden
 
 import android.app.Application
+import com.example.eden.database.AppDatabase
+import com.example.eden.database.AppRepository
+import com.example.eden.database.EdenDao
 import timber.log.Timber
 import kotlin.properties.Delegates
 

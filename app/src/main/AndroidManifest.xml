@@ -14,7 +14,7 @@
         android:theme="@style/Base.Theme.Eden"
         tools:targetApi="31">
         <activity
-            android:name=".HomeScreenActivity"
+            android:name=".ui.HomeScreenActivity"
             android:theme="@style/Theme.MySplashScreen"
             android:exported="true">
 
@@ -35,31 +35,31 @@
 <!--        </activity>-->
 
         <activity
-            android:name=".NewPostActivity"
+            android:name=".ui.NewPostActivity"
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
         <activity
-            android:name=".SelectCommunityActivity"
+            android:name=".ui.SelectCommunityActivity"
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
         <activity
-            android:name=".NewCommunityActivity"
+            android:name=".ui.NewCommunityActivity"
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
         <activity
-            android:name=".PostDetailedActivity"
+            android:name=".ui.PostDetailedActivity"
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
         <activity
-            android:name=".CommunityDetailedActivity"
+            android:name=".ui.CommunityDetailedActivity"
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
-        <activity android:name=".SearchableActivity"
+        <activity android:name=".ui.SearchableActivity"
             android:launchMode="singleTop"
             android:exported="true">
             <intent-filter>

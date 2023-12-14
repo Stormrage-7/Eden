@@ -6,12 +6,12 @@
     <data>
         <variable
             name="homeViewModel"
-            type="com.example.eden.HomeViewModel" />
+            type="com.example.eden.viewmodels.HomeViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HomeFragment">
+        tools:context=".ui.HomeFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPosts"

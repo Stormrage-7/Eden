@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.Eden.HomeScreen"
-    tools:context=".HomeScreenActivity">
+    tools:context=".ui.HomeScreenActivity">
 
     <include
         android:id="@+id/topAppBar"
