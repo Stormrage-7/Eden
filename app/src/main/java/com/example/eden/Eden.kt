@@ -13,7 +13,7 @@ class Eden: Application() {
     var postId by Delegates.notNull<Int>()
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
+//        Timber.plant(Timber.DebugTree())
         edenDao = AppDatabase.getDatabase(this).edenDao()
         repository = AppRepository(edenDao)
         postId = 0

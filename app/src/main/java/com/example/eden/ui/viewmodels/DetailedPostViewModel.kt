@@ -1,4 +1,4 @@
-package com.example.eden.viewmodels
+package com.example.eden.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel

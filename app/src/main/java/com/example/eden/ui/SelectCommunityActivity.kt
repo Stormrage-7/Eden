@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
-import com.example.eden.viewmodels.CommunitiesViewModel
+import com.example.eden.ui.viewmodels.CommunitiesViewModel
 import com.example.eden.adapters.CommunityAdapter
-import com.example.eden.viewmodels.CommunityViewModelFactory
+import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.database.EdenDao
 import com.example.eden.databinding.ActivitySelectCommunityBinding

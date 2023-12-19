@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
-import com.example.eden.viewmodels.NewPostViewModel
-import com.example.eden.viewmodels.NewPostViewModelFactory
+import com.example.eden.ui.viewmodels.NewPostViewModel
+import com.example.eden.ui.viewmodels.NewPostViewModelFactory
 import com.example.eden.R
 import com.example.eden.entities.Post
 import com.example.eden.databinding.ActivityNewPostBinding

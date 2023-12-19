@@ -100,7 +100,6 @@ class HomeScreenActivity: AppCompatActivity() {
                 }
                 else -> {false}
             }
-
         }
     }
 
@@ -108,7 +107,6 @@ class HomeScreenActivity: AppCompatActivity() {
         super.onStart()
         Timber.i("This is a log message!")
     }
-
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -123,7 +121,6 @@ class HomeScreenActivity: AppCompatActivity() {
                 R.id.homeFragment -> R.id.miHome
                 R.id.communitiesFragment -> R.id.miCommunities
                 R.id.customFeedFragment -> R.id.miCustomFeed
-//            R.id.inboxFragment -> R.id.miInbox
                 else -> {0}
             }
         }

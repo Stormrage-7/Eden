@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.adapters.CommunityAdapter
 import com.example.eden.R
-import com.example.eden.viewmodels.SearchViewModel
+import com.example.eden.ui.viewmodels.SearchViewModel
 import com.example.eden.databinding.FragmentCommunitySearchBinding
 import com.example.eden.entities.Community
 

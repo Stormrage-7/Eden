@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
 import com.example.eden.adapters.CommentAdapter
-import com.example.eden.viewmodels.DetailedPostViewModel
-import com.example.eden.viewmodels.DetailedPostViewModelFactory
+import com.example.eden.ui.viewmodels.DetailedPostViewModel
+import com.example.eden.ui.viewmodels.DetailedPostViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.databinding.ActivityDetailedPostViewBinding

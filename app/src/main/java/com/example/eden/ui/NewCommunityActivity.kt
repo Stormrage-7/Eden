@@ -17,8 +17,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
-import com.example.eden.viewmodels.CommunitiesViewModel
-import com.example.eden.viewmodels.CommunityViewModelFactory
+import com.example.eden.ui.viewmodels.CommunitiesViewModel
+import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding

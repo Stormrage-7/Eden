@@ -1,5 +1,6 @@
 package com.example.eden.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,8 +15,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
-import com.example.eden.viewmodels.HomeViewModel
-import com.example.eden.viewmodels.HomeViewModelFactory
+import com.example.eden.ui.viewmodels.HomeViewModel
+import com.example.eden.ui.viewmodels.HomeViewModelFactory
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.R
 import com.example.eden.databinding.FragmentHomeBinding
@@ -29,6 +30,7 @@ class HomeFragment: Fragment(){
     private lateinit var repository: AppRepository
     private lateinit var factory: HomeViewModelFactory
 
+    @SuppressLint("LogNotTimber")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,7 +52,6 @@ class HomeFragment: Fragment(){
 
 
         val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener {
-            // ANONYMOUS CLASS IMPLEMENTATION OF POSTCLICKLISTENER INTERFACE
         override fun getCommunityIdFromPostId(position: Int): Int {
             return 1
         }
@@ -85,10 +86,9 @@ class HomeFragment: Fragment(){
             )
         )
 
-        viewModel.communityList.observe(this.requireActivity(), Observer {
-            Timber.i(it.toString())
+        viewModel.communityList.observe(this.requireActivity()) {
             adapter.updateCommunityList(it)
-        })
+        }
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {

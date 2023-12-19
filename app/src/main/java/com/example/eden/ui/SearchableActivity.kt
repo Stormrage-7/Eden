@@ -8,8 +8,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.Eden
-import com.example.eden.viewmodels.SearchViewModel
-import com.example.eden.viewmodels.SearchViewModelFactory
+import com.example.eden.ui.viewmodels.SearchViewModel
+import com.example.eden.ui.viewmodels.SearchViewModelFactory
 import com.example.eden.adapters.ViewPagerAdapter
 import com.example.eden.databinding.ActivitySearchableBinding
 import com.google.android.material.tabs.TabLayoutMediator

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.R
-import com.example.eden.viewmodels.SearchViewModel
+import com.example.eden.ui.viewmodels.SearchViewModel
 import com.example.eden.databinding.FragmentPostSearchBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post

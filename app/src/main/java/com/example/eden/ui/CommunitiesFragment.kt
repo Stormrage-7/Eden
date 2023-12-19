@@ -12,9 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.eden.viewmodels.CommunitiesViewModel
+import com.example.eden.ui.viewmodels.CommunitiesViewModel
 import com.example.eden.adapters.CommunityAdapter
-import com.example.eden.viewmodels.CommunityViewModelFactory
+import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.databinding.FragmentCommunitiesBinding
@@ -41,20 +41,19 @@ class CommunitiesFragment: Fragment() {
         fragmentCommunitiesBinding.communitiesViewModel = viewModel
         fragmentCommunitiesBinding.lifecycleOwner = this.requireActivity() //Very Important line of code that allowed LiveData to update the layout
 
-        val adapter = context?.let {
-            CommunityAdapter(context = it, object : CommunityAdapter.CommunityClickListener {
-                override fun onClick(community: Community) {
-                    Intent(requireActivity(), CommunityDetailedActivity:: class.java).apply {
-                        putExtra("CommunityObject", community)
-                        startActivity(this)
-                    }
+        val adapter = CommunityAdapter(context = this.requireActivity(), object : CommunityAdapter.CommunityClickListener {
+            override fun onClick(community: Community) {
+                Intent(requireActivity(), CommunityDetailedActivity:: class.java).apply {
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
                 }
+            }
 
-                override fun onJoinClick(position: Int) {
-                    viewModel.onJoinClick(position)
-                }
+            override fun onJoinClick(position: Int) {
+                viewModel.onJoinClick(position)
+            }
 
-            }) }
+        })
 
 
         viewModel.communityList.observe(this.requireActivity(), Observer{

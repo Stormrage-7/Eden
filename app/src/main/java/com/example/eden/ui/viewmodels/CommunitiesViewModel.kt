@@ -1,5 +1,6 @@
-package com.example.eden.viewmodels
+package com.example.eden.ui.viewmodels
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import com.example.eden.Eden
 import com.example.eden.entities.Community
 import kotlinx.coroutines.launch
 
+@SuppressLint("LogNotTimber")
 class CommunitiesViewModel(private val repository: AppRepository,
                            application: Eden
 ): AndroidViewModel(application) {
@@ -17,18 +19,11 @@ class CommunitiesViewModel(private val repository: AppRepository,
     var communityNameList = mutableListOf<String>()
 
     init {
-        Log.i("Community List", "${communityList.value.toString()}")
+        Log.i("Community List", communityList.value.toString())
         Log.i("Testing", "CommunitiesViewModel Initialized!")
         refreshCommunityListFromRepository()
-        Log.i("Community List", "${repository.communityList.value.toString()}")
+        Log.i("Community List", repository.communityList.value.toString())
     }
-
-//    override fun onCleared() {
-//    }
-
-//    fun setCommunityList(communityList: List<Community>) {
-//        _communityList.value = communityList
-//    }
 
     fun onJoinClick(position: Int) {
         val community = communityList.value!![position]

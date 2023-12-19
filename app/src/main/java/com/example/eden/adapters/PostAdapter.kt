@@ -170,4 +170,8 @@ class PostAdapter(
         fun onPostLongClick(position: Int)
     }
 
+    class New(){
+
+    }
+
 }

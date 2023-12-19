@@ -19,7 +19,7 @@
         <ImageButton
             android:id="@+id/close_btn"
             android:layout_width="48sp"
-            android:layout_height="48sp"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_close_24"
             android:backgroundTint="@color/white"
             app:layout_constraintTop_toTopOf="parent"
@@ -29,12 +29,13 @@
         <Button
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
-            android:layout_height="40sp"
+            android:layout_height="wrap_content"
             android:text="Next"
             android:backgroundTint="@color/grey"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:layout_marginVertical="5sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
-import com.example.eden.viewmodels.HomeViewModel
-import com.example.eden.viewmodels.HomeViewModelFactory
+import com.example.eden.ui.viewmodels.HomeViewModel
+import com.example.eden.ui.viewmodels.HomeViewModelFactory
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.FragmentCustomFeedBinding
 import com.example.eden.entities.Community
@@ -89,7 +89,8 @@ class CustomFeedFragment: Fragment() {
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {
-                val filteredList = it.filter { post -> adapter.joinedCommunitiesList?.contains(post.communityId) ?: false }
+                val filteredList = it.filter { post -> adapter.joinedCommunitiesList.contains(post.communityId)
+                    ?: false }
                 if(filteredList.isEmpty()){
                     fragmentCustomFeedBinding.rvPosts.visibility = View.GONE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.VISIBLE
