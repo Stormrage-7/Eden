@@ -11,11 +11,12 @@ import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
 
 class DetailedCommunityViewModel(private val repository: AppRepository,
-                                 val community: Community,
+                                 communityObj: Community,
                                  application: Eden
 ): AndroidViewModel(application) {
 
-    val postList = repository.getPostsOfCommunity(community.communityId)
+    val community = repository.getCommunity(communityObj.communityId)
+    val postList = repository.getPostsOfCommunity(communityObj.communityId)
     init {
         Log.i("Testing", "DetailedCommunityViewModel Initialized")
     }
@@ -45,22 +46,23 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
     }
 
     fun onJoinClick() {
-        when(community.isJoined){
+        val copy: Community = when(community.value!!.isJoined){
             true -> {
                 viewModelScope.launch{
-                    repository.deleteFromJoinedCommunities(community.communityId)
+                    repository.deleteFromJoinedCommunities(community.value!!.communityId)
                 }
-                community.isJoined = false
+                community.value!!.copy(isJoined = false)
             }
+
             false -> {
                 viewModelScope.launch {
-                    repository.insertIntoJoinedCommunities(community.communityId)
+                    repository.insertIntoJoinedCommunities(community.value!!.communityId)
                 }
-                community.isJoined = true
+                community.value!!.copy(isJoined = true)
             }
         }
         viewModelScope.launch{
-            repository.upsertCommunity(community)
+            repository.upsertCommunity(copy)
         }
     }
 

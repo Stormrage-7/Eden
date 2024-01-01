@@ -16,6 +16,7 @@ import com.example.eden.enums.VoteStatus
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.relations.PostCommunityCrossRef
+import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.HomeScreenActivity
 import com.example.eden.ui.SearchableActivity
 
@@ -49,13 +50,20 @@ class PostAdapter(
         else currentCommunity
 
 
-
         holder.binding.apply {
             //COMMUNITY DETAILS
-            textViewCommunityName.text = community.communityName
-            if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
-            else imageViewCommunity.setImageResource(community.imageUri.toInt())
 
+            if (context is CommunityDetailedActivity){
+                communityBar.visibility = View.GONE
+            }
+            else {
+                textViewCommunityName.text = community.communityName
+                if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                else imageViewCommunity.setImageResource(community.imageUri.toInt())
+                communityBar.setOnClickListener {
+                    postListener.onCommunityClick(community)
+                }
+            }
             //TITLE
             textViewTitle.text = postList[position].title
 
@@ -97,7 +105,7 @@ class PostAdapter(
                 textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
             }
 
-            if(context is SearchableActivity){
+            if (context is SearchableActivity){
                 textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
                 likeBtn.visibility = View.GONE
                 dislikeBtn.visibility = View.GONE
@@ -147,11 +155,6 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
-    fun updatePostCommunityCrossRefList(crossRefList: List<PostCommunityCrossRef>){
-        this.postCommunityCrossRefList = crossRefList
-        notifyDataSetChanged()
-    }
-
     fun updateJoinedCommunityList(joinedCommunitiesList: List<Int>?) {
         if (joinedCommunitiesList != null) {
             this.joinedCommunitiesList = joinedCommunitiesList
@@ -165,13 +168,10 @@ class PostAdapter(
     interface PostListener{
         fun getCommunityIdFromPostId(position: Int): Int
         fun onPostClick(post: Post, community: Community)
+        fun onCommunityClick(community: Community)
         fun onUpvoteBtnClick(post: Post)
         fun onDownvoteBtnClick(post: Post)
         fun onPostLongClick(position: Int)
-    }
-
-    class New(){
-
     }
 
 }

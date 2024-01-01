@@ -83,6 +83,27 @@ class NewPostActivity: AppCompatActivity()  {
 
         })
 
+        if(intent.hasExtra("Context")){
+            if (intent.getStringExtra("Context") == "CommunityDetailedActivity"){
+                activityNewPostBinding.apply {
+                    communityBar.visibility = View.VISIBLE
+                    val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as Community
+                    communityId = community.communityId
+                    Log.d("NewPostActivity", communityId.toString())
+                    if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                    else imageViewCommunity.setImageResource(Integer.parseInt(community.imageUri))
+                    textViewCommunityName.text = community.communityName
+                    nextButton.text = "Post"
+                }
+            }
+        }
+
+        activityNewPostBinding.communityBar.setOnClickListener {
+            Intent(this@NewPostActivity, SelectCommunityActivity::class.java).apply {
+                startActivityForResult(this, PICK_COMMUNITY)
+            }
+        }
+
         activityNewPostBinding.nextButton.setOnClickListener {
             if(communityId==-1){
                 Log.i("Inside Next Button!", "HELLO!")
@@ -105,13 +126,6 @@ class NewPostActivity: AppCompatActivity()  {
         }
 
 
-//        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//            if (result.resultCode == Activity.RESULT_OK) {
-//                // There are no request codes
-//                val data: Intent? = result.data
-//            }
-//        }
-
         activityNewPostBinding.insertImagesBtn.setOnClickListener {
             val pickImage = Intent().apply {
                 type = "image/*"
@@ -119,7 +133,6 @@ class NewPostActivity: AppCompatActivity()  {
                 putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                 addCategory(Intent.CATEGORY_OPENABLE)
             }
-//            resultLauncher.launch(pickImage)
             startActivityForResult(pickImage, PICK_IMAGE)
         }
     }

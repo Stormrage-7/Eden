@@ -47,6 +47,13 @@ class CustomFeedFragment: Fragment() {
                 return 1
             }
 
+            override fun onCommunityClick(community: Community) {
+                Intent(requireActivity() as HomeScreenActivity, CommunityDetailedActivity:: class.java).apply {
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
+                }
+            }
+
             override fun onPostClick(post: Post, community: Community) {
 //                Toast.makeText(requireActivity(), "${post.toString()}", Toast.LENGTH_SHORT).show()
                 Intent(requireActivity(), PostDetailedActivity::class.java).apply {

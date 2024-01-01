@@ -42,15 +42,17 @@ class CommunityDetailedActivity: AppCompatActivity() {
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedCommunityViewModel::class.java]
 
-        //POST DETAILS
         detailedCommunityViewBinding.apply {
-            if(viewModel.community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(viewModel.community.imageUri))
-            else imageViewCommunity.setImageResource(viewModel.community.imageUri.toInt())
-            textViewCommunityName.text = viewModel.community.communityName
-            updateJoinStatus()
-
             backBtn.setOnClickListener {
                 finish()
+            }
+
+            createPostButton.setOnClickListener {
+                Intent(this@CommunityDetailedActivity, NewPostActivity::class.java).apply {
+                    putExtra("Context", "CommunityDetailedActivity")
+                    putExtra("CommunityObject", viewModel.community.value)
+                    startActivity(this)
+                }
             }
         }
 
@@ -59,13 +61,23 @@ class CommunityDetailedActivity: AppCompatActivity() {
             updateJoinStatus()
         }
 
+        detailedCommunityViewBinding.editButton.setOnClickListener {
+            Intent(this@CommunityDetailedActivity, NewCommunityActivity::class.java).apply {
+                putExtra("Context", "CommunityDetailedActivity")
+                putExtra("CommunityObject", viewModel.community.value)
+                startActivity(this)
+            }
+        }
+
         val adapter = PostAdapter(context = this, object : PostAdapter.PostListener {
             override fun getCommunityIdFromPostId(position: Int): Int {
                 return 1
             }
 
+            override fun onCommunityClick(community: Community) {
+                //TODO
+            }
             override fun onPostClick(post: Post, community: Community) {
-//                Toast.makeText(requireActivity(), "${post.toString()}", Toast.LENGTH_SHORT).show()
                 Intent(this@CommunityDetailedActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     putExtra("CommunityObject", community)
@@ -86,15 +98,29 @@ class CommunityDetailedActivity: AppCompatActivity() {
             }
 
         })
-        detailedCommunityViewBinding.rvPosts.adapter = adapter
-        detailedCommunityViewBinding.rvPosts.layoutManager = LinearLayoutManager(this)
-        detailedCommunityViewBinding.rvPosts.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                LinearLayoutManager(this).orientation
-            )
-        )
-        adapter.currentCommunity = viewModel.community
+
+        viewModel.community.observe(this, Observer {
+            detailedCommunityViewBinding.apply {
+                if (it.isCustomImage) imageViewCommunity.setImageURI(
+                    Uri.parse(
+                        it.imageUri
+                    )
+                )
+                else imageViewCommunity.setImageResource(it.imageUri.toInt())
+                textViewCommunityName.text = it.communityName
+                textViewCommunityDescription.text = it.description
+                updateJoinStatus()
+                detailedCommunityViewBinding.rvPosts.adapter = adapter
+                detailedCommunityViewBinding.rvPosts.layoutManager = LinearLayoutManager(this@CommunityDetailedActivity)
+                detailedCommunityViewBinding.rvPosts.addItemDecoration(
+                    DividerItemDecoration(
+                        this@CommunityDetailedActivity,
+                        LinearLayoutManager(this@CommunityDetailedActivity).orientation
+                    )
+                )
+                adapter.currentCommunity = it
+            }
+        })
 
         viewModel.postList.observe(this, Observer {
             it.let {
@@ -119,7 +145,7 @@ class CommunityDetailedActivity: AppCompatActivity() {
 
     private fun updateJoinStatus() {
         detailedCommunityViewBinding.apply {
-            if (viewModel.community.isJoined){
+            if (viewModel.community.value!!.isJoined){
                 joinButton.text = "Joined"
                 joinButton.backgroundTintList = ColorStateList.valueOf(
                     ResourcesCompat.getColor(resources, R.color.grey, null)

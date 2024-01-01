@@ -84,5 +84,9 @@ class AppRepository(private val databaseDao: EdenDao) {
         return databaseDao.getCommunitiesMatchingQuery(searchQuery)
     }
 
+    fun getCommunity(communityId: Int): LiveData<Community> {
+        return databaseDao.getCommunityById(communityId)
+    }
+
 
 }

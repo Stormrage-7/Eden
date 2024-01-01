@@ -46,7 +46,7 @@ interface EdenDao {
     fun getAllCommunities(): LiveData<List<Community>>
 
     @Query("SELECT * FROM Community_Table WHERE communityId = :communityId")
-    suspend fun getCommunityById(communityId: Int): Community
+    fun getCommunityById(communityId: Int): LiveData<Community>
 
     @Query("SELECT communityId FROM PostCommunityCrossRef WHERE postId = :postId")
     suspend fun getCommunityIdFromPostId(postId: Int): Int

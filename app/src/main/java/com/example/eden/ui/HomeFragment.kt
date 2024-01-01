@@ -52,31 +52,38 @@ class HomeFragment: Fragment(){
 
 
         val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener {
-        override fun getCommunityIdFromPostId(position: Int): Int {
-            return 1
-        }
-
-        override fun onPostClick(post: Post, community: Community) {
-            Intent(requireActivity(), PostDetailedActivity::class.java).apply {
-                putExtra("PostObject", post)
-                putExtra("CommunityObject", community)
-                startActivity(this)
+            override fun getCommunityIdFromPostId(position: Int): Int {
+                return 1
             }
-        }
 
-        override fun onUpvoteBtnClick(post: Post) {
-            viewModel.upvotePost(post)
-        }
+            override fun onCommunityClick(community: Community) {
+                Intent(requireActivity(), CommunityDetailedActivity:: class.java).apply {
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
+                }
+            }
 
-        override fun onDownvoteBtnClick(post: Post) {
-            viewModel.downvotePost(post)
-        }
+            override fun onPostClick(post: Post, community: Community) {
+                Intent(requireActivity(), PostDetailedActivity::class.java).apply {
+                    putExtra("PostObject", post)
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
+                }
+            }
 
-        override fun onPostLongClick(position: Int) {
-            TODO("Not yet implemented")
-        }
+            override fun onUpvoteBtnClick(post: Post) {
+                viewModel.upvotePost(post)
+            }
 
-    })
+            override fun onDownvoteBtnClick(post: Post) {
+                viewModel.downvotePost(post)
+            }
+
+            override fun onPostLongClick(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+        })
         fragmentHomeBinding.rvPosts.adapter = adapter
         fragmentHomeBinding.rvPosts.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.rvPosts.addItemDecoration(

@@ -36,6 +36,12 @@ class PostSearchFragment: Fragment() {
         val adapter = PostAdapter(activity as SearchableActivity, object : PostAdapter.PostListener {
             override fun getCommunityIdFromPostId(position: Int): Int {return 1}
 
+            override fun onCommunityClick(community: Community) {
+                Intent(requireActivity() as SearchableActivity, CommunityDetailedActivity::class.java).apply {
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
+                }
+            }
             override fun onPostClick(post: Post, community: Community) {
                 Intent(activity as SearchableActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)

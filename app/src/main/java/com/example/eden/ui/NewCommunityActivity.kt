@@ -100,21 +100,38 @@ class NewCommunityActivity: AppCompatActivity()  {
 
         })
 
+        if(intent.hasExtra("Context")){
+            val community = intent.getSerializableExtra("CommunityObject") as Community
+            activityNewCommunityBinding.apply {
+                imageViewCommunity.visibility = View.GONE
+                tempTextView.visibility = View.GONE
+                communityNameEditText.apply {
+                    setText(community.communityName)
+                    visibility = View.GONE
+                }
+                communityDescriptionEditText.setText(community.description)
+                nextButton.text = "Save"
+            }
+        }
+
         //COMMUNITY CREATE BUTTON
         activityNewCommunityBinding.nextButton.setOnClickListener {
             val communityName = activityNewCommunityBinding.communityNameEditText.text.toString()
             val communityDescription = activityNewCommunityBinding.communityDescriptionEditText.text.toString()
-            if(viewModel.communityNameList.contains(communityName)){
+            if(viewModel.communityNameList.contains(communityName) and !intent.hasExtra("Context")){
                 Toast.makeText(this, "Community already exists! Please try again...", Toast.LENGTH_LONG).show()
             }
             else{
                 Log.i("Inside Create Button!", "HELLO!")
-                val community = Community(0, communityName = communityName, description = communityDescription, isCustomImage = isImageAttached, imageUri = imageUri)
-//                if (isImageAttached) community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
-//                else community = Community(0, communityName = communityName, description = "", isCustomImage = isImageAttached, imageUri = imageUri)
-
-                viewModel.upsertCommunity(community)
-                Toast.makeText(this, "Community has been created!", Toast.LENGTH_LONG).show()
+                var newCommunity: Community
+                if (intent.hasExtra("Context")) {
+                    val community = intent.getSerializableExtra("CommunityObject") as Community
+                    newCommunity = community.copy(description = communityDescription)
+                }
+                else newCommunity = Community(0, communityName = communityName, description = communityDescription, isCustomImage = isImageAttached, imageUri = imageUri)
+                viewModel.upsertCommunity(newCommunity)
+                if (intent.hasExtra("Context")) Toast.makeText(this, "Community has been edited!", Toast.LENGTH_LONG).show()
+                else Toast.makeText(this, "Community has been created!", Toast.LENGTH_LONG).show()
                 finish()
             }
         }
