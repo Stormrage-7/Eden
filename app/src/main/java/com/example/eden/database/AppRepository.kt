@@ -88,5 +88,9 @@ class AppRepository(private val databaseDao: EdenDao) {
         return databaseDao.getCommunityById(communityId)
     }
 
+    suspend fun deletePost(post: Post) {
+        databaseDao.deletePost(post)
+    }
+
 
 }

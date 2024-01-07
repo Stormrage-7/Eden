@@ -136,8 +136,8 @@
 
     <Button
         android:id="@+id/shareBtn"
-        android:layout_width="100sp"
-        android:layout_height="30sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_share_black_24"
         android:backgroundTint="@color/white"
         android:outlineProvider="none"

@@ -12,64 +12,53 @@ import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
 
 class DetailedPostViewModel(private val repository: AppRepository,
-                            val post: Post,
-                            val community: Community,
+                            postObj: Post,
+                            communityObj: Community,
                             application: Eden
 ): AndroidViewModel(application) {
 
-    val commentList = repository.getCommentListForPost(post.postId)
+    val post = repository.getPostWithId(postObj.postId)
+    val community = repository.getCommunity(communityObj.communityId)
+    val commentList = repository.getCommentListForPost(postObj.postId)
 
     init {
         Log.i("Testing", "DetailedPostViewModel Initialized")
     }
 
     fun upvotePost(){
-
-        when(post.voteStatus){
-            VoteStatus.UPVOTED -> {
-                post.voteCounter -= 1
-                post.voteStatus = VoteStatus.NONE
-            }
-            VoteStatus.DOWNVOTED -> {
-                post.voteCounter += 2
-                post.voteStatus = VoteStatus.UPVOTED
-            }
-            VoteStatus.NONE -> {
-                post.voteCounter += 1
-                post.voteStatus = VoteStatus.UPVOTED
-            }
+        val postValue = post.value!!
+        val temp: Post = when(postValue.voteStatus){
+            VoteStatus.UPVOTED -> postValue.copy(voteCounter = postValue.voteCounter-1, voteStatus = VoteStatus.NONE)
+            VoteStatus.DOWNVOTED -> postValue.copy(voteCounter = postValue.voteCounter+2, voteStatus = VoteStatus.UPVOTED)
+            VoteStatus.NONE -> postValue.copy(voteCounter = postValue.voteCounter+1, voteStatus = VoteStatus.UPVOTED)
         }
-
         viewModelScope.launch {
-            repository.upsertPost(post)
+            repository.upsertPost(temp)
         }
     }
 
     fun downvotePost(){
-
-        when(post.voteStatus){
-            VoteStatus.UPVOTED -> {
-                post.voteCounter -= 2
-                post.voteStatus = VoteStatus.DOWNVOTED
-            }
-            VoteStatus.DOWNVOTED -> {
-                post.voteCounter += 1
-                post.voteStatus = VoteStatus.NONE
-            }
-            VoteStatus.NONE -> {
-                post.voteCounter -= 1
-                post.voteStatus = VoteStatus.DOWNVOTED
-            }
+        val postValue = post.value!!
+        val temp: Post = when(postValue.voteStatus){
+            VoteStatus.UPVOTED -> postValue.copy(voteCounter = postValue.voteCounter-2, voteStatus = VoteStatus.DOWNVOTED)
+            VoteStatus.DOWNVOTED -> postValue.copy(voteCounter = postValue.voteCounter+1, voteStatus = VoteStatus.NONE)
+            VoteStatus.NONE -> postValue.copy(voteCounter = postValue.voteCounter-1, voteStatus = VoteStatus.DOWNVOTED)
         }
 
         viewModelScope.launch{
-            repository.upsertPost(post)
+            repository.upsertPost(temp)
         }
     }
 
     fun addComment(comment: Comment) {
         viewModelScope.launch {
             repository.upsertComment(comment)
+        }
+    }
+
+    fun deletePost(){
+        viewModelScope.launch {
+            repository.deletePost(post.value!!)
         }
     }
 

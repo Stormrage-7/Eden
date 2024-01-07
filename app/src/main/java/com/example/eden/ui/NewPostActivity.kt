@@ -96,6 +96,18 @@ class NewPostActivity: AppCompatActivity()  {
                     nextButton.text = "Post"
                 }
             }
+
+            if (intent.getStringExtra("Context") == "PostDetailedActivity"){
+                activityNewPostBinding.apply {
+                    val post = this@NewPostActivity.intent.getSerializableExtra("PostObject") as Post
+                    val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as Community
+                    communityId = community.communityId
+                    TitleEditTV.visibility = View.GONE
+                    insertImagesBtn.visibility = View.GONE
+                    bodyTextEditTV.setText(post.bodyText)
+                    nextButton.text = "Save"
+                }
+            }
         }
 
         activityNewPostBinding.communityBar.setOnClickListener {
@@ -115,12 +127,21 @@ class NewPostActivity: AppCompatActivity()  {
                 Log.i("Inside Join Button!", "HELLO!")
                 val titleText = activityNewPostBinding.TitleEditTV.text.toString()
                 val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
-
-
-                viewModel.upsertPost(Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId))
-                (application as Eden).postId+=1
+                var newPost: Post
+                if (intent.hasExtra("Context")){
+                    if (intent.getStringExtra("Context") == "PostDetailedActivity"){
+                        val post = intent.getSerializableExtra("PostObject") as Post
+                        newPost = post.copy(bodyText = bodyText)
+                        viewModel.upsertPost(newPost)
+                        Toast.makeText(this, "Post has been Updated!", Toast.LENGTH_LONG).show()
+                    }
+                }
+                else{
+                    newPost = Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId)
+                    viewModel.upsertPost(newPost)
+                    Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+                }
                 viewModel.insertPostCommunityCrossRef(PostCommunityCrossRef((application as Eden).postId, communityId))
-                Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                 finish()
             }
         }

@@ -1,6 +1,7 @@
 package com.example.eden.ui
 
 import android.app.Activity
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
@@ -51,27 +52,6 @@ class PostDetailedActivity: AppCompatActivity(){
 
         //POST DETAILS
         activityDetailedPostViewBinding.apply {
-            if(viewModel.community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(viewModel.community.imageUri))
-            else imageViewCommunity.setImageResource(viewModel.community.imageUri.toInt())
-            textViewCommunityName.text = viewModel.community.communityName
-            textViewTitle.text = viewModel.post.title
-
-            if(viewModel.post.containsImage){
-                imageViewPost.visibility = View.VISIBLE
-                imageViewPost.setImageURI(Uri.parse(viewModel.post.imageUri))
-                imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
-            }
-            else imageViewPost.visibility = View.GONE
-
-            //BODY TEXT
-            if(viewModel.post.bodyText.isEmpty()){
-                textViewDescription.visibility = View.GONE
-            }
-            else{
-                textViewDescription.visibility = View.VISIBLE
-                textViewDescription.text = viewModel.post.bodyText
-            }
-            updateVoteSystem()
 
             postCommentButton.isEnabled = false
 
@@ -111,11 +91,24 @@ class PostDetailedActivity: AppCompatActivity(){
 
             postCommentButton.setOnClickListener {
                 val commentText = commentEditText.text.toString()
-                viewModel.addComment(Comment(0, text = commentText, postId = viewModel.post.postId))
+                viewModel.addComment(Comment(0, text = commentText, postId = viewModel.post.value!!.postId))
                 commentEditText.text.clear()
                 commentEditText.clearFocus()
                 val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(commentEditText.windowToken, 0)
+            }
+
+            editButton.setOnClickListener {
+                Intent(this@PostDetailedActivity, NewPostActivity::class.java).apply {
+                    putExtra("Context", "PostDetailedActivity")
+                    putExtra("PostObject", viewModel.post.value)
+                    startActivity(this)
+                }
+            }
+
+            deleteButton.setOnClickListener {
+                viewModel.deletePost()
+                finish()
             }
         }
 
@@ -129,15 +122,37 @@ class PostDetailedActivity: AppCompatActivity(){
             )
         )
 
-//        activityDetailedPostViewBinding.rvComments.addOnScrollListener(object : OnScrollListener(){
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                mScrollY += dy.toFloat()
-//                mScrollY = max(mScrollY, 0F)
-//
-//                activityDetailedPostViewBinding.postDetails.translationY = min(-mScrollY, 0F)
-//            }
-//        })
+        viewModel.post.observe(this) {
+            activityDetailedPostViewBinding.apply {
+                textViewTitle.text = it.title
+                if (it.containsImage) {
+                    imageViewPost.visibility = View.VISIBLE
+                    imageViewPost.setImageURI(Uri.parse(it.imageUri))
+                    imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+                } else imageViewPost.visibility = View.GONE
+
+                //BODY TEXT
+                if (it.bodyText.isEmpty()) {
+                    textViewDescription.visibility = View.GONE
+                } else {
+                    textViewDescription.visibility = View.VISIBLE
+                    textViewDescription.text = it.bodyText
+                }
+                updateVoteSystem()
+            }
+        }
+
+        viewModel.community.observe(this) {
+            activityDetailedPostViewBinding.apply {
+                if (it.isCustomImage) imageViewCommunity.setImageURI(
+                    Uri.parse(
+                        it.imageUri
+                    )
+                )
+                else imageViewCommunity.setImageResource(it.imageUri.toInt())
+                textViewCommunityName.text = it.communityName
+            }
+        }
 
         viewModel.commentList.observe(this) {
             it.let {
@@ -158,13 +173,23 @@ class PostDetailedActivity: AppCompatActivity(){
                 }
             }
         }
+
+    //        activityDetailedPostViewBinding.rvComments.addOnScrollListener(object : OnScrollListener(){
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                mScrollY += dy.toFloat()
+//                mScrollY = max(mScrollY, 0F)
+//
+//                activityDetailedPostViewBinding.postDetails.translationY = min(-mScrollY, 0F)
+//            }
+//        })
     }
 
     private fun updateVoteSystem() {
         activityDetailedPostViewBinding.apply {
-            textViewVoteCounter.text = viewModel.post.voteCounter.toString()
+            textViewVoteCounter.text = viewModel.post.value!!.voteCounter.toString()
 
-            when (viewModel.post.voteStatus) {
+            when (viewModel.post.value!!.voteStatus) {
                 VoteStatus.UPVOTED -> {
                     likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
                     dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
