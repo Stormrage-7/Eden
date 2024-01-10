@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
         JoinedCommunities :: class,
         Comment :: class
     ],
-    version = 21
+    version = 22
 )
 abstract class AppDatabase : RoomDatabase() {
 

@@ -102,6 +102,7 @@ class PostDetailedActivity: AppCompatActivity(){
                 Intent(this@PostDetailedActivity, NewPostActivity::class.java).apply {
                     putExtra("Context", "PostDetailedActivity")
                     putExtra("PostObject", viewModel.post.value)
+                    putExtra("CommunityObject", viewModel.community.value)
                     startActivity(this)
                 }
             }
@@ -123,22 +124,24 @@ class PostDetailedActivity: AppCompatActivity(){
         )
 
         viewModel.post.observe(this) {
-            activityDetailedPostViewBinding.apply {
-                textViewTitle.text = it.title
-                if (it.containsImage) {
-                    imageViewPost.visibility = View.VISIBLE
-                    imageViewPost.setImageURI(Uri.parse(it.imageUri))
-                    imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
-                } else imageViewPost.visibility = View.GONE
+            if (it!=null) {
+                activityDetailedPostViewBinding.apply {
+                    textViewTitle.text = it.title
+                    if (it.containsImage) {
+                        imageViewPost.visibility = View.VISIBLE
+                        imageViewPost.setImageURI(Uri.parse(it.imageUri))
+                        imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+                    } else imageViewPost.visibility = View.GONE
 
-                //BODY TEXT
-                if (it.bodyText.isEmpty()) {
-                    textViewDescription.visibility = View.GONE
-                } else {
-                    textViewDescription.visibility = View.VISIBLE
-                    textViewDescription.text = it.bodyText
+                    //BODY TEXT
+                    if (it.bodyText.isEmpty()) {
+                        textViewDescription.visibility = View.GONE
+                    } else {
+                        textViewDescription.visibility = View.VISIBLE
+                        textViewDescription.text = it.bodyText
+                    }
+                    updateVoteSystem()
                 }
-                updateVoteSystem()
             }
         }
 
@@ -174,7 +177,7 @@ class PostDetailedActivity: AppCompatActivity(){
             }
         }
 
-    //        activityDetailedPostViewBinding.rvComments.addOnScrollListener(object : OnScrollListener(){
+//        activityDetailedPostViewBinding.rvComments.addOnScrollListener(object : OnScrollListener(){
 //            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 //                super.onScrolled(recyclerView, dx, dy)
 //                mScrollY += dy.toFloat()

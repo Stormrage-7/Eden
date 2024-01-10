@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
@@ -22,10 +23,12 @@ import com.example.eden.ui.viewmodels.NewPostViewModelFactory
 import com.example.eden.R
 import com.example.eden.entities.Post
 import com.example.eden.databinding.ActivityNewPostBinding
+import com.example.eden.dialogs.DiscardChangesDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.relations.PostCommunityCrossRef
 
-class NewPostActivity: AppCompatActivity()  {
+class NewPostActivity: AppCompatActivity(),
+        DiscardChangesDialogFragment.DiscardChangesDialogListener{
     private lateinit var activityNewPostBinding: ActivityNewPostBinding
     private lateinit var viewModel: NewPostViewModel
     private lateinit var database: AppDatabase
@@ -55,7 +58,8 @@ class NewPostActivity: AppCompatActivity()  {
         }
 
         activityNewPostBinding.closeBtn.setOnClickListener {
-            finish()
+            val discardChangesDialog = DiscardChangesDialogFragment()
+            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
         }
 
         activityNewPostBinding.TitleEditTV.addTextChangedListener(object : TextWatcher {
@@ -102,6 +106,7 @@ class NewPostActivity: AppCompatActivity()  {
                     val post = this@NewPostActivity.intent.getSerializableExtra("PostObject") as Post
                     val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as Community
                     communityId = community.communityId
+                    TitleEditTV.setText(post.title)
                     TitleEditTV.visibility = View.GONE
                     insertImagesBtn.visibility = View.GONE
                     bodyTextEditTV.setText(post.bodyText)
@@ -211,6 +216,12 @@ class NewPostActivity: AppCompatActivity()  {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        finish()
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    }
 
 
 }
