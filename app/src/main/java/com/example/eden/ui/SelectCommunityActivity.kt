@@ -18,7 +18,6 @@ import com.example.eden.entities.Community
 
 class SelectCommunityActivity: AppCompatActivity() {
     private lateinit var activitySelectCommunityBinding: ActivitySelectCommunityBinding
-    private lateinit var databaseDao: EdenDao
     private lateinit var repository: AppRepository
     private lateinit var viewModel: CommunitiesViewModel
     private lateinit var factory: CommunityViewModelFactory

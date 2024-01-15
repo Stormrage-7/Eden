@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.database.AppDatabase
@@ -22,10 +23,12 @@ import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding
+import com.example.eden.dialogs.DiscardChangesDialogFragment
 import com.example.eden.entities.Community
 
 
-class NewCommunityActivity: AppCompatActivity()  {
+class NewCommunityActivity: AppCompatActivity(),
+    DiscardChangesDialogFragment.DiscardChangesDialogListener{
     private lateinit var activityNewCommunityBinding: ActivityNewCommunityBinding
     private lateinit var viewModel: CommunitiesViewModel
     private lateinit var database: AppDatabase
@@ -57,7 +60,8 @@ class NewCommunityActivity: AppCompatActivity()  {
 
         //CLOSE BUTTON
         activityNewCommunityBinding.closeBtn.setOnClickListener {
-            finish()
+            val discardChangesDialog = DiscardChangesDialogFragment()
+            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
         }
 
         activityNewCommunityBinding.nextButton.apply {
@@ -173,6 +177,19 @@ class NewCommunityActivity: AppCompatActivity()  {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        finish()
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    }
+
+    override fun onBackPressed() {
+        val discardChangesDialog = DiscardChangesDialogFragment()
+        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
+//        super.onBackPressed()
     }
 
 }

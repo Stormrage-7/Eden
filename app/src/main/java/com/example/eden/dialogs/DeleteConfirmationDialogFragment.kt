@@ -6,11 +6,10 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import java.lang.ClassCastException
-import kotlin.IllegalStateException
 
-class DiscardChangesDialogFragment: DialogFragment() {
-    private lateinit var listener: DiscardChangesDialogListener
-    interface DiscardChangesDialogListener {
+class DeleteConfirmationDialogFragment: DialogFragment() {
+    private lateinit var listener: DeleteConfirmationDialogListener
+    interface DeleteConfirmationDialogListener{
         fun onDialogPositiveClick(dialog: DialogFragment)
         fun onDialogNegativeClick(dialog: DialogFragment)
     }
@@ -18,13 +17,13 @@ class DiscardChangesDialogFragment: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("Are you sure you want discard changes and exit?")
+            builder.setMessage("Are you sure you want to delete this post?")
                 .setPositiveButton("Yes"
                 ) { _, _ ->
                     listener.onDialogPositiveClick(this)
                 }
                 .setNegativeButton("No"
-                ) { dialog, id ->
+                ) { _, _ ->
                     listener.onDialogNegativeClick(this)
                 }
             builder.create()
@@ -34,10 +33,10 @@ class DiscardChangesDialogFragment: DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            listener = context as DiscardChangesDialogListener
+            listener = context as DeleteConfirmationDialogListener
         } catch (e: ClassCastException){
             throw ClassCastException((context.toString() +
-                    " must implement DiscardChangesDialogListener!"))
+                    " must implement DeleteConfirmationDialogListener!"))
         }
     }
 }

@@ -60,10 +60,10 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
 <!--        <ImageButton-->
-<!--            android:id="@+id/search_btn"-->
+<!--            android:id="@+id/filter_btn"-->
 <!--            android:layout_width="48sp"-->
 <!--            android:layout_height="48sp"-->
-<!--            android:src="@drawable/ic_discover_24"-->
+<!--            android:src="@drawable/ic_filter_24"-->
 <!--            android:backgroundTint="@color/white"-->
 <!--            app:layout_constraintTop_toTopOf="parent"-->
 <!--            app:layout_constraintBottom_toBottomOf="parent"-->

@@ -223,5 +223,10 @@ class NewPostActivity: AppCompatActivity(),
     override fun onDialogNegativeClick(dialog: DialogFragment) {
     }
 
+    override fun onBackPressed() {
+        val discardChangesDialog = DiscardChangesDialogFragment()
+        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
+//        super.onBackPressed()
+    }
 
 }

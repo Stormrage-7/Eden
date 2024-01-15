@@ -3,14 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="New Community"
-        android:icon="@drawable/community_add_24"
-        android:id="@+id/newCommunityItem"
-        app:showAsAction="ifRoom"/>
+        android:title="Search"
+        android:icon="@drawable/ic_discover_24"
+        android:id="@+id/searchItem"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item
         android:title="New Community"
-        android:icon="@drawable/ic_discover_24"
-        android:id="@+id/searchItem"
-        app:showAsAction="ifRoom"/>
+        android:icon="@drawable/community_add_24"
+        android:id="@+id/newCommunityItem"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="Filter"
+        android:icon="@drawable/ic_filter_24"
+        android:id="@+id/filterItem"
+        app:showAsAction="always|collapseActionView" />
+
 </menu>
