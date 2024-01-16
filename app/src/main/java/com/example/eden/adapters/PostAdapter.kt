@@ -16,6 +16,7 @@ import com.example.eden.enums.VoteStatus
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.relations.PostCommunityCrossRef
+import com.example.eden.enums.PostFilter
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.HomeScreenActivity
 import com.example.eden.ui.SearchableActivity
@@ -26,9 +27,10 @@ class PostAdapter(
 ): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     var joinedCommunitiesList: List<Int> = listOf()
-    var postList: List<Post> = listOf()
+    var postList: MutableList<Post> = mutableListOf()
     var communityList: List<Community> = listOf()
     var postCommunityCrossRefList: List<PostCommunityCrossRef> = listOf()
+    private var filter = PostFilter.HOT
     lateinit var currentCommunity: Community
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
@@ -145,7 +147,11 @@ class PostAdapter(
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
         Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
-        this.postList = postList
+        this.postList = when(filter){
+            PostFilter.HOT -> postList.sortedByDescending { it.postId }.toMutableList()
+            PostFilter.TOP -> postList.sortedByDescending { it.voteCounter }.toMutableList()
+            PostFilter.OLDEST -> postList.sortedBy { it.postId }.toMutableList()
+        }
         Log.i("In Update Method", "Local List: ${this.postList}")
         notifyDataSetChanged()
     }
@@ -159,9 +165,20 @@ class PostAdapter(
         if (joinedCommunitiesList != null) {
             this.joinedCommunitiesList = joinedCommunitiesList
             Log.i("PostAdapter", "${this.postList}")
-            this.postList = postList.filter { post -> this.joinedCommunitiesList.contains(post.communityId) }
+            this.postList =
+                postList.filter { post -> this.joinedCommunitiesList.contains(post.communityId) }.toMutableList()
         }
         Log.i("PostAdapter", "${this.postList}")
+        notifyDataSetChanged()
+    }
+
+    fun updateFilter(filter: PostFilter) {
+        this.filter = filter
+        when(filter){
+            PostFilter.HOT -> postList.sortByDescending { it.postId }
+            PostFilter.TOP -> postList.sortByDescending { it.voteCounter }
+            PostFilter.OLDEST -> postList.sortBy { it.postId }
+        }
         notifyDataSetChanged()
     }
 

@@ -7,16 +7,18 @@ import com.example.eden.database.AppRepository
 import com.example.eden.Eden
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
 
 class DetailedCommunityViewModel(private val repository: AppRepository,
-                                 communityObj: Community,
+                                 val communityObj: Community,
                                  application: Eden
 ): AndroidViewModel(application) {
 
     val community = repository.getCommunity(communityObj.communityId)
-    val postList = repository.getPostsOfCommunity(communityObj.communityId)
+    var postList = repository.getPostsOfCommunity(communityObj.communityId)
+    var filter: PostFilter = PostFilter.HOT
     init {
         Log.i("Testing", "DetailedCommunityViewModel Initialized")
     }
@@ -64,6 +66,11 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
         viewModelScope.launch{
             repository.upsertCommunity(copy)
         }
+    }
+
+    fun refreshPostListWithFilter(filter: PostFilter) {
+        postList = repository.getPostsOfCommunity(community.value!!.communityId, filter)
+        Log.i("DetailedCommunityViewModel", postList.value.toString())
     }
 
 }

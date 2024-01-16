@@ -69,9 +69,6 @@ interface EdenDao {
     @Query("SELECT * FROM PostCommunityCrossRef")
     fun getAllPostCommunityCrossRef(): LiveData<List<PostCommunityCrossRef>>
 
-    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId")
-    fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>>
-
     @Transaction
     @Query("SELECT * FROM post_table WHERE postId = :postId")
     suspend fun getCommunitiesOfPost(postId: Int): List<PostWithCommunities>
@@ -89,4 +86,13 @@ interface EdenDao {
     fun getPostsMatchingQuery(searchQuery: String): LiveData<List<Post>>
     @Query("SELECT * FROM community_table WHERE communityName LIKE '%' || :searchQuery || '%'")
     fun getCommunitiesMatchingQuery(searchQuery: String): LiveData<List<Community>>
+
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId")
+    fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>>
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter ASC")
+    fun getHotPostsOfCommunity(communityId: Int): LiveData<List<Post>>
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter DESC")
+    fun getTopPostsOfCommunity(communityId: Int): LiveData<List<Post>>
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter DESC")
+    fun getOldPostsOfCommunity(communityId: Int): LiveData<List<Post>>
 }

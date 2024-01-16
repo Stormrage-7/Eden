@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
@@ -26,6 +28,8 @@ import com.example.eden.databinding.ActivityNewPostBinding
 import com.example.eden.dialogs.DiscardChangesDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.relations.PostCommunityCrossRef
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class NewPostActivity: AppCompatActivity(),
         DiscardChangesDialogFragment.DiscardChangesDialogListener{
@@ -42,6 +46,7 @@ class NewPostActivity: AppCompatActivity(),
         private const val PICK_COMMUNITY = 101
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityNewPostBinding = ActivityNewPostBinding.inflate(layoutInflater)
@@ -129,7 +134,7 @@ class NewPostActivity: AppCompatActivity(),
                 }
             }
             else{
-                Log.i("Inside Join Button!", "HELLO!")
+                Log.i("Inside Post Button!", "HELLO!")
                 val titleText = activityNewPostBinding.TitleEditTV.text.toString()
                 val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
                 var newPost: Post
@@ -140,9 +145,16 @@ class NewPostActivity: AppCompatActivity(),
                         viewModel.upsertPost(newPost)
                         Toast.makeText(this, "Post has been Updated!", Toast.LENGTH_LONG).show()
                     }
+                    else{
+                        newPost = Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
+                            ZoneOffset.UTC), voteCounter = (0..25).random())
+                        viewModel.upsertPost(newPost)
+                        Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+                    }
                 }
                 else{
-                    newPost = Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId)
+                    newPost = Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
+                        ZoneOffset.UTC), voteCounter = (0..25).random())
                     viewModel.upsertPost(newPost)
                     Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                 }

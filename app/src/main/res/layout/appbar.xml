@@ -40,7 +40,7 @@
             android:layout_width="0sp"
             android:layout_height="match_parent"
             android:visibility="visible"
-            android:iconifiedByDefault="false"
+            android:iconifiedByDefault="true"
             android:queryHint="Search post or community..."
             android:background="@drawable/searchview_background"
             app:layout_constraintTop_toTopOf="parent"

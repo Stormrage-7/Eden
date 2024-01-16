@@ -19,9 +19,10 @@ data class Post (
     val bodyText: String,
     var voteCounter: Int = 0,
     var voteStatus: VoteStatus = VoteStatus.NONE,
-    val isPinned: Boolean = false,
+    val dateTime: Long,
     val communityId: Int
     ) : Serializable
+//val isPinned: Boolean = false,
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),
 //    val commentSectionType: CommentSectionType = CommentSectionType.OPEN,

@@ -59,6 +59,11 @@
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
+        <activity
+            android:name=".ui.NewCommentActivity"
+            android:theme="@style/Theme.Eden.CreatePostScreen">
+        </activity>
+
         <activity android:name=".ui.SearchableActivity"
             android:launchMode="singleTop"
             android:exported="true">

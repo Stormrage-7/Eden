@@ -19,8 +19,11 @@ import com.example.eden.Eden
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.R
 import com.example.eden.databinding.ActivityDetailedCommunityViewBinding
+import com.example.eden.databinding.BottomSheetPostFilterBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.enums.PostFilter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class CommunityDetailedActivity: AppCompatActivity() {
 
@@ -28,6 +31,7 @@ class CommunityDetailedActivity: AppCompatActivity() {
     private lateinit var viewModel: DetailedCommunityViewModel
     private lateinit var repository: AppRepository
     private lateinit var factory: DetailedCommunityViewModelFactory
+    private lateinit var bottomSheetDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,18 +132,53 @@ class CommunityDetailedActivity: AppCompatActivity() {
                     detailedCommunityViewBinding.rvPosts.visibility = View.GONE
                     detailedCommunityViewBinding.tempImgView.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempTextView.visibility = View.VISIBLE
-                    adapter!!.updatePostList(it)
+                    adapter.updatePostList(it)
                 }
                 else {
                     detailedCommunityViewBinding.rvPosts.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempImgView.visibility = View.GONE
                     detailedCommunityViewBinding.tempTextView.visibility = View.GONE
-                    adapter!!.updatePostList(it)
+                    adapter.updatePostList(it)
                     Log.i("Inside PostList Observer", it.toString())
                     Log.i("Inside PostList Observer", adapter.postList.toString())
                 }
             }
         })
+
+        detailedCommunityViewBinding.filterButton.setOnClickListener {
+            val dialogViewBinding = BottomSheetPostFilterBinding.inflate(layoutInflater)
+            bottomSheetDialog = BottomSheetDialog(this)
+            bottomSheetDialog.setContentView(dialogViewBinding.root)
+
+            dialogViewBinding.filterHot.setOnClickListener {
+                viewModel.filter = PostFilter.HOT
+                detailedCommunityViewBinding.filterButton.apply {
+                    text = viewModel.filter.text
+                    setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                }
+                adapter.updateFilter(viewModel.filter)
+                bottomSheetDialog.dismiss()
+            }
+            dialogViewBinding.filterTop.setOnClickListener {
+                viewModel.filter = PostFilter.TOP
+                detailedCommunityViewBinding.filterButton.apply {
+                    text = viewModel.filter.text
+                    setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                }
+                adapter.updateFilter(viewModel.filter)
+                bottomSheetDialog.dismiss()
+            }
+            dialogViewBinding.filterOld.setOnClickListener {
+                viewModel.filter = PostFilter.OLDEST
+                detailedCommunityViewBinding.filterButton.apply {
+                    text = viewModel.filter.text
+                    setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                }
+                adapter.updateFilter(viewModel.filter)
+                bottomSheetDialog.dismiss()
+            }
+            bottomSheetDialog.show()
+        }
 
     }
 

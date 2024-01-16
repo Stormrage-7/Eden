@@ -13,6 +13,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,12 +24,15 @@ import com.example.eden.ui.viewmodels.DetailedPostViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.databinding.ActivityDetailedPostViewBinding
+import com.example.eden.dialogs.DeleteConfirmationDialogFragment
+import com.example.eden.dialogs.DiscardChangesDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
 
-class PostDetailedActivity: AppCompatActivity(){
+class PostDetailedActivity: AppCompatActivity(),
+    DeleteConfirmationDialogFragment.DeleteConfirmationDialogListener{
 
     private lateinit var activityDetailedPostViewBinding: ActivityDetailedPostViewBinding
     private lateinit var viewModel: DetailedPostViewModel
@@ -43,17 +47,16 @@ class PostDetailedActivity: AppCompatActivity(){
         setContentView(activityDetailedPostViewBinding.root)
 
         val application = application as Eden
+        val post = intent.getSerializableExtra("PostObject") as Post
         repository = application.repository
         factory = DetailedPostViewModelFactory(repository,
-            intent.getSerializableExtra("PostObject") as Post,
+            post,
             intent.getSerializableExtra("CommunityObject") as Community,
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedPostViewModel::class.java]
 
         //POST DETAILS
         activityDetailedPostViewBinding.apply {
-
-            postCommentButton.isEnabled = false
 
             likeBtn.setOnClickListener { viewModel.upvotePost()
                 updateVoteSystem()
@@ -65,37 +68,12 @@ class PostDetailedActivity: AppCompatActivity(){
                 finish()
             }
 
-            commentEditText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                TODO("Not yet implemented")
+            commentTextView.setOnClickListener {
+                Intent(this@PostDetailedActivity, NewCommentActivity::class.java).apply {
+                    putExtra("PostTitle", post.title)
+                    putExtra("PostId", post.postId)
+                    startActivity(this)
                 }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0?.trim()?.isNotEmpty() == true) {
-                        postCommentButton.isEnabled = true
-                        postCommentButton.backgroundTintList = ColorStateList.valueOf(
-                            ResourcesCompat.getColor(resources, R.color.azure, null)
-                        )
-                    } else {
-                        postCommentButton.isEnabled = false
-                        postCommentButton.backgroundTintList = ColorStateList.valueOf(
-                            ResourcesCompat.getColor(resources, R.color.grey, null)
-                        )
-                    }
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-//                TODO("Not yet implemented")
-                }
-            })
-
-            postCommentButton.setOnClickListener {
-                val commentText = commentEditText.text.toString()
-                viewModel.addComment(Comment(0, text = commentText, postId = viewModel.post.value!!.postId))
-                commentEditText.text.clear()
-                commentEditText.clearFocus()
-                val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(commentEditText.windowToken, 0)
             }
 
             editButton.setOnClickListener {
@@ -108,8 +86,8 @@ class PostDetailedActivity: AppCompatActivity(){
             }
 
             deleteButton.setOnClickListener {
-                viewModel.deletePost()
-                finish()
+                val deleteConfirmationDialog = DeleteConfirmationDialogFragment()
+                deleteConfirmationDialog.show(supportFragmentManager, "DeleteConfirmationDialogFragment")
             }
         }
 
@@ -186,6 +164,14 @@ class PostDetailedActivity: AppCompatActivity(){
 //                activityDetailedPostViewBinding.postDetails.translationY = min(-mScrollY, 0F)
 //            }
 //        })
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        viewModel.deletePost()
+        finish()
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
     }
 
     private fun updateVoteSystem() {

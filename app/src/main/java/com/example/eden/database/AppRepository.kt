@@ -7,6 +7,7 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.relations.PostCommunityCrossRef
+import com.example.eden.enums.PostFilter
 
 class AppRepository(private val databaseDao: EdenDao) {
 
@@ -17,6 +18,13 @@ class AppRepository(private val databaseDao: EdenDao) {
     fun getCommentListForPost(postId: Int): LiveData<List<Comment>> = databaseDao.getCommentListForPost(postId)
     fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>> = databaseDao.getPostsOfCommunity(communityId)
 
+    fun getPostsOfCommunity(communityId: Int, filter: PostFilter): LiveData<List<Post>> {
+        return when(filter){
+            PostFilter.HOT -> databaseDao.getHotPostsOfCommunity(communityId)
+            PostFilter.TOP -> databaseDao.getTopPostsOfCommunity(communityId)
+            PostFilter.OLDEST -> databaseDao.getOldPostsOfCommunity(communityId)
+        }
+    }
 
     init {
         refreshPosts()
