@@ -18,6 +18,7 @@ import com.example.eden.ui.viewmodels.DetailedCommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.R
+import com.example.eden.adapters.CommunityWithPostsAdapter
 import com.example.eden.databinding.ActivityDetailedCommunityViewBinding
 import com.example.eden.databinding.BottomSheetPostFilterBinding
 import com.example.eden.entities.Community
@@ -46,37 +47,18 @@ class CommunityDetailedActivity: AppCompatActivity() {
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedCommunityViewModel::class.java]
 
-        detailedCommunityViewBinding.apply {
-            backBtn.setOnClickListener {
-                finish()
-            }
-
-            createPostButton.setOnClickListener {
-                Intent(this@CommunityDetailedActivity, NewPostActivity::class.java).apply {
-                    putExtra("Context", "CommunityDetailedActivity")
-                    putExtra("CommunityObject", viewModel.community.value)
-                    startActivity(this)
-                }
-            }
-        }
-
-        detailedCommunityViewBinding.joinButton.setOnClickListener {
-            viewModel.onJoinClick()
-            updateJoinStatus()
-        }
-
         detailedCommunityViewBinding.editButton.setOnClickListener {
             Intent(this@CommunityDetailedActivity, NewCommunityActivity::class.java).apply {
                 putExtra("Context", "CommunityDetailedActivity")
                 putExtra("CommunityObject", viewModel.community.value)
                 startActivity(this)
             }
+
         }
 
-        val adapter = PostAdapter(context = this, object : PostAdapter.PostListener {
-            override fun getCommunityIdFromPostId(position: Int): Int {
-                return 1
-            }
+        detailedCommunityViewBinding.backBtn.setOnClickListener { finish() }
+
+        val adapter = CommunityWithPostsAdapter(context = this, object : CommunityWithPostsAdapter.PostListener {
 
             override fun onCommunityClick(community: Community) {
                 //TODO
@@ -97,106 +79,71 @@ class CommunityDetailedActivity: AppCompatActivity() {
                 viewModel.downvotePost(post)
             }
 
-            override fun onPostLongClick(position: Int) {
-                TODO("Not yet implemented")
+            override fun setFilter(filter: PostFilter) {
+                viewModel.filter = filter
             }
 
+            override fun onJoinClick() {
+                viewModel.onJoinClick()
+            }
+
+            override fun onCreateClick() {
+                Intent(this@CommunityDetailedActivity, NewPostActivity::class.java).apply {
+                    putExtra("Context", "CommunityDetailedActivity")
+                    putExtra("CommunityObject", viewModel.community.value)
+                    startActivity(this)
+                }
+            }
         })
+        adapter.resources = resources
 
         viewModel.community.observe(this, Observer {
             detailedCommunityViewBinding.apply {
-                if (it.isCustomImage) imageViewCommunity.setImageURI(
-                    Uri.parse(
-                        it.imageUri
-                    )
-                )
-                else imageViewCommunity.setImageResource(it.imageUri.toInt())
-                textViewCommunityName.text = it.communityName
-                textViewCommunityDescription.text = it.description
-                updateJoinStatus()
-                detailedCommunityViewBinding.rvPosts.adapter = adapter
-                detailedCommunityViewBinding.rvPosts.layoutManager = LinearLayoutManager(this@CommunityDetailedActivity)
-                detailedCommunityViewBinding.rvPosts.addItemDecoration(
+                detailedCommunityViewBinding.rvDetailedCommunity.adapter = adapter
+                detailedCommunityViewBinding.rvDetailedCommunity.layoutManager = LinearLayoutManager(this@CommunityDetailedActivity)
+                detailedCommunityViewBinding.rvDetailedCommunity.addItemDecoration(
                     DividerItemDecoration(
                         this@CommunityDetailedActivity,
                         LinearLayoutManager(this@CommunityDetailedActivity).orientation
                     )
                 )
                 adapter.currentCommunity = it
+                adapter.notifyDataSetChanged()
             }
         })
 
         viewModel.postList.observe(this, Observer {
             it.let {
                 if(it.isEmpty()){
-                    detailedCommunityViewBinding.rvPosts.visibility = View.GONE
                     detailedCommunityViewBinding.tempImgView.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempTextView.visibility = View.VISIBLE
                     adapter.updatePostList(it)
                 }
                 else {
-                    detailedCommunityViewBinding.rvPosts.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempImgView.visibility = View.GONE
                     detailedCommunityViewBinding.tempTextView.visibility = View.GONE
                     adapter.updatePostList(it)
-                    Log.i("Inside PostList Observer", it.toString())
-                    Log.i("Inside PostList Observer", adapter.postList.toString())
                 }
             }
         })
 
-        detailedCommunityViewBinding.filterButton.setOnClickListener {
-            val dialogViewBinding = BottomSheetPostFilterBinding.inflate(layoutInflater)
-            bottomSheetDialog = BottomSheetDialog(this)
-            bottomSheetDialog.setContentView(dialogViewBinding.root)
-
-            dialogViewBinding.filterHot.setOnClickListener {
-                viewModel.filter = PostFilter.HOT
-                detailedCommunityViewBinding.filterButton.apply {
-                    text = viewModel.filter.text
-                    setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
-                }
-                adapter.updateFilter(viewModel.filter)
-                bottomSheetDialog.dismiss()
-            }
-            dialogViewBinding.filterTop.setOnClickListener {
-                viewModel.filter = PostFilter.TOP
-                detailedCommunityViewBinding.filterButton.apply {
-                    text = viewModel.filter.text
-                    setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
-                }
-                adapter.updateFilter(viewModel.filter)
-                bottomSheetDialog.dismiss()
-            }
-            dialogViewBinding.filterOld.setOnClickListener {
-                viewModel.filter = PostFilter.OLDEST
-                detailedCommunityViewBinding.filterButton.apply {
-                    text = viewModel.filter.text
-                    setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
-                }
-                adapter.updateFilter(viewModel.filter)
-                bottomSheetDialog.dismiss()
-            }
-            bottomSheetDialog.show()
-        }
-
     }
 
-    private fun updateJoinStatus() {
-        detailedCommunityViewBinding.apply {
-            if (viewModel.community.value!!.isJoined){
-                joinButton.text = "Joined"
-                joinButton.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(resources, R.color.grey, null)
-                )
-            }
-            else{
-                joinButton.text = "Join"
-                joinButton.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(resources, R.color.azure, null)
-                )
-            }
-        }
-    }
+//    private fun updateJoinStatus() {
+//        detailedCommunityViewBinding.apply {
+//            if (viewModel.community.value!!.isJoined){
+//                joinButton.text = "Joined"
+//                joinButton.backgroundTintList = ColorStateList.valueOf(
+//                    ResourcesCompat.getColor(resources, R.color.grey, null)
+//                )
+//            }
+//            else{
+//                joinButton.text = "Join"
+//                joinButton.backgroundTintList = ColorStateList.valueOf(
+//                    ResourcesCompat.getColor(resources, R.color.azure, null)
+//                )
+//            }
+//        }
+//    }
 
 }

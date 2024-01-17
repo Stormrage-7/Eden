@@ -2,130 +2,46 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/community_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/back_btn"
+        android:layout_width="36sp"
+        android:layout_height="36sp"
+        android:src="@drawable/ic_arrow_back_24"
+        android:backgroundTint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/white"
-        android:visibility="visible"
-        android:padding="7sp"
-        android:elevation="5sp"
-        >
+        app:layout_constraintStart_toStartOf="parent"/>
 
-        <ImageButton
-            android:id="@+id/back_btn"
-            android:layout_width="36sp"
-            android:layout_height="36sp"
-            android:src="@drawable/ic_arrow_back_24"
-            android:backgroundTint="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/editButton"
-            android:layout_width="28sp"
-            android:layout_height="28sp"
-            android:layout_marginHorizontal="10sp"
-            android:src="@drawable/ic_edit_24"
-            android:backgroundTint="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imageViewCommunity"
-            app:shapeAppearanceOverlay="@style/roundedProfileImageView"
-            android:layout_width="100sp"
-            android:layout_height="100sp"
-            style="@style/roundedImageView"
-            android:src="@drawable/icon_logo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/back_btn"/>
-
-        <Button
-            android:id="@+id/createPostButton"
-            android:layout_width="wrap_content"
-            android:layout_height="45sp"
-            android:src="@drawable/ic_new_post_24"
-            android:text="Create Post"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:backgroundTint="@color/azure"
-            app:layout_constraintTop_toTopOf="@id/imageViewCommunity"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewCommunity"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
-            android:id="@+id/textViewCommunityName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Community Name"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageViewCommunity"/>
-
-        <TextView
-            android:id="@+id/textViewCommunityDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_marginTop="5sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewCommunityName"/>
-
-        <Button
-            android:id="@+id/filterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_hot_24"
-            android:drawableRight="@drawable/arrow_down_24"
-            android:outlineProvider="none"
-            android:backgroundTint="@color/azure"
-            android:text="Hot"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewCommunityDescription"/>
-
-        <Button
-            android:id="@+id/join_button"
-            android:layout_width="wrap_content"
-            android:layout_height="35sp"
-            android:text="Join"
-            android:backgroundTint="@color/azure"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewCommunityName"
-            app:layout_constraintBottom_toBottomOf="@id/textViewCommunityName"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/editButton"
+        android:layout_width="36sp"
+        android:layout_height="36sp"
+        android:layout_marginHorizontal="10sp"
+        android:src="@drawable/ic_edit_24"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPosts"
+        android:id="@+id/rvDetailedCommunity"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:padding="5sp"
-        app:layout_constraintTop_toBottomOf="@id/community_bar"
+        app:layout_constraintTop_toBottomOf="@id/back_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <ImageView
         android:id="@+id/tempImgView"
-        android:layout_width="200sp"
-        android:layout_height="200sp"
+        android:layout_width="140sp"
+        android:layout_height="140sp"
         android:src="@drawable/icon_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_btn"
         />
 
     <TextView
@@ -133,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No Posts"
-        android:textSize="50sp"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tempImgView"/>

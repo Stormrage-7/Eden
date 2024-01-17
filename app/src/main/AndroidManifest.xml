@@ -65,6 +65,7 @@
         </activity>
 
         <activity android:name=".ui.SearchableActivity"
+            android:theme="@style/Theme.Eden.CreatePostScreen"
             android:launchMode="singleTop"
             android:exported="true">
             <intent-filter>

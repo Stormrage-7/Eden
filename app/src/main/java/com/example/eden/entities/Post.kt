@@ -21,7 +21,7 @@ data class Post (
     var voteStatus: VoteStatus = VoteStatus.NONE,
     val dateTime: Long,
     val communityId: Int
-    ) : Serializable
+    ) : Serializable, DataItem()
 //val isPinned: Boolean = false,
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),
@@ -34,8 +34,3 @@ data class Post (
 //    val isDistinguishedAsMod: Boolean = false,
 //    val censorship: Censorship = Censorship.NONE,
 //    val crowdControlSettings: CrowdControlSettings = CrowdControlSettings.OFF)
-{
-//    constructor(title: String, text: String, byteArray: ByteArray):this
-
-
-}

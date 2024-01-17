@@ -77,8 +77,4 @@ class CommunitiesFragment: Fragment() {
 
         return fragmentCommunitiesBinding.root
     }
-
-//    private fun updateCountText(){
-//        fragmentCommunitiesBinding.textViewCount.text = viewModel.count.toString()
-//    }
 }

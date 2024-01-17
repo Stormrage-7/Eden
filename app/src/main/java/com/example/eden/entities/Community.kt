@@ -10,18 +10,13 @@ import java.io.Serializable
 data class Community(
     @PrimaryKey(autoGenerate = true)
     val communityId: Int,
-    @ColumnInfo
     val communityName: String,
-    @ColumnInfo
     val description: String,
-    @ColumnInfo
     val noOfMembers: Int = 0,
     @ColumnInfo(name = "contains_image")
     val isCustomImage: Boolean,
     @ColumnInfo(name = "image_uri")
     var imageUri: String,
-//    @ColumnInfo(name = "image_src")
-//    var imageSrc: Int = 0,
     var isJoined: Boolean = false
 //    val membersList: MutableList<Int>, // Should go in helper class which will act as crossreference between two classes (Post and Subreddit)
 //    val subredditType: SubredditType,
@@ -29,5 +24,4 @@ data class Community(
 //    val moderators: MutableList<Int>,  //User IDs
 //    val rules: HashMap<Int, String>,
 //    val avatar: Serializable
-): Serializable {
-}
+): Serializable, DataItem()
