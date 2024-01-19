@@ -21,7 +21,7 @@ data class Post (
     var voteStatus: VoteStatus = VoteStatus.NONE,
     val dateTime: Long,
     val communityId: Int
-    ) : Serializable, DataItem()
+    ) : Serializable
 //val isPinned: Boolean = false,
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),

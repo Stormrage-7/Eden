@@ -24,4 +24,4 @@ data class Community(
 //    val moderators: MutableList<Int>,  //User IDs
 //    val rules: HashMap<Int, String>,
 //    val avatar: Serializable
-): Serializable, DataItem()
+): Serializable

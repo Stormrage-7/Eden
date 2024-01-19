@@ -23,12 +23,15 @@ import com.example.eden.ui.viewmodels.DetailedPostViewModel
 import com.example.eden.ui.viewmodels.DetailedPostViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
+import com.example.eden.adapters.CommunityWithPostsAdapter
+import com.example.eden.adapters.PostWithCommentsAdapter
 import com.example.eden.databinding.ActivityDetailedPostViewBinding
 import com.example.eden.dialogs.DeleteConfirmationDialogFragment
 import com.example.eden.dialogs.DiscardChangesDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
 
 class PostDetailedActivity: AppCompatActivity(),
@@ -38,7 +41,6 @@ class PostDetailedActivity: AppCompatActivity(),
     private lateinit var viewModel: DetailedPostViewModel
     private lateinit var repository: AppRepository
     private lateinit var factory: DetailedPostViewModelFactory
-    private var mScrollY = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,23 +57,65 @@ class PostDetailedActivity: AppCompatActivity(),
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedPostViewModel::class.java]
 
+        val adapter = PostWithCommentsAdapter(context = this, object : PostWithCommentsAdapter.PostListener {
+
+            override fun onCommunityClick(community: Community) {
+                //TODO
+            }
+
+            override fun onUpvoteBtnClick() {
+                viewModel.upvotePost()
+            }
+
+            override fun onDownvoteBtnClick() {
+                viewModel.downvotePost()
+            }
+        })
+
+        viewModel.post.observe(this) {
+            it.let {
+                adapter.post = it
+                adapter.notifyItemChanged(0)
+            }
+        }
+
+        viewModel.community.observe(this) {
+            it.let {
+                adapter.community = it
+            }
+        }
+
+        viewModel.commentList.observe(this) {
+            it.let {
+                if (it.isEmpty()) {
+                    activityDetailedPostViewBinding.apply {
+                        tempImgView.visibility = View.VISIBLE
+                        tempTextView.visibility = View.VISIBLE
+                    }
+                    adapter.updateCommentList(it)
+                } else {
+                    activityDetailedPostViewBinding.apply {
+                        tempImgView.visibility = View.GONE
+                        tempTextView.visibility = View.GONE
+                    }
+                    adapter.updateCommentList(it)
+                }
+            }
+        }
+
         //POST DETAILS
         activityDetailedPostViewBinding.apply {
 
-            likeBtn.setOnClickListener { viewModel.upvotePost()
-                updateVoteSystem()
-            }
-            dislikeBtn.setOnClickListener { viewModel.downvotePost()
-                updateVoteSystem()
-            }
             backBtn.setOnClickListener {
                 finish()
             }
 
             commentTextView.setOnClickListener {
                 Intent(this@PostDetailedActivity, NewCommentActivity::class.java).apply {
-                    putExtra("PostTitle", post.title)
-                    putExtra("PostId", post.postId)
+                    viewModel.post.value?.let {
+                        putExtra("PostTitle", it.title)
+                        putExtra("PostId", it.postId)
+                    }
                     startActivity(this)
                 }
             }
@@ -91,7 +135,6 @@ class PostDetailedActivity: AppCompatActivity(),
             }
         }
 
-        val adapter = CommentAdapter(context = this)
         activityDetailedPostViewBinding.rvComments.adapter = adapter
         activityDetailedPostViewBinding.rvComments.layoutManager = LinearLayoutManager(this)
         activityDetailedPostViewBinding.rvComments.addItemDecoration(
@@ -100,70 +143,6 @@ class PostDetailedActivity: AppCompatActivity(),
                 LinearLayoutManager(this).orientation
             )
         )
-
-        viewModel.post.observe(this) {
-            if (it!=null) {
-                activityDetailedPostViewBinding.apply {
-                    textViewTitle.text = it.title
-                    if (it.containsImage) {
-                        imageViewPost.visibility = View.VISIBLE
-                        imageViewPost.setImageURI(Uri.parse(it.imageUri))
-                        imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
-                    } else imageViewPost.visibility = View.GONE
-
-                    //BODY TEXT
-                    if (it.bodyText.isEmpty()) {
-                        textViewDescription.visibility = View.GONE
-                    } else {
-                        textViewDescription.visibility = View.VISIBLE
-                        textViewDescription.text = it.bodyText
-                    }
-                    updateVoteSystem()
-                }
-            }
-        }
-
-        viewModel.community.observe(this) {
-            activityDetailedPostViewBinding.apply {
-                if (it.isCustomImage) imageViewCommunity.setImageURI(
-                    Uri.parse(
-                        it.imageUri
-                    )
-                )
-                else imageViewCommunity.setImageResource(it.imageUri.toInt())
-                textViewCommunityName.text = it.communityName
-            }
-        }
-
-        viewModel.commentList.observe(this) {
-            it.let {
-                if (it.isEmpty()) {
-                    activityDetailedPostViewBinding.apply {
-                        rvComments.visibility = View.GONE
-                        tempImgView.visibility = View.VISIBLE
-                        tempTextView.visibility = View.VISIBLE
-                    }
-                    adapter.updateCommentList(it)
-                } else {
-                    activityDetailedPostViewBinding.apply {
-                        rvComments.visibility = View.VISIBLE
-                        tempImgView.visibility = View.GONE
-                        tempTextView.visibility = View.GONE
-                    }
-                    adapter.updateCommentList(it)
-                }
-            }
-        }
-
-//        activityDetailedPostViewBinding.rvComments.addOnScrollListener(object : OnScrollListener(){
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                mScrollY += dy.toFloat()
-//                mScrollY = max(mScrollY, 0F)
-//
-//                activityDetailedPostViewBinding.postDetails.translationY = min(-mScrollY, 0F)
-//            }
-//        })
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment) {
@@ -171,48 +150,6 @@ class PostDetailedActivity: AppCompatActivity(),
         finish()
     }
 
-    override fun onDialogNegativeClick(dialog: DialogFragment) {
-    }
-
-    private fun updateVoteSystem() {
-        activityDetailedPostViewBinding.apply {
-            textViewVoteCounter.text = viewModel.post.value!!.voteCounter.toString()
-
-            when (viewModel.post.value!!.voteStatus) {
-                VoteStatus.UPVOTED -> {
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                    textViewVoteCounter.setTextColor(
-                        ContextCompat.getColor(
-                            this@PostDetailedActivity,
-                            R.color.green
-                        )
-                    )
-                }
-
-                VoteStatus.DOWNVOTED -> {
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                    textViewVoteCounter.setTextColor(
-                        ContextCompat.getColor(
-                            this@PostDetailedActivity,
-                            R.color.red
-                        )
-                    )
-                }
-
-                VoteStatus.NONE -> {
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                    textViewVoteCounter.setTextColor(
-                        ContextCompat.getColor(
-                            this@PostDetailedActivity,
-                            R.color.black
-                        )
-                    )
-                }
-            }
-        }
-    }
+    override fun onDialogNegativeClick(dialog: DialogFragment) {}
 
 }

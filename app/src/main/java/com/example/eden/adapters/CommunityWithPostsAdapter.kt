@@ -25,8 +25,8 @@ import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.SearchableActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-const val ITEM_COMMUNITY = 0
-const val ITEM_POST = 1
+private const val ITEM_COMMUNITY_HEADER = 0
+private const val ITEM_POST = 1
 class CommunityWithPostsAdapter(
     val context: Context,
     private val postListener: PostListener
@@ -178,12 +178,12 @@ class CommunityWithPostsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position==0) ITEM_COMMUNITY else ITEM_POST
+        return if (position==0) ITEM_COMMUNITY_HEADER else ITEM_POST
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return if (viewType == ITEM_COMMUNITY){
+        return if (viewType == ITEM_COMMUNITY_HEADER){
             val binding = ItemDetailedCommunityBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             CommunityViewHolder(binding)
         } else{
@@ -198,7 +198,7 @@ class CommunityWithPostsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        if (getItemViewType(position) == ITEM_COMMUNITY){
+        if (getItemViewType(position) == ITEM_COMMUNITY_HEADER){
             (holder as CommunityViewHolder).bind(currentCommunity)
         }
         else{
