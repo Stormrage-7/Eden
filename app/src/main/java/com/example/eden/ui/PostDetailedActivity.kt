@@ -73,14 +73,14 @@ class PostDetailedActivity: AppCompatActivity(),
         })
 
         viewModel.post.observe(this) {
-            it.let {
+            if (it != null) {
                 adapter.post = it
                 adapter.notifyItemChanged(0)
             }
         }
 
         viewModel.community.observe(this) {
-            it.let {
+            it?.let {
                 adapter.community = it
             }
         }
@@ -145,11 +145,11 @@ class PostDetailedActivity: AppCompatActivity(),
         )
     }
 
-    override fun onDialogPositiveClick(dialog: DialogFragment) {
+    override fun onDialogPositiveClick() {
         viewModel.deletePost()
         finish()
     }
 
-    override fun onDialogNegativeClick(dialog: DialogFragment) {}
+    override fun onDialogNegativeClick() {}
 
 }

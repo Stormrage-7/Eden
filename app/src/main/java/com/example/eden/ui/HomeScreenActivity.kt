@@ -3,7 +3,10 @@ package com.example.eden.ui
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
@@ -40,18 +43,18 @@ class HomeScreenActivity: AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.CustomToolBar))
 
-        activityHomeScreenBinding.topAppBar.addCommunityBtn.setOnClickListener {
-            activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
+        activityHomeScreenBinding.addCommunityBtn.setOnClickListener {
+            activityHomeScreenBinding.topAppBar.requestFocus()
             Intent(this, NewCommunityActivity::class.java).apply {
                 startActivity(this)
             }
         }
 
-        activityHomeScreenBinding.topAppBar.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        activityHomeScreenBinding.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                activityHomeScreenBinding.topAppBar.homeScreenSearchView.setQuery("", false)
-                activityHomeScreenBinding.topAppBar.homeScreenSearchView.clearFocus()
-                activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
+                activityHomeScreenBinding.homeScreenSearchView.setQuery("", false)
+                activityHomeScreenBinding.homeScreenSearchView.clearFocus()
+                activityHomeScreenBinding.topAppBar.requestFocus()
                 Intent(this@HomeScreenActivity, SearchableActivity:: class.java).apply {
                     putExtra(SearchManager.QUERY, query)
                     startActivity(this)
@@ -66,7 +69,7 @@ class HomeScreenActivity: AppCompatActivity() {
         })
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
-            activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
+            activityHomeScreenBinding.topAppBar.requestFocus()
             when(it.itemId){
                 R.id.miHome -> {
 
@@ -108,10 +111,20 @@ class HomeScreenActivity: AppCompatActivity() {
         Timber.i("This is a log message!")
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if(activityHomeScreenBinding.homeScreenSearchView.isFocused) {
+            activityHomeScreenBinding.topAppBar.requestFocus()
+            Log.i("OnResume","Inside focus")
+        }
+        Log.i("OnResume","Outside focus")
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (!activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified){
-            activityHomeScreenBinding.topAppBar.homeScreenSearchView.isIconified = true
+        if (!activityHomeScreenBinding.topAppBar.isFocused){
+            activityHomeScreenBinding.topAppBar.requestFocus()
         }
         else {
             super.onBackPressed()

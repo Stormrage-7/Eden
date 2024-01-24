@@ -5,71 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:id="@+id/CustomToolBar"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:elevation="5sp"
     android:theme="@style/ThemeOverlay.AppCompat.Light">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="40sp">
 
-        <ImageButton
-            android:id="@+id/back_btn"
-            android:layout_width="48sp"
-            android:layout_height="48sp"
-            android:visibility="gone"
-            android:src="@drawable/ic_arrow_back_24"
-            android:backgroundTint="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-<!--        <TextView-->
-<!--            android:id="@+id/appNameTextView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Eden"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textSize="18sp"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"/>-->
-
-        <SearchView
-            android:id="@+id/homeScreenSearchView"
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-            android:iconifiedByDefault="true"
-            android:queryHint="Search post or community..."
-            android:background="@drawable/searchview_background"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/add_community_btn"
-            android:queryBackground="@color/transparent"/>
-
-        <ImageButton
-            android:id="@+id/add_community_btn"
-            android:layout_width="48sp"
-            android:layout_height="48sp"
-            android:src="@drawable/community_add_24"
-            android:backgroundTint="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/filter_btn"-->
-<!--            android:layout_width="48sp"-->
-<!--            android:layout_height="48sp"-->
-<!--            android:src="@drawable/ic_filter_24"-->
-<!--            android:backgroundTint="@color/white"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"/>-->
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.appcompat.widget.Toolbar>

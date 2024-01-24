@@ -134,21 +134,23 @@ class CommunityWithPostsAdapter(
 
                 textViewVoteCounter.text = post.voteCounter.toString()
 
-                if (post.voteStatus == VoteStatus.UPVOTED) {
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
+                when (post.voteStatus) {
+                    VoteStatus.UPVOTED -> {
+                        likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
+                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
 
-                }
-                else if (post.voteStatus == VoteStatus.DOWNVOTED){
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
-                }
-                else{
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                    }
+                    VoteStatus.DOWNVOTED -> {
+                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
+                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
+                    }
+                    VoteStatus.NONE -> {
+                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                    }
                 }
 
                 // CHANGES TO THE VOTE

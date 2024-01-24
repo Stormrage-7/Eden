@@ -97,10 +97,11 @@ class CommunityDetailedActivity: AppCompatActivity() {
         })
         adapter.resources = resources
 
-        viewModel.community.observe(this, Observer {
+        viewModel.community.observe(this) {
             detailedCommunityViewBinding.apply {
                 detailedCommunityViewBinding.rvDetailedCommunity.adapter = adapter
-                detailedCommunityViewBinding.rvDetailedCommunity.layoutManager = LinearLayoutManager(this@CommunityDetailedActivity)
+                detailedCommunityViewBinding.rvDetailedCommunity.layoutManager =
+                    LinearLayoutManager(this@CommunityDetailedActivity)
                 detailedCommunityViewBinding.rvDetailedCommunity.addItemDecoration(
                     DividerItemDecoration(
                         this@CommunityDetailedActivity,
@@ -110,22 +111,21 @@ class CommunityDetailedActivity: AppCompatActivity() {
                 adapter.currentCommunity = it
                 adapter.notifyDataSetChanged()
             }
-        })
+        }
 
-        viewModel.postList.observe(this, Observer {
+        viewModel.postList.observe(this) {
             it.let {
-                if(it.isEmpty()){
+                if (it.isEmpty()) {
                     detailedCommunityViewBinding.tempImgView.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempTextView.visibility = View.VISIBLE
                     adapter.updatePostList(it)
-                }
-                else {
+                } else {
                     detailedCommunityViewBinding.tempImgView.visibility = View.GONE
                     detailedCommunityViewBinding.tempTextView.visibility = View.GONE
                     adapter.updatePostList(it)
                 }
             }
-        })
+        }
 
     }
 

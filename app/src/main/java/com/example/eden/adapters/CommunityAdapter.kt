@@ -31,12 +31,10 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
         holder.binding.apply {
             val currentItem = communityList[position]
 
-            if (currentItem.isCustomImage) {
-                imageViewCommunity.setImageURI(Uri.parse(currentItem.imageUri))
-            }
-            else{
-                imageViewCommunity.setImageResource(currentItem.imageUri.toInt())
-            }
+            if (currentItem.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(currentItem.imageUri))
+
+            else imageViewCommunity.setImageResource(currentItem.imageUri.toInt())
+
 
             //For Select Community Activity
             if(context is SelectCommunityActivity){
@@ -62,7 +60,7 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
             textViewDescription.text = currentItem.description
             joinButton.setOnClickListener {
                 clickListener.onJoinClick(position)
-                notifyItemChanged(position)
+//                notifyItemChanged(position)
 //                notifyDataSetChanged()
             }
         }

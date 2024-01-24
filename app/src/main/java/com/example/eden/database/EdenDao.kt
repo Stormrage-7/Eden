@@ -82,7 +82,7 @@ interface EdenDao {
     @Upsert
     suspend fun upsertComment(comment: Comment)
 
-    @Query("SELECT * FROM post_table WHERE title LIKE '%' || :searchQuery || '%'")
+    @Query("SELECT * FROM post_table WHERE title LIKE '%' || :searchQuery || '%' OR bodyText LIKE '%' || :searchQuery || '%'")
     fun getPostsMatchingQuery(searchQuery: String): LiveData<List<Post>>
     @Query("SELECT * FROM community_table WHERE communityName LIKE '%' || :searchQuery || '%'")
     fun getCommunitiesMatchingQuery(searchQuery: String): LiveData<List<Community>>

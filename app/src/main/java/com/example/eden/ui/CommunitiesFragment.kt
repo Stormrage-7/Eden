@@ -59,7 +59,7 @@ class CommunitiesFragment: Fragment() {
         viewModel.communityList.observe(this.requireActivity(), Observer{
             it.let {
                 Log.i("CommunitiesFragment", "${it.toString()}")
-                adapter!!.updateAdapter(it)
+                adapter.updateAdapter(it)
             }
             if(fragmentCommunitiesBinding.rvCommunities.adapter!=adapter){
                 fragmentCommunitiesBinding.rvCommunities.apply {

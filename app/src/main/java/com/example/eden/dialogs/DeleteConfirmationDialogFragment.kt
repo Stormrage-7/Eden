@@ -10,8 +10,8 @@ import java.lang.ClassCastException
 class DeleteConfirmationDialogFragment: DialogFragment() {
     private lateinit var listener: DeleteConfirmationDialogListener
     interface DeleteConfirmationDialogListener{
-        fun onDialogPositiveClick(dialog: DialogFragment)
-        fun onDialogNegativeClick(dialog: DialogFragment)
+        fun onDialogPositiveClick()
+        fun onDialogNegativeClick()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -20,11 +20,11 @@ class DeleteConfirmationDialogFragment: DialogFragment() {
             builder.setMessage("Are you sure you want to delete this post?")
                 .setPositiveButton("Yes"
                 ) { _, _ ->
-                    listener.onDialogPositiveClick(this)
+                    listener.onDialogPositiveClick()
                 }
                 .setNegativeButton("No"
                 ) { _, _ ->
-                    listener.onDialogNegativeClick(this)
+                    listener.onDialogNegativeClick()
                 }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null!")

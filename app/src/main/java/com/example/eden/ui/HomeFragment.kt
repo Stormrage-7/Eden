@@ -93,6 +93,9 @@ class HomeFragment: Fragment(){
             )
         )
 
+        viewModel.joinedCommunitiesList.observe(this.requireActivity()) {
+            adapter.joinedCommunitiesList = it
+        }
         viewModel.communityList.observe(this.requireActivity()) {
             adapter.updateCommunityList(it)
         }

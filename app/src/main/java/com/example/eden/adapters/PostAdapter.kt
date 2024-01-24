@@ -48,6 +48,7 @@ class PostAdapter(
         val post = postList[position]
         val communityId = post.communityId
 
+        Log.i("postAdapter", "$communityList")
         val community: Community = if (context is HomeScreenActivity || context is SearchableActivity) communityList.find { it.communityId == communityId }!!
         else currentCommunity
 

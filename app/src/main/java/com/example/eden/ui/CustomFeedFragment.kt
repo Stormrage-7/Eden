@@ -36,13 +36,13 @@ class CustomFeedFragment: Fragment() {
         repository = application.repository
         factory = HomeViewModelFactory(repository, requireActivity())
         viewModel = ViewModelProvider(this.requireActivity(), factory)[HomeViewModel::class.java]
+//        viewModel.refreshDataFromRepository()
 
-        fragmentCustomFeedBinding.lifecycleOwner = viewLifecycleOwner   // Important
+        fragmentCustomFeedBinding.lifecycleOwner = viewLifecycleOwner
         fragmentCustomFeedBinding.customFeedViewModel = viewModel
 
 
         val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener{
-            // ANONYMOUS CLASS IMPLEMENTATION OF POSTCLICKLISTENER INTERFACE
             override fun getCommunityIdFromPostId(position: Int): Int {
                 return 1
             }
@@ -55,7 +55,6 @@ class CustomFeedFragment: Fragment() {
             }
 
             override fun onPostClick(post: Post, community: Community) {
-//                Toast.makeText(requireActivity(), "${post.toString()}", Toast.LENGTH_SHORT).show()
                 Intent(requireActivity(), PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     putExtra("CommunityObject", community)
@@ -72,10 +71,10 @@ class CustomFeedFragment: Fragment() {
             }
 
             override fun onPostLongClick(position: Int) {
-                TODO("Not yet implemented")
             }
 
         })
+
         fragmentCustomFeedBinding.rvPosts.adapter = adapter
         fragmentCustomFeedBinding.rvPosts.layoutManager = LinearLayoutManager(context)
         fragmentCustomFeedBinding.rvPosts.addItemDecoration(
@@ -84,24 +83,27 @@ class CustomFeedFragment: Fragment() {
                 LinearLayoutManager(context).orientation
             )
         )
-        viewModel.joinedCommunitiesList.observe(this.requireActivity(), Observer {
-            Log.i("HomeFragment", "${it.toString()}")
-            adapter.updateJoinedCommunityList(it)
-        })
 
         viewModel.communityList.observe(this.requireActivity(), Observer {
-            Log.i("HomeFragment", "${it.toString()}")
+            Log.i("CustomFeedFragment", "community list = $it")
             adapter.updateCommunityList(it)
+        })
+
+        viewModel.joinedCommunitiesList.observe(this.requireActivity(), Observer {
+            Log.i("CustomFeedFragment", "Joined Communities = $it")
+            adapter.updateJoinedCommunityList(it)
         })
 
         viewModel.postList.observe(this.requireActivity(), Observer {
             it.let {
-                val filteredList = it.filter { post -> adapter.joinedCommunitiesList.contains(post.communityId)
-                    ?: false }
+                Log.i("CustomFeedFragment", "$it")
+                val filteredList = it.filter { post -> adapter.joinedCommunitiesList.contains(post.communityId) }
+                Log.i("CustomFeedFragment", "$filteredList")
                 if(filteredList.isEmpty()){
                     fragmentCustomFeedBinding.rvPosts.visibility = View.GONE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.VISIBLE
+                    Log.i("CustomFeedFragment", "Empty")
                     adapter.updatePostList(filteredList)
                 }
                 else {
@@ -111,8 +113,8 @@ class CustomFeedFragment: Fragment() {
                     adapter.updatePostList(filteredList)
                 }
             }
+            Log.i("CustomFeedFragment", "PostList Observer")
         })
-
         return fragmentCustomFeedBinding.root
     }
 }
