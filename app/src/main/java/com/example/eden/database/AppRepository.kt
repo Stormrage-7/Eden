@@ -84,12 +84,17 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.upsertComment(comment)
     }
 
+    /****************** SEARCH METHODS **********************/
     fun getPostsMatchingQuery(searchQuery: String): LiveData<List<Post>> {
         return databaseDao.getPostsMatchingQuery(searchQuery)
     }
 
     fun getCommunitiesMatchingQuery(searchQuery: String): LiveData<List<Community>> {
         return databaseDao.getCommunitiesMatchingQuery(searchQuery)
+    }
+
+    fun getCommentsMatchingQuery(searchQuery: String): LiveData<List<Comment>> {
+        return databaseDao.getCommentsMatchingQuery(searchQuery)
     }
 
     fun getCommunity(communityId: Int): LiveData<Community> {
@@ -99,6 +104,8 @@ class AppRepository(private val databaseDao: EdenDao) {
     suspend fun deletePost(post: Post) {
         databaseDao.deletePost(post)
     }
+
+
 
 
 }

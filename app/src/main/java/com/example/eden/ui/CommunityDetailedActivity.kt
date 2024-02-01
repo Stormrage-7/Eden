@@ -21,12 +21,14 @@ import com.example.eden.R
 import com.example.eden.adapters.CommunityWithPostsAdapter
 import com.example.eden.databinding.ActivityDetailedCommunityViewBinding
 import com.example.eden.databinding.BottomSheetPostFilterBinding
+import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.PostFilter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class CommunityDetailedActivity: AppCompatActivity() {
+class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogListener,
+    AppCompatActivity() {
 
     private lateinit var detailedCommunityViewBinding: ActivityDetailedCommunityViewBinding
     private lateinit var viewModel: DetailedCommunityViewModel
@@ -66,7 +68,6 @@ class CommunityDetailedActivity: AppCompatActivity() {
             override fun onPostClick(post: Post, community: Community) {
                 Intent(this@CommunityDetailedActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
-                    putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
@@ -84,7 +85,11 @@ class CommunityDetailedActivity: AppCompatActivity() {
             }
 
             override fun onJoinClick() {
-                viewModel.onJoinClick()
+                if (viewModel.community.value?.isJoined == true){
+                    val leaveCommunityConfirmationDialog = ConfirmationDialogFragment("Are you sure you want to leave this Community?")
+                    leaveCommunityConfirmationDialog.show(supportFragmentManager, "LeaveCommunityConfirmationDialog")
+                }
+                else viewModel.onJoinClick()
             }
 
             override fun onCreateClick() {
@@ -96,21 +101,20 @@ class CommunityDetailedActivity: AppCompatActivity() {
             }
         })
         adapter.resources = resources
+        detailedCommunityViewBinding.apply {
+            rvDetailedCommunity.adapter = adapter
+            rvDetailedCommunity.layoutManager = LinearLayoutManager(this@CommunityDetailedActivity)
+            rvDetailedCommunity.addItemDecoration(
+                DividerItemDecoration(
+                    this@CommunityDetailedActivity,
+                    LinearLayoutManager(this@CommunityDetailedActivity).orientation
+                )
+            )
+        }
 
         viewModel.community.observe(this) {
-            detailedCommunityViewBinding.apply {
-                detailedCommunityViewBinding.rvDetailedCommunity.adapter = adapter
-                detailedCommunityViewBinding.rvDetailedCommunity.layoutManager =
-                    LinearLayoutManager(this@CommunityDetailedActivity)
-                detailedCommunityViewBinding.rvDetailedCommunity.addItemDecoration(
-                    DividerItemDecoration(
-                        this@CommunityDetailedActivity,
-                        LinearLayoutManager(this@CommunityDetailedActivity).orientation
-                    )
-                )
                 adapter.currentCommunity = it
                 adapter.notifyDataSetChanged()
-            }
         }
 
         viewModel.postList.observe(this) {
@@ -129,21 +133,12 @@ class CommunityDetailedActivity: AppCompatActivity() {
 
     }
 
-//    private fun updateJoinStatus() {
-//        detailedCommunityViewBinding.apply {
-//            if (viewModel.community.value!!.isJoined){
-//                joinButton.text = "Joined"
-//                joinButton.backgroundTintList = ColorStateList.valueOf(
-//                    ResourcesCompat.getColor(resources, R.color.grey, null)
-//                )
-//            }
-//            else{
-//                joinButton.text = "Join"
-//                joinButton.backgroundTintList = ColorStateList.valueOf(
-//                    ResourcesCompat.getColor(resources, R.color.azure, null)
-//                )
-//            }
-//        }
-//    }
+    override fun onDialogPositiveClick() {
+        viewModel.onJoinClick()
+    }
+
+    override fun onDialogNegativeClick() {
+    }
+
 
 }

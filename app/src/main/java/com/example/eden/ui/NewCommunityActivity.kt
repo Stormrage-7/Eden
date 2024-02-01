@@ -23,12 +23,12 @@ import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding
-import com.example.eden.dialogs.DiscardChangesDialogFragment
+import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 
 
 class NewCommunityActivity: AppCompatActivity(),
-    DiscardChangesDialogFragment.DiscardChangesDialogListener{
+    ConfirmationDialogFragment.ConfirmationDialogListener{
     private lateinit var activityNewCommunityBinding: ActivityNewCommunityBinding
     private lateinit var viewModel: CommunitiesViewModel
     private lateinit var database: AppDatabase
@@ -60,8 +60,8 @@ class NewCommunityActivity: AppCompatActivity(),
 
         //CLOSE BUTTON
         activityNewCommunityBinding.closeBtn.setOnClickListener {
-            val discardChangesDialog = DiscardChangesDialogFragment()
-            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
+            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
         }
 
         activityNewCommunityBinding.nextButton.apply {
@@ -107,6 +107,7 @@ class NewCommunityActivity: AppCompatActivity(),
         if(intent.hasExtra("Context")){
             val community = intent.getSerializableExtra("CommunityObject") as Community
             activityNewCommunityBinding.apply {
+                pageTitle.text = "Edit Community"
                 imageViewCommunity.visibility = View.GONE
                 tempTextView.visibility = View.GONE
                 communityNameEditText.apply {
@@ -179,16 +180,16 @@ class NewCommunityActivity: AppCompatActivity(),
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onDialogPositiveClick(dialog: DialogFragment) {
+    override fun onDialogPositiveClick() {
         finish()
     }
 
-    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    override fun onDialogNegativeClick() {
     }
 
     override fun onBackPressed() {
-        val discardChangesDialog = DiscardChangesDialogFragment()
-        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
+        val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
 //        super.onBackPressed()
     }
 

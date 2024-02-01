@@ -17,11 +17,13 @@ import com.example.eden.Eden
 import com.example.eden.database.EdenDao
 import com.example.eden.R
 import com.example.eden.databinding.ActivityHomeScreenBinding
+import com.example.eden.dialogs.ConfirmationDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class HomeScreenActivity: AppCompatActivity() {
+class HomeScreenActivity: AppCompatActivity(),
+    ConfirmationDialogFragment.ConfirmationDialogListener{
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var navController : NavController
     private lateinit var databaseDao: EdenDao
@@ -143,10 +145,12 @@ class HomeScreenActivity: AppCompatActivity() {
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id
     }
 
-    private suspend fun clearDB(){
-        withContext(Dispatchers.IO) {
-            databaseDao.deleteAllPosts()
-        }
+    override fun onDialogPositiveClick() {
+
+    }
+
+    override fun onDialogNegativeClick() {
+
     }
 
 }

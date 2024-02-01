@@ -6,23 +6,19 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityNewCommentBinding
-import com.example.eden.databinding.ActivityNewPostBinding
-import com.example.eden.dialogs.DiscardChangesDialogFragment
+import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.ui.viewmodels.CommentsViewModel
 import com.example.eden.ui.viewmodels.CommentsViewModelFactory
-import com.example.eden.ui.viewmodels.NewPostViewModel
-import com.example.eden.ui.viewmodels.NewPostViewModelFactory
 
 class NewCommentActivity: AppCompatActivity(),
-    DiscardChangesDialogFragment.DiscardChangesDialogListener{
+    ConfirmationDialogFragment.ConfirmationDialogListener{
 
     private lateinit var activityNewCommentBinding: ActivityNewCommentBinding
     private lateinit var viewModel: CommentsViewModel
@@ -42,8 +38,8 @@ class NewCommentActivity: AppCompatActivity(),
 
         activityNewCommentBinding.nextButton.isEnabled = false
         activityNewCommentBinding.closeBtn.setOnClickListener {
-            val discardChangesDialog = DiscardChangesDialogFragment()
-            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
+            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
         }
 
         activityNewCommentBinding.commentEditText.addTextChangedListener(object : TextWatcher {
@@ -72,25 +68,26 @@ class NewCommentActivity: AppCompatActivity(),
         })
 
         val postTitle = intent.getStringExtra("PostTitle")
-        val postId = intent.getIntExtra("PostId",0)
+        val postId = intent.getIntExtra("PostId",-1)
+        val communityId = intent.getIntExtra("CommunityId", -1)
         activityNewCommentBinding.postTitleTextView.text = postTitle
         activityNewCommentBinding.nextButton.setOnClickListener {
             val comment = activityNewCommentBinding.commentEditText.text.toString()
-            viewModel.upsertComment(Comment(0, text = comment, postId = postId))
+            viewModel.upsertComment(Comment(0, text = comment, postId = postId, communityId = communityId))
             finish()
         }
     }
 
-    override fun onDialogPositiveClick(dialog: DialogFragment) {
+    override fun onDialogPositiveClick() {
         finish()
     }
 
-    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    override fun onDialogNegativeClick() {
     }
 
     override fun onBackPressed() {
-        val discardChangesDialog = DiscardChangesDialogFragment()
-        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialogFragment")
+        val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
 //        super.onBackPressed()
     }
 }

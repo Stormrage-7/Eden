@@ -15,6 +15,7 @@ class SearchViewModel(private val repository: AppRepository,
 
     var postList = repository.getPostsMatchingQuery(searchQuery)
     var communityList = repository.getCommunitiesMatchingQuery(searchQuery)
+    var commentList = repository.getCommentsMatchingQuery(searchQuery)
     val allCommunityList = repository.communityList
 
     init {
@@ -34,6 +35,14 @@ class SearchViewModel(private val repository: AppRepository,
             communityList = repository.getCommunitiesMatchingQuery(searchQuery)
             Log.i("Refresh Method", "Communities Refreshed!")
 
+        }
+    }
+
+    fun refreshDataSet(){
+        viewModelScope.launch {
+            postList = repository.getPostsMatchingQuery(searchQuery)
+            communityList = repository.getCommunitiesMatchingQuery(searchQuery)
+            commentList = repository.getCommentsMatchingQuery(searchQuery)
         }
     }
 

@@ -30,8 +30,7 @@ class SearchableActivity: AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         viewModel.searchQuery = intent.getStringExtra(SearchManager.QUERY).toString()
-        viewModel.refreshPostList()
-        viewModel.refreshCommunityList()
+        viewModel.refreshDataSet()
         handleIntent()
     }
 
@@ -63,6 +62,7 @@ class SearchableActivity: AppCompatActivity() {
             when(position){
                 0 -> tab.text = "Posts"
                 1 -> tab.text = "Communities"
+                2 -> tab.text = "Comments"
             }
         }.attach()
     }

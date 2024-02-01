@@ -2,6 +2,7 @@ package com.example.eden.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
@@ -12,14 +13,14 @@ import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
 
 class DetailedPostViewModel(private val repository: AppRepository,
-                            postObj: Post,
-                            communityObj: Community,
+                            postId: Int,
+                            communityId: Int,
                             application: Eden
 ): AndroidViewModel(application) {
 
-    val post = repository.getPostWithId(postObj.postId)
-    val community = repository.getCommunity(communityObj.communityId)
-    val commentList = repository.getCommentListForPost(postObj.postId)
+    val post = repository.getPostWithId(postId)
+    val commentList = repository.getCommentListForPost(postId)
+    val community = repository.getCommunity(communityId)
 
     init {
         Log.i("Testing", "DetailedPostViewModel Initialized")
@@ -50,16 +51,16 @@ class DetailedPostViewModel(private val repository: AppRepository,
         }
     }
 
-    fun addComment(comment: Comment) {
-        viewModelScope.launch {
-            repository.upsertComment(comment)
-        }
-    }
-
     fun deletePost(){
         viewModelScope.launch {
             repository.deletePost(post.value!!)
         }
     }
+
+//    fun getCommunityForPost(communityId: Int){
+//        viewModelScope.launch {
+//            community = repository.getCommunity(communityId)
+//        }
+//    }
 
 }

@@ -48,10 +48,7 @@ class PostAdapter(
         val post = postList[position]
         val communityId = post.communityId
 
-        Log.i("postAdapter", "$communityList")
-        val community: Community = if (context is HomeScreenActivity || context is SearchableActivity) communityList.find { it.communityId == communityId }!!
-        else currentCommunity
-
+        val community: Community? = communityList.find { it.communityId == communityId }
 
         holder.binding.apply {
             //COMMUNITY DETAILS
@@ -60,11 +57,17 @@ class PostAdapter(
                 communityBar.visibility = View.GONE
             }
             else {
-                textViewCommunityName.text = community.communityName
-                if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
-                else imageViewCommunity.setImageResource(community.imageUri.toInt())
-                communityBar.setOnClickListener {
-                    postListener.onCommunityClick(community)
+                if (community != null) {
+                    textViewCommunityName.text = community.communityName
+                    if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                    else imageViewCommunity.setImageResource(community.imageUri.toInt())
+                    communityBar.setOnClickListener {
+                        postListener.onCommunityClick(community)
+                    }
+                }
+                else {
+                    textViewCommunityName.text = ""
+                    imageViewCommunity.setImageResource(R.color.white)
                 }
             }
             //TITLE
@@ -88,7 +91,6 @@ class PostAdapter(
             }
 
             //UPVOTE AND DOWNVOTE
-            Log.i("Binding View", "Binding View to Holder!")
             textViewVoteCounter.text = postList[position].voteCounter.toString()
 
             if (postList[position].voteStatus == VoteStatus.UPVOTED) {
@@ -128,19 +130,21 @@ class PostAdapter(
             }
 
             shareBtn.setOnClickListener {
-                val intent: Intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, "HI")
-                }
-
-                if (intent.resolveActivity(context.packageManager) != null){
-                    context.startActivity(intent)
-                }
+//                val intent: Intent = Intent(Intent.ACTION_SEND).apply {
+//                    type = "text/plain"
+//                    putExtra(Intent.EXTRA_TEXT, "HI")
+//                }
+//
+//                if (intent.resolveActivity(context.packageManager) != null){
+//                    context.startActivity(intent)
+//                }
             }
         }
 
         holder.itemView.setOnClickListener {
-            postListener.onPostClick(post, community)
+            if (community != null) {
+                postListener.onPostClick(post, community)
+            }
         }
     }
 

@@ -2,13 +2,12 @@ package com.example.eden.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,8 +27,7 @@ class CommunitiesFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-//        fragmentCommunitiesBinding = FragmentCommunitiesBinding.inflate(layoutInflater)
+    ): View {
         fragmentCommunitiesBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_communities, container, false)
 
@@ -50,31 +48,43 @@ class CommunitiesFragment: Fragment() {
             }
 
             override fun onJoinClick(position: Int) {
-                viewModel.onJoinClick(position)
-            }
+                if (viewModel.communityList.value?.get(position)?.isJoined == true){
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(this@CommunitiesFragment.requireContext())
+                    builder
+                        .setMessage("Are you sure you want to leave this community?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            viewModel.onJoinClick(position)
+                        }
+                        .setNegativeButton("No") { _, _ ->
+                        }
 
+                    val confirmationDialog: AlertDialog = builder.create()
+                    confirmationDialog.show()
+                }
+                else viewModel.onJoinClick(position)
+            }
         })
 
+        fragmentCommunitiesBinding.rvCommunities.apply {
+            this.adapter = adapter
+            this.layoutManager = LinearLayoutManager(context)
+            addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    LinearLayoutManager(context).orientation
+                )
+            )
+        }
 
-        viewModel.communityList.observe(this.requireActivity(), Observer{
+        viewModel.communityList.observe(this.requireActivity()) {
             it.let {
-                Log.i("CommunitiesFragment", "${it.toString()}")
                 adapter.updateAdapter(it)
             }
-            if(fragmentCommunitiesBinding.rvCommunities.adapter!=adapter){
-                fragmentCommunitiesBinding.rvCommunities.apply {
-                    this.adapter = adapter
-                    this.layoutManager = LinearLayoutManager(context)
-                    addItemDecoration(
-                        DividerItemDecoration(
-                            context,
-                            LinearLayoutManager(context).orientation
-                        )
-                    )
-                }
-            }
-        })
+//            if(fragmentCommunitiesBinding.rvCommunities.adapter!=adapter){
+//            }
+        }
 
         return fragmentCommunitiesBinding.root
     }
+
 }

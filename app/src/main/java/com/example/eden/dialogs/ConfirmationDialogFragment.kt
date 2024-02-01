@@ -7,9 +7,9 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import java.lang.ClassCastException
 
-class DeleteConfirmationDialogFragment: DialogFragment() {
-    private lateinit var listener: DeleteConfirmationDialogListener
-    interface DeleteConfirmationDialogListener{
+class ConfirmationDialogFragment(private val displayString: String): DialogFragment() {
+    private lateinit var listener: ConfirmationDialogListener
+    interface ConfirmationDialogListener{
         fun onDialogPositiveClick()
         fun onDialogNegativeClick()
     }
@@ -17,7 +17,7 @@ class DeleteConfirmationDialogFragment: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("Are you sure you want to delete this post?")
+            builder.setMessage(displayString)
                 .setPositiveButton("Yes"
                 ) { _, _ ->
                     listener.onDialogPositiveClick()
@@ -33,10 +33,10 @@ class DeleteConfirmationDialogFragment: DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            listener = context as DeleteConfirmationDialogListener
+            listener = context as ConfirmationDialogListener
         } catch (e: ClassCastException){
             throw ClassCastException((context.toString() +
-                    " must implement DeleteConfirmationDialogListener!"))
+                    " must implement ConfirmationDialogListener!"))
         }
     }
 }

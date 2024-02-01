@@ -13,7 +13,7 @@ import com.example.eden.entities.Community
 import com.example.eden.databinding.ItemCommunityBinding
 import com.example.eden.ui.SelectCommunityActivity
 
-class CommunityAdapter(val context: Context, val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
+class CommunityAdapter(val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
     private var communityList = listOf<Community>()
     inner class CommunityViewHolder(val binding: ItemCommunityBinding): RecyclerView.ViewHolder(binding.root)
@@ -60,8 +60,6 @@ class CommunityAdapter(val context: Context, val clickListener: CommunityClickLi
             textViewDescription.text = currentItem.description
             joinButton.setOnClickListener {
                 clickListener.onJoinClick(position)
-//                notifyItemChanged(position)
-//                notifyDataSetChanged()
             }
         }
         holder.itemView.setOnClickListener {

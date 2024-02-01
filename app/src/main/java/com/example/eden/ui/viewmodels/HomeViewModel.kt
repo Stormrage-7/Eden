@@ -8,6 +8,7 @@ import com.example.eden.database.AppRepository
 import com.example.eden.Eden
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: AppRepository,

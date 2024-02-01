@@ -13,6 +13,7 @@ data class Community(
     val communityName: String,
     val description: String,
     val noOfMembers: Int = 0,
+    val noOfPosts: Int = 0,
     @ColumnInfo(name = "contains_image")
     val isCustomImage: Boolean,
     @ColumnInfo(name = "image_uri")
