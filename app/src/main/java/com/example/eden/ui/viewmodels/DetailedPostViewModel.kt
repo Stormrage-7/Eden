@@ -54,6 +54,7 @@ class DetailedPostViewModel(private val repository: AppRepository,
     fun deletePost(){
         viewModelScope.launch {
             repository.deletePost(post.value!!)
+            repository.decreasePostCount(community.value!!.communityId)
         }
     }
 

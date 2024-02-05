@@ -20,6 +20,7 @@ import com.example.eden.enums.PostFilter
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.HomeScreenActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.util.UriValidation
 
 class PostAdapter(
     val context: Context,
@@ -59,7 +60,14 @@ class PostAdapter(
             else {
                 if (community != null) {
                     textViewCommunityName.text = community.communityName
-                    if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                    if (community.isCustomImage) {
+                        if (UriValidation.validate(
+                                context,
+                                community.imageUri
+                            )
+                        ) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                        else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                    }
                     else imageViewCommunity.setImageResource(community.imageUri.toInt())
                     communityBar.setOnClickListener {
                         postListener.onCommunityClick(community)
@@ -74,10 +82,10 @@ class PostAdapter(
             textViewTitle.text = postList[position].title
 
             //MEDIA
-            if(postList[position].containsImage){
+            if(post.containsImage and UriValidation.validate(context, post.imageUri)){
                 imageViewPost.visibility = View.VISIBLE
                 imageViewPost.setImageURI(Uri.parse(postList[position].imageUri))
-                imageViewPost.scaleType = ImageView.ScaleType.FIT_XY
+                imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             else imageViewPost.visibility = View.GONE
 
@@ -93,21 +101,24 @@ class PostAdapter(
             //UPVOTE AND DOWNVOTE
             textViewVoteCounter.text = postList[position].voteCounter.toString()
 
-            if (postList[position].voteStatus == VoteStatus.UPVOTED) {
-                likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-                dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
+            when (postList[position].voteStatus) {
+                VoteStatus.UPVOTED -> {
+                    likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
+                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
+                }
 
-            }
-            else if (postList[position].voteStatus == VoteStatus.DOWNVOTED){
-                dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-                likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
-            }
-            else{
-                likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                VoteStatus.DOWNVOTED -> {
+                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
+                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
+                }
+
+                VoteStatus.NONE -> {
+                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                }
             }
 
             if (context is SearchableActivity){

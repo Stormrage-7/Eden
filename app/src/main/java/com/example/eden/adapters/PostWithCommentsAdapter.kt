@@ -24,6 +24,7 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
+import com.example.eden.util.UriValidation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 const val ITEM_POST_HEADER = 0
@@ -33,7 +34,7 @@ class PostWithCommentsAdapter(
     private val postListener: PostListener
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var commentList: List<Comment> = listOf()
+    private var commentList: List<Comment> = listOf()
     var post: Post? = null
     var community: Community? = null
     lateinit var resources: Resources
@@ -52,29 +53,34 @@ class PostWithCommentsAdapter(
             binding.apply {
                 //COMMUNITY DETAILS
                 if (community != null) {
-                    if (community.isCustomImage) imageViewCommunity.setImageURI(
-                        Uri.parse(
-                            community.imageUri
-                        )
-                    )
+                    if (community.isCustomImage) {
+                        if (UriValidation.validate(
+                                context,
+                                community.imageUri
+                            )
+                        ) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                        else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                    }
                     else imageViewCommunity.setImageResource(community.imageUri.toInt())
+
                     textViewCommunityName.text = community.communityName
                 } else {
                     imageViewCommunity.setImageResource(R.drawable.icon_logo)
-                    textViewCommunityName.text = "Community Name"
+                    textViewCommunityName.text = ""
                 }
                 //POST DETAILS
                 if (post != null) {
                     textViewTitle.text = post.title
 
                     //MEDIA
-                    if (post.containsImage) {
+                    if(post.containsImage and UriValidation.validate(context, post.imageUri)){
                         imageViewPost.apply {
                             visibility = View.VISIBLE
                             setImageURI(Uri.parse(post.imageUri))
                             scaleType = ImageView.ScaleType.CENTER_CROP
                         }
-                    } else imageViewPost.visibility = View.GONE
+                    }
+                    else imageViewPost.visibility = View.GONE
 
                     //BODY TEXT
                     if (post.bodyText.isEmpty()) {

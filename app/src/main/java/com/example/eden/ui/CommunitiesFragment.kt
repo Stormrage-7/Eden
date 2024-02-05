@@ -80,8 +80,6 @@ class CommunitiesFragment: Fragment() {
             it.let {
                 adapter.updateAdapter(it)
             }
-//            if(fragmentCommunitiesBinding.rvCommunities.adapter!=adapter){
-//            }
         }
 
         return fragmentCommunitiesBinding.root

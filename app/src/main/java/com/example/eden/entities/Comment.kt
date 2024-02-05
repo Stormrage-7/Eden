@@ -10,6 +10,7 @@ data class Comment (
     val commentId: Int,
     val posterName: String = "Sharan",
     val text: String,
+    val imageUri: String? = null,
     val postId: Int,
     val communityId: Int
 ): Serializable

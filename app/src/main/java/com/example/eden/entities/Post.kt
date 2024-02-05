@@ -22,7 +22,7 @@ data class Post (
     val dateTime: Long,
     val communityId: Int
     ) : Serializable
-//val isPinned: Boolean = false,
+//    val isPinned: Boolean = false,
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),
 //    val commentSectionType: CommentSectionType = CommentSectionType.OPEN,

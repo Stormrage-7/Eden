@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,7 +42,21 @@ class CommunitySearchFragment: Fragment() {
                 }
 
                 override fun onJoinClick(position: Int) {
-                    viewModel.onJoinClick(position)
+//                    viewModel.onJoinClick(position)
+                    if (viewModel.communityList.value?.get(position)?.isJoined == true){
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(this@CommunitySearchFragment.requireContext())
+                        builder
+                            .setMessage("Are you sure you want to leave this community?")
+                            .setPositiveButton("Yes") { _, _ ->
+                                viewModel.onJoinClick(position)
+                            }
+                            .setNegativeButton("No") { _, _ ->
+                            }
+
+                        val confirmationDialog: AlertDialog = builder.create()
+                        confirmationDialog.show()
+                    }
+                    else viewModel.onJoinClick(position)
                 }
 
             }) }

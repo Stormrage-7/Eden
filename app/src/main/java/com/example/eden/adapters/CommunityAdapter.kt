@@ -12,6 +12,7 @@ import com.example.eden.R
 import com.example.eden.entities.Community
 import com.example.eden.databinding.ItemCommunityBinding
 import com.example.eden.ui.SelectCommunityActivity
+import com.example.eden.util.UriValidation
 
 class CommunityAdapter(val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
@@ -31,8 +32,10 @@ class CommunityAdapter(val context: Context, private val clickListener: Communit
         holder.binding.apply {
             val currentItem = communityList[position]
 
-            if (currentItem.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(currentItem.imageUri))
-
+            if (currentItem.isCustomImage) {
+                if (UriValidation.validate(context, currentItem.imageUri)) imageViewCommunity.setImageURI(Uri.parse(currentItem.imageUri))
+                else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+            }
             else imageViewCommunity.setImageResource(currentItem.imageUri.toInt())
 
 
@@ -57,6 +60,7 @@ class CommunityAdapter(val context: Context, private val clickListener: Communit
 
             textViewCommunityName.text = currentItem.communityName
             textViewMemberCounter.text = currentItem.noOfMembers.toString() + " members"
+            textViewPostCount.text = currentItem.noOfPosts.toString() + " Posts"
             textViewDescription.text = currentItem.description
             joinButton.setOnClickListener {
                 clickListener.onJoinClick(position)

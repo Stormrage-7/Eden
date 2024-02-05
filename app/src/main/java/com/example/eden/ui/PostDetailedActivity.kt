@@ -34,20 +34,21 @@ class PostDetailedActivity: AppCompatActivity(),
 
         val application = application as Eden
         repository = application.repository
-        if (intent.hasExtra("PostObject")){
+
+        factory = if (intent.hasExtra("PostObject")){
             val post = intent.getSerializableExtra("PostObject") as Post
-            factory = DetailedPostViewModelFactory(repository,
+            DetailedPostViewModelFactory(repository,
                 post.postId,
                 post.communityId,
                 application)
-        }
-        else {
+        } else {
             val comment = intent.getSerializableExtra("CommentObject") as Comment
-            factory = DetailedPostViewModelFactory(repository,
+            DetailedPostViewModelFactory(repository,
                 comment.postId,
                 comment.communityId,
                 application)
         }
+
         viewModel = ViewModelProvider(this, factory)[DetailedPostViewModel::class.java]
 
         val adapter = PostWithCommentsAdapter(context = this, object : PostWithCommentsAdapter.PostListener {

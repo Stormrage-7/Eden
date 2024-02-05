@@ -106,7 +106,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageViewPost"
         android:layout_width="match_parent"
-        android:layout_height="350sp"
+        android:layout_height="240sp"
         android:src="@color/black"
         android:visibility="gone"
         android:layout_marginHorizontal="6sp"

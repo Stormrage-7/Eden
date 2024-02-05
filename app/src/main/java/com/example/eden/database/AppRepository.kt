@@ -101,6 +101,14 @@ class AppRepository(private val databaseDao: EdenDao) {
         return databaseDao.getCommunityById(communityId)
     }
 
+    suspend fun increasePostCount(communityId: Int) {
+        databaseDao.increasePostCount(communityId)
+    }
+
+    suspend fun decreasePostCount(communityId: Int) {
+        databaseDao.decreasePostCount(communityId)
+    }
+
     suspend fun deletePost(post: Post) {
         databaseDao.deletePost(post)
     }

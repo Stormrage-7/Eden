@@ -101,4 +101,11 @@ interface EdenDao {
     @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter DESC")
     fun getOldPostsOfCommunity(communityId: Int): LiveData<List<Post>>
 
+    /************************************/
+    @Query("UPDATE Community_Table SET noOfPosts = (noOfPosts+1) WHERE communityId = :communityId")
+    suspend fun increasePostCount(communityId: Int)
+
+    @Query("UPDATE Community_Table SET noOfPosts = noOfPosts-1 WHERE communityId = :communityId")
+    suspend fun decreasePostCount(communityId: Int)
+
 }

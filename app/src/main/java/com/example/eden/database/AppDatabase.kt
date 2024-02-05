@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
         JoinedCommunities :: class,
         Comment :: class
     ],
-    version = 24
+    version = 28
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -50,11 +50,11 @@ abstract class AppDatabase : RoomDatabase() {
                         INSTANCE!!.let {
 //                            it.edenDao().deleteAllCommunities()
                             if(it.edenDao().getCommunityCount()==0){
-                            it.edenDao().upsertCommunity(Community(0, "PS5", "Description 1", 10, false, imageUri = R.drawable.playstation_logo.toString()))
-                            it.edenDao().upsertCommunity(Community(0, "Xbox", "Description 2", 25, false, imageUri = R.drawable.xbox_logo.toString()))
-                            it.edenDao().upsertCommunity(Community(0, "Android", "Description 3", 100, false, imageUri = R.drawable.android_logo.toString()))
-                            it.edenDao().upsertCommunity(Community(0, "IOS", "Description 4", 500, false, imageUri = R.drawable.icon_logo.toString()))
-                            it.edenDao().upsertCommunity(Community(0, "PCMasterRace", "Description 5", 3, false, imageUri = R.drawable.icon_logo.toString()))
+                            it.edenDao().upsertCommunity(Community(0, "PS5", "Description 1", 10, isCustomImage = false, imageUri = R.drawable.playstation_logo.toString()))
+                            it.edenDao().upsertCommunity(Community(0, "Xbox", "Description 2", 25, isCustomImage = false, imageUri = R.drawable.xbox_logo.toString()))
+                            it.edenDao().upsertCommunity(Community(0, "Android", "Description 3", 100, isCustomImage = false, imageUri = R.drawable.android_logo.toString()))
+                            it.edenDao().upsertCommunity(Community(0, "IOS", "Description 4", 500, isCustomImage = false, imageUri = R.drawable.icon_logo.toString()))
+                            it.edenDao().upsertCommunity(Community(0, "PCMasterRace", "Description 5", 3, isCustomImage = false, imageUri = R.drawable.icon_logo.toString()))
                             }
                         }
                     }
