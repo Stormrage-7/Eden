@@ -25,6 +25,7 @@ import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
+import com.example.eden.util.UriValidation
 
 
 class NewCommunityActivity: AppCompatActivity(),
@@ -170,11 +171,17 @@ class NewCommunityActivity: AppCompatActivity(),
                     takeFlags
                 )
                 Log.i("IMAGE URI before setting", imageUri)
-                activityNewCommunityBinding.imageViewCommunity.setImageURI(Uri.parse(imageUri))
-                activityNewCommunityBinding.imageViewCommunity.scaleType = ImageView.ScaleType.CENTER_CROP
-                activityNewCommunityBinding.deleteImageBtn.visibility = View.VISIBLE
-                activityNewCommunityBinding.tempTextView.visibility = View.GONE
-                isImageAttached = true
+                if (UriValidation.validate(this, imageUri)){
+                    activityNewCommunityBinding.imageViewCommunity.setImageURI(Uri.parse(imageUri))
+                    activityNewCommunityBinding.deleteImageBtn.visibility = View.VISIBLE
+                    activityNewCommunityBinding.imageViewCommunity.scaleType = ImageView.ScaleType.CENTER_CROP
+//                    activityNewCommunityBinding.tempTextView.visibility = View.GONE
+                    isImageAttached = true
+                }
+                else{
+                    imageUri = R.drawable.icon_logo.toString()
+                    isImageAttached = false
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

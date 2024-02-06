@@ -1,14 +1,9 @@
 package com.example.eden.ui
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +11,8 @@ import com.example.eden.database.AppRepository
 import com.example.eden.ui.viewmodels.DetailedCommunityViewModel
 import com.example.eden.ui.viewmodels.DetailedCommunityViewModelFactory
 import com.example.eden.Eden
-import com.example.eden.adapters.PostAdapter
-import com.example.eden.R
 import com.example.eden.adapters.CommunityWithPostsAdapter
 import com.example.eden.databinding.ActivityDetailedCommunityViewBinding
-import com.example.eden.databinding.BottomSheetPostFilterBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post

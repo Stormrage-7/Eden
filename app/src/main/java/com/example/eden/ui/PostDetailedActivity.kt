@@ -3,7 +3,10 @@ package com.example.eden.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +20,7 @@ import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.util.PostUriParser
 
 class PostDetailedActivity: AppCompatActivity(),
     ConfirmationDialogFragment.ConfirmationDialogListener{
@@ -25,6 +29,7 @@ class PostDetailedActivity: AppCompatActivity(),
     private lateinit var viewModel: DetailedPostViewModel
     private lateinit var repository: AppRepository
     private lateinit var factory: DetailedPostViewModelFactory
+    private var postFound = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +46,18 @@ class PostDetailedActivity: AppCompatActivity(),
                 post.postId,
                 post.communityId,
                 application)
-        } else {
+        } else if (intent.hasExtra("CommentObject")) {
             val comment = intent.getSerializableExtra("CommentObject") as Comment
             DetailedPostViewModelFactory(repository,
                 comment.postId,
                 comment.communityId,
+                application)
+        } else {
+            val uri = intent.getStringExtra("UriObject")
+            val (postId, communityId) = PostUriParser.parse(uri!!)
+            DetailedPostViewModelFactory(repository,
+                postId,
+                communityId,
                 application)
         }
 
@@ -68,8 +80,23 @@ class PostDetailedActivity: AppCompatActivity(),
 
         viewModel.post.observe(this) {
             if (it != null) {
+                postFound = true
                 adapter.post = it
                 adapter.notifyItemChanged(0)
+            }
+            else {
+                postFound = false
+                Toast.makeText(this@PostDetailedActivity, "Post Doesn't Exist!", Toast.LENGTH_LONG).show()
+                activityDetailedPostViewBinding.apply {
+                    editButton.visibility = View.GONE
+                    deleteButton.visibility = View.GONE
+                    bottomCommentBar.visibility = View.GONE
+                    rvComments.visibility = View.GONE
+                    tempTextView.visibility = View.GONE
+                    tempImgView.visibility = View.GONE
+                    noPostTextView.visibility = View.VISIBLE
+                    noPostImgView.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -82,13 +109,16 @@ class PostDetailedActivity: AppCompatActivity(),
 
         viewModel.commentList.observe(this) {
             it?.let {
-                if (it.isEmpty()) {
+                if (it.isEmpty() and postFound) {
                     activityDetailedPostViewBinding.apply {
                         tempImgView.visibility = View.VISIBLE
                         tempTextView.visibility = View.VISIBLE
                     }
                 } else {
                     activityDetailedPostViewBinding.apply {
+                        rvComments.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                            bottomToTop = bottomCommentBar.id
+                        }
                         tempImgView.visibility = View.GONE
                         tempTextView.visibility = View.GONE
                     }

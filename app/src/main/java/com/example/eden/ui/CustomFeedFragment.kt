@@ -19,6 +19,7 @@ import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.FragmentCustomFeedBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.util.PostUriGenerator
 
 class CustomFeedFragment: Fragment() {
     private lateinit var fragmentCustomFeedBinding: FragmentCustomFeedBinding
@@ -68,6 +69,17 @@ class CustomFeedFragment: Fragment() {
 
             override fun onDownvoteBtnClick(post: Post) {
                 viewModel.downvotePost(post)
+            }
+
+            override fun onShareBtnClick(postId: Int, communityId: Int) {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, PostUriGenerator.generate(postId, communityId))
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
             }
 
             override fun onPostLongClick(position: Int) {

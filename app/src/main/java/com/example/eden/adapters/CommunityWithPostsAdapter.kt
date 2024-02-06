@@ -23,6 +23,7 @@ import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.util.UriValidation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 private const val ITEM_COMMUNITY_HEADER = 0
@@ -41,12 +42,12 @@ class CommunityWithPostsAdapter(
     inner class CommunityViewHolder(val binding: ItemDetailedCommunityBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(community: Community){
             binding.apply {
-                if (community.isCustomImage) imageViewCommunity.setImageURI(
-                    Uri.parse(
-                        community.imageUri
-                    )
-                )
+                if (community.isCustomImage) {
+                    if (UriValidation.validate(context, community.imageUri)) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                    else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                }
                 else imageViewCommunity.setImageResource(community.imageUri.toInt())
+
                 textViewCommunityName.text = community.communityName
                 textViewCommunityDescription.text = community.description
 
@@ -116,10 +117,12 @@ class CommunityWithPostsAdapter(
                 textViewTitle.text = post.title
 
                 //MEDIA
-                if(post.containsImage){
-                    imageViewPost.visibility = View.VISIBLE
-                    imageViewPost.setImageURI(Uri.parse(post.imageUri))
-                    imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+                if(post.containsImage and UriValidation.validate(context, post.imageUri)){
+                    imageViewPost.apply {
+                        visibility = View.VISIBLE
+                        setImageURI(Uri.parse(post.imageUri))
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                    }
                 }
                 else imageViewPost.visibility = View.GONE
 

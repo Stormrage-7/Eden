@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Eden</string>
+    <string name="domain">https://www.eden.com</string>
 </resources>

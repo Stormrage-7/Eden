@@ -22,6 +22,7 @@ import com.example.eden.R
 import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.util.PostUriGenerator
 import timber.log.Timber
 
 class HomeFragment: Fragment(){
@@ -79,8 +80,18 @@ class HomeFragment: Fragment(){
                 viewModel.downvotePost(post)
             }
 
+            override fun onShareBtnClick(postId: Int, communityId: Int) {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, PostUriGenerator.generate(postId, communityId))
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            }
+
             override fun onPostLongClick(position: Int) {
-                TODO("Not yet implemented")
             }
 
         })

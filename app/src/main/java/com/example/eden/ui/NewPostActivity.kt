@@ -222,6 +222,7 @@ class NewPostActivity: AppCompatActivity(),
             }
             else{
                 imageUri = ""
+                isImageAttached = false
             }
         }
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_COMMUNITY && data!=null){

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -147,6 +146,22 @@
         android:layout_marginStart="10sp"
         app:layout_constraintStart_toEndOf="@id/dislikeBtn"
         app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
+
+    <Button
+        android:id="@+id/shareBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_share_black_24"
+        android:backgroundTint="@color/white"
+        android:outlineProvider="none"
+        android:text="Share"
+        android:textSize="10sp"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:layout_marginStart="10sp"
+        app:layout_constraintStart_toEndOf="@id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toBottomOf="@id/textView"/>
     <!--    <ImageButton-->
     <!--        android:id="@+id/btnMore"-->
     <!--        android:layout_width="0dp"-->

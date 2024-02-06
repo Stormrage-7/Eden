@@ -22,8 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class HomeScreenActivity: AppCompatActivity(),
-    ConfirmationDialogFragment.ConfirmationDialogListener{
+class HomeScreenActivity: AppCompatActivity(){
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var navController : NavController
     private lateinit var databaseDao: EdenDao
@@ -46,10 +45,11 @@ class HomeScreenActivity: AppCompatActivity(),
         setSupportActionBar(findViewById(R.id.CustomToolBar))
 
         activityHomeScreenBinding.addCommunityBtn.setOnClickListener {
-            activityHomeScreenBinding.topAppBar.requestFocus()
-            Intent(this, NewCommunityActivity::class.java).apply {
-                startActivity(this)
-            }
+            activityHomeScreenBinding.drawerLayout.open()
+//            activityHomeScreenBinding.topAppBar.requestFocus()
+//            Intent(this, NewCommunityActivity::class.java).apply {
+//                startActivity(this)
+//            }
         }
 
         activityHomeScreenBinding.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
@@ -57,9 +57,17 @@ class HomeScreenActivity: AppCompatActivity(),
                 activityHomeScreenBinding.homeScreenSearchView.setQuery("", false)
                 activityHomeScreenBinding.homeScreenSearchView.clearFocus()
                 activityHomeScreenBinding.topAppBar.requestFocus()
-                Intent(this@HomeScreenActivity, SearchableActivity:: class.java).apply {
-                    putExtra(SearchManager.QUERY, query)
-                    startActivity(this)
+                if (query?.startsWith("https://www.eden.com") == true){
+                    Intent(this@HomeScreenActivity, PostDetailedActivity::class.java).apply {
+                        putExtra("UriObject", query)
+                        startActivity(this)
+                    }
+                }
+                else {
+                    Intent(this@HomeScreenActivity, SearchableActivity::class.java).apply {
+                        putExtra(SearchManager.QUERY, query)
+                        startActivity(this)
+                    }
                 }
                 return true
             }
@@ -125,6 +133,10 @@ class HomeScreenActivity: AppCompatActivity(),
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        if (activityHomeScreenBinding.drawerLayout.isOpen){
+            activityHomeScreenBinding.drawerLayout.close()
+            return
+        }
         if (!activityHomeScreenBinding.topAppBar.isFocused){
             activityHomeScreenBinding.topAppBar.requestFocus()
         }
@@ -143,14 +155,6 @@ class HomeScreenActivity: AppCompatActivity(),
 
     private fun isValidDestination(destination: Int) : Boolean{
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id
-    }
-
-    override fun onDialogPositiveClick() {
-
-    }
-
-    override fun onDialogNegativeClick() {
-
     }
 
 }

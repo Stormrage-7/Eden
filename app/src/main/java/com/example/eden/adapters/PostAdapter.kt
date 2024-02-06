@@ -30,9 +30,7 @@ class PostAdapter(
     var joinedCommunitiesList: List<Int> = listOf()
     var postList: MutableList<Post> = mutableListOf()
     var communityList: List<Community> = listOf()
-    var postCommunityCrossRefList: List<PostCommunityCrossRef> = listOf()
     private var filter = PostFilter.HOT
-    lateinit var currentCommunity: Community
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -127,6 +125,10 @@ class PostAdapter(
                 dislikeBtn.visibility = View.GONE
                 shareBtn.visibility = View.GONE
                 textView.visibility = View.VISIBLE
+                shareBtn2.visibility = View.VISIBLE
+                shareBtn2.setOnClickListener {
+                    postListener.onShareBtnClick(post.postId, post.communityId)
+                }
             }
 
                 // CHANGES TO THE VOTE
@@ -149,6 +151,7 @@ class PostAdapter(
 //                if (intent.resolveActivity(context.packageManager) != null){
 //                    context.startActivity(intent)
 //                }
+                postListener.onShareBtnClick(post.postId, post.communityId)
             }
         }
 
@@ -204,6 +207,7 @@ class PostAdapter(
         fun onCommunityClick(community: Community)
         fun onUpvoteBtnClick(post: Post)
         fun onDownvoteBtnClick(post: Post)
+        fun onShareBtnClick(postId: Int, communityId: Int)
         fun onPostLongClick(position: Int)
     }
 
