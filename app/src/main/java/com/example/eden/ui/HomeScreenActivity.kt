@@ -44,10 +44,10 @@ class HomeScreenActivity: AppCompatActivity(){
         val communitiesFragment = CommunitiesFragment()
         val yourFeedFragment = CustomFeedFragment()
         current = homeFragment
-        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, communitiesFragment, "3").hide(communitiesFragment).commit()
-        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, yourFeedFragment, "2").hide(yourFeedFragment).commit()
-        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, homeFragment, "1").commit()
-//        setCurrentFragment(homeFragment)
+//        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, communitiesFragment, "3").hide(communitiesFragment).commit()
+//        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, yourFeedFragment, "2").hide(yourFeedFragment).commit()
+//        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, homeFragment, "1").commit()
+        setCurrentFragment(homeFragment)
 
         setSupportActionBar(activityHomeScreenBinding.topAppBar)
         activityHomeScreenBinding.homeScreenSearchView.setupWithSearchBar(activityHomeScreenBinding.searchBar)
@@ -72,6 +72,23 @@ class HomeScreenActivity: AppCompatActivity(){
             false
         }
 
+        activityHomeScreenBinding.homeScreenSearchView.editText.setOnEditorActionListener { v, actionId, event ->
+            val query = activityHomeScreenBinding.homeScreenSearchView.text.toString().trim()
+            if (query.isNotEmpty() and query.startsWith("https://www.eden.com")){
+                Intent(this@HomeScreenActivity, PostDetailedActivity::class.java).apply {
+                    putExtra("UriObject", query)
+                    startActivity(this)
+                }
+            }
+            else if (query.isNotEmpty()) {
+                Intent(this@HomeScreenActivity, SearchableActivity::class.java).apply {
+                    putExtra(SearchManager.QUERY, query)
+                    startActivity(this)
+                }
+            }
+            activityHomeScreenBinding.homeScreenSearchView.hide()
+            false
+        }
 //        activityHomeScreenBinding.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 //            override fun onQueryTextSubmit(query: String?): Boolean {
 ////                activityHomeScreenBinding.homeScreenSearchView.setQuery("", false)
@@ -155,9 +172,13 @@ class HomeScreenActivity: AppCompatActivity(){
     }
 
     private fun setCurrentFragment(fragment: Fragment) =
+//        supportFragmentManager.beginTransaction().apply {
+//            hide(current)
+//            show(fragment)
+//            commit()
+//        }
         supportFragmentManager.beginTransaction().apply {
-            hide(current)
-            show(fragment)
+            replace(R.id.nav_host_fragment, fragment)
             commit()
         }
 
