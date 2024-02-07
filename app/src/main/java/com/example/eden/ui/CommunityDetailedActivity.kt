@@ -20,6 +20,7 @@ import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.PostFilter
+import com.example.eden.util.PostUriGenerator
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogListener,
@@ -80,26 +81,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             }
 
             override fun onFilterClick() {
-                val dialogViewBinding = BottomSheetPostFilterBinding.inflate(layoutInflater)
-                bottomSheetDialog = BottomSheetDialog(this@CommunityDetailedActivity)
-                bottomSheetDialog.setContentView(dialogViewBinding.root)
-
-                dialogViewBinding.filterHot.setOnClickListener {
-                    viewModel.filter = PostFilter.HOT
-                    viewModel.refreshPostListWithFilter(viewModel.filter)
-                    bottomSheetDialog.dismiss()
-                }
-                dialogViewBinding.filterTop.setOnClickListener {
-                    viewModel.filter = PostFilter.TOP
-                    viewModel.refreshPostListWithFilter(viewModel.filter)
-                    bottomSheetDialog.dismiss()
-                }
-                dialogViewBinding.filterOld.setOnClickListener {
-                    viewModel.filter = PostFilter.OLDEST
-                    viewModel.refreshPostListWithFilter(viewModel.filter)
-                    bottomSheetDialog.dismiss()
-                }
-                bottomSheetDialog.show()
+                TODO("Not yet implemented")
             }
 
             override fun onJoinClick() {
@@ -119,7 +101,14 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
-                TODO("Not yet implemented")
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, PostUriGenerator.generate(postId, communityId))
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
             }
         })
         adapter.resources = resources
@@ -135,8 +124,8 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         }
 
         viewModel.community.observe(this) {
-                adapter.currentCommunity = it
-                adapter.notifyDataSetChanged()
+            adapter.currentCommunity = it
+            adapter.notifyDataSetChanged()
         }
 
         viewModel.postList.observe(this) {

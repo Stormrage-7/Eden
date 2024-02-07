@@ -69,12 +69,43 @@ class CommunityWithPostsAdapter(
                     updateJoinStatus(binding)
                 }
 
-                filterButton.apply {
-                    text = filter.text
-                    setCompoundDrawablesWithIntrinsicBounds(filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
-                }
+                filterButton.setOnClickListener {
+                    val dialogViewBinding = BottomSheetPostFilterBinding.inflate(LayoutInflater.from(context))
+                    bottomSheetDialog = BottomSheetDialog(context)
+                    bottomSheetDialog.setContentView(dialogViewBinding.root)
 
-                filterButton.setOnClickListener { postListener.onFilterClick() }
+                    dialogViewBinding.filterHot.setOnClickListener {
+                        postListener.setFilter(PostFilter.HOT)
+                        filter = PostFilter.HOT
+                        binding.filterButton.apply {
+                            text = filter.text
+                            setCompoundDrawablesWithIntrinsicBounds(filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                        }
+                        updateFilter()
+                        bottomSheetDialog.dismiss()
+                    }
+                    dialogViewBinding.filterTop.setOnClickListener {
+                        postListener.setFilter(PostFilter.TOP)
+                        filter = PostFilter.TOP
+                        binding.filterButton.apply {
+                            text = filter.text
+                            setCompoundDrawablesWithIntrinsicBounds(filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                        }
+                        updateFilter()
+                        bottomSheetDialog.dismiss()
+                    }
+                    dialogViewBinding.filterOld.setOnClickListener {
+                        postListener.setFilter(PostFilter.OLDEST)
+                        filter = PostFilter.OLDEST
+                        binding.filterButton.apply {
+                            text = filter.text
+                            setCompoundDrawablesWithIntrinsicBounds(filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                        }
+                        updateFilter()
+                        bottomSheetDialog.dismiss()
+                    }
+                    bottomSheetDialog.show()
+                }
             }
         }
     }
@@ -136,9 +167,16 @@ class CommunityWithPostsAdapter(
                     postListener.onDownvoteBtnClick(post)
                 }
 
-//                shareBtn.visibility = View.INVISIBLE
+                shareBtn.visibility = View.INVISIBLE
                 shareBtn.setOnClickListener {
-                    postListener.onShareBtnClick(post.postId, post.communityId)
+                    val intent: Intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, "HI")
+                    }
+
+                    if (intent.resolveActivity(context.packageManager) != null){
+                        context.startActivity(intent)
+                    }
                 }
             }
         }

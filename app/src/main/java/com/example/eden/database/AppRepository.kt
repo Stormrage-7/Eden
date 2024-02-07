@@ -2,6 +2,7 @@ package com.example.eden.database
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.JoinedCommunities
@@ -13,9 +14,25 @@ import com.example.eden.enums.VoteStatus
 class AppRepository(private val databaseDao: EdenDao) {
 
     var postList: LiveData<List<Post>> = databaseDao.getAllPosts()
+    private var _postList: MutableLiveData<List<Post>> = MutableLiveData()
     var postCommunityCrossRefList: LiveData<List<PostCommunityCrossRef>> = databaseDao.getAllPostCommunityCrossRef()
     var communityList: LiveData<List<Community>> = databaseDao.getAllCommunities()
     var joinedCommunitiesList: LiveData<List<Int>> = databaseDao.getAllJoinedCommunities()
+
+    /********************* TESTING ***********************/
+    fun getTopPostList(communityId: Int): LiveData<List<Post>> {
+        return databaseDao.getTopPostsOfCommunity(communityId)
+    }
+    fun getHotPostList(communityId: Int): LiveData<List<Post>> {
+        return databaseDao.getHotPostsOfCommunity(communityId)
+    }
+    fun getOldPostList(communityId: Int): LiveData<List<Post>> {
+        return databaseDao.getOldPostsOfCommunity(communityId)
+    }
+    fun get_PostList(): LiveData<List<Post>> = _postList
+
+
+    /*****************************************************/
     fun getCommentListForPost(postId: Int): LiveData<List<Comment>> = databaseDao.getCommentListForPost(postId)
     fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>> = databaseDao.getPostsOfCommunity(communityId)
 

@@ -192,16 +192,6 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateFilter(filter: PostFilter) {
-        this.filter = filter
-        when(filter){
-            PostFilter.HOT -> postList.sortByDescending { it.postId }
-            PostFilter.TOP -> postList.sortByDescending { it.voteCounter }
-            PostFilter.OLDEST -> postList.sortBy { it.postId }
-        }
-        notifyDataSetChanged()
-    }
-
     interface PostListener{
         fun getCommunityIdFromPostId(position: Int): Int
         fun onPostClick(post: Post, community: Community)

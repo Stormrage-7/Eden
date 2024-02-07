@@ -2,6 +2,8 @@ package com.example.eden.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
@@ -12,7 +14,7 @@ import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
 
 class DetailedCommunityViewModel(private val repository: AppRepository,
-                                 val communityObj: Community,
+                                 communityObj: Community,
                                  application: Eden
 ): AndroidViewModel(application) {
 
@@ -69,9 +71,8 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
     }
 
     fun refreshPostListWithFilter(filter: PostFilter) {
-        Log.i("DetailedCommunityViewModel", "community:" + community.value)
         postList = repository.getPostsOfCommunity(community.value!!.communityId, filter)
-        Log.i("DetailedCommunityViewModel", "retrived list:" + postList.value.toString())
+        Log.i("DetailedCommunityViewModel", postList.value.toString())
     }
 
 }

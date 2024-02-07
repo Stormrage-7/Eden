@@ -9,6 +9,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
@@ -26,30 +27,32 @@ class HomeScreenActivity: AppCompatActivity(){
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var navController : NavController
     private lateinit var databaseDao: EdenDao
+    private lateinit var current: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         databaseDao = (application as Eden).edenDao
-//        lifecycleScope.launch {
-//            clearDB()
-//        }
 
         activityHomeScreenBinding = ActivityHomeScreenBinding.inflate(layoutInflater)
         setContentView(activityHomeScreenBinding.root)
 
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-        setSupportActionBar(findViewById(R.id.CustomToolBar))
+        val homeFragment = HomeFragment()
+        val communitiesFragment = CommunitiesFragment()
+        val yourFeedFragment = CustomFeedFragment()
+        current = homeFragment
+        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, communitiesFragment, "3").hide(communitiesFragment).commit()
+        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, yourFeedFragment, "2").hide(yourFeedFragment).commit()
+        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, homeFragment, "1").commit()
+//        setCurrentFragment(homeFragment)
 
-        activityHomeScreenBinding.addCommunityBtn.setOnClickListener {
+        setSupportActionBar(activityHomeScreenBinding.topAppBar)
+        activityHomeScreenBinding.homeScreenSearchView.setupWithSearchBar(activityHomeScreenBinding.searchBar)
+        activityHomeScreenBinding.searchBar.setNavigationOnClickListener {
             activityHomeScreenBinding.drawerLayout.open()
-//            activityHomeScreenBinding.topAppBar.requestFocus()
-//            Intent(this, NewCommunityActivity::class.java).apply {
-//                startActivity(this)
-//            }
         }
 
         activityHomeScreenBinding.navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -69,50 +72,37 @@ class HomeScreenActivity: AppCompatActivity(){
             false
         }
 
-        activityHomeScreenBinding.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                activityHomeScreenBinding.homeScreenSearchView.setQuery("", false)
-                activityHomeScreenBinding.homeScreenSearchView.clearFocus()
-                activityHomeScreenBinding.topAppBar.requestFocus()
-                if (query?.startsWith("https://www.eden.com") == true){
-                    Intent(this@HomeScreenActivity, PostDetailedActivity::class.java).apply {
-                        putExtra("UriObject", query)
-                        startActivity(this)
-                    }
-                }
-                else {
-                    Intent(this@HomeScreenActivity, SearchableActivity::class.java).apply {
-                        putExtra(SearchManager.QUERY, query)
-                        startActivity(this)
-                    }
-                }
-                return true
-            }
+//        activityHomeScreenBinding.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+////                activityHomeScreenBinding.homeScreenSearchView.setQuery("", false)
+////                activityHomeScreenBinding.homeScreenSearchView.clearFocus()
+////                activityHomeScreenBinding.topAppBar.requestFocus()
+//                if (query?.startsWith("https://www.eden.com") == true){
+//                    Intent(this@HomeScreenActivity, PostDetailedActivity::class.java).apply {
+//                        putExtra("UriObject", query)
+//                        startActivity(this)
+//                    }
+//                }
+//                else {
+//                    Intent(this@HomeScreenActivity, SearchableActivity::class.java).apply {
+//                        putExtra(SearchManager.QUERY, query)
+//                        startActivity(this)
+//                    }
+//                }
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//
+//        })
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-
-        })
-
-        activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
-            activityHomeScreenBinding.topAppBar.requestFocus()
-            when(it.itemId){
+        activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when(item.itemId) {
                 R.id.miHome -> {
-
-                    if( isValidDestination(R.id.homeFragment) and !navController.popBackStack(R.id.homeFragment, false)) {
-                        navController.navigate(R.id.homeFragment)
-                    }
-                    true
-                    //TODO Change to Nested If so that if HOME is pressed again then scroll back to top!
-
-                }
-                R.id.miCommunities -> {
-
-                    if( isValidDestination(R.id.communitiesFragment) and !navController.popBackStack(
-                            R.id.communitiesFragment, false)) {
-                        navController.navigate(R.id.communitiesFragment)
-                    }
+                    setCurrentFragment(homeFragment)
+                    current = homeFragment
                     true
                 }
                 R.id.miCreatePost -> {
@@ -122,13 +112,16 @@ class HomeScreenActivity: AppCompatActivity(){
                     false
                 }
                 R.id.miCustomFeed -> {
-                    if( isValidDestination(R.id.customFeedFragment) and !navController.popBackStack(
-                            R.id.customFeedFragment, false)) {
-                        navController.navigate(R.id.customFeedFragment)
-                    }
+                    setCurrentFragment(yourFeedFragment)
+                    current = yourFeedFragment
                     true
                 }
-                else -> {false}
+                R.id.miCommunities -> {
+                    setCurrentFragment(communitiesFragment)
+                    current = communitiesFragment
+                    true
+                }
+                else -> false
             }
         }
     }
@@ -140,12 +133,6 @@ class HomeScreenActivity: AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
-
-        if(activityHomeScreenBinding.homeScreenSearchView.isFocused) {
-            activityHomeScreenBinding.topAppBar.requestFocus()
-            Log.i("OnResume","Inside focus")
-        }
-        Log.i("OnResume","Outside focus")
     }
 
     @Deprecated("Deprecated in Java")
@@ -154,21 +141,25 @@ class HomeScreenActivity: AppCompatActivity(){
             activityHomeScreenBinding.drawerLayout.close()
             return
         }
-        if (!activityHomeScreenBinding.topAppBar.isFocused){
-            activityHomeScreenBinding.topAppBar.requestFocus()
-        }
         else {
             super.onBackPressed()
-            activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this,
-                R.id.nav_host_fragment
-            ).currentDestination!!.id){
-                R.id.homeFragment -> R.id.miHome
-                R.id.communitiesFragment -> R.id.miCommunities
-                R.id.customFeedFragment -> R.id.miCustomFeed
-                else -> {0}
-            }
+//            activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this,
+//                R.id.nav_host_fragment
+//            ).currentDestination!!.id){
+//                R.id.homeFragment -> R.id.miHome
+//                R.id.communitiesFragment -> R.id.miCommunities
+//                R.id.customFeedFragment -> R.id.miCustomFeed
+//                else -> {0}
+//            }
         }
     }
+
+    private fun setCurrentFragment(fragment: Fragment) =
+        supportFragmentManager.beginTransaction().apply {
+            hide(current)
+            show(fragment)
+            commit()
+        }
 
     private fun isValidDestination(destination: Int) : Boolean{
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id

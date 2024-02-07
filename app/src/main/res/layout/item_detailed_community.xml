@@ -65,7 +65,7 @@
         android:outlineProvider="none"
         android:backgroundTint="@color/azure"
         android:text="Hot"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewCommunityDescription"/>
 
