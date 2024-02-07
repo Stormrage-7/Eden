@@ -19,6 +19,7 @@ import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.enums.PostFilter
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.HomeScreenActivity
+import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
 import com.example.eden.util.UriValidation
 
@@ -119,7 +120,7 @@ class PostAdapter(
                 }
             }
 
-            if (context is SearchableActivity){
+            if ((context is SearchableActivity) or (context is PostInteractionsActivity)){
                 textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
                 likeBtn.visibility = View.GONE
                 dislikeBtn.visibility = View.GONE

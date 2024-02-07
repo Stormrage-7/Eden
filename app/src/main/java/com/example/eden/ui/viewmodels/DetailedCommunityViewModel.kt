@@ -69,8 +69,9 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
     }
 
     fun refreshPostListWithFilter(filter: PostFilter) {
+        Log.i("DetailedCommunityViewModel", "community:" + community.value)
         postList = repository.getPostsOfCommunity(community.value!!.communityId, filter)
-        Log.i("DetailedCommunityViewModel", postList.value.toString())
+        Log.i("DetailedCommunityViewModel", "retrived list:" + postList.value.toString())
     }
 
 }

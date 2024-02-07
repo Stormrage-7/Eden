@@ -2,6 +2,7 @@ package com.example.eden.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -11,8 +12,10 @@ import com.example.eden.database.AppRepository
 import com.example.eden.ui.viewmodels.DetailedCommunityViewModel
 import com.example.eden.ui.viewmodels.DetailedCommunityViewModelFactory
 import com.example.eden.Eden
+import com.example.eden.R
 import com.example.eden.adapters.CommunityWithPostsAdapter
 import com.example.eden.databinding.ActivityDetailedCommunityViewBinding
+import com.example.eden.databinding.BottomSheetPostFilterBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
@@ -76,6 +79,29 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 viewModel.filter = filter
             }
 
+            override fun onFilterClick() {
+                val dialogViewBinding = BottomSheetPostFilterBinding.inflate(layoutInflater)
+                bottomSheetDialog = BottomSheetDialog(this@CommunityDetailedActivity)
+                bottomSheetDialog.setContentView(dialogViewBinding.root)
+
+                dialogViewBinding.filterHot.setOnClickListener {
+                    viewModel.filter = PostFilter.HOT
+                    viewModel.refreshPostListWithFilter(viewModel.filter)
+                    bottomSheetDialog.dismiss()
+                }
+                dialogViewBinding.filterTop.setOnClickListener {
+                    viewModel.filter = PostFilter.TOP
+                    viewModel.refreshPostListWithFilter(viewModel.filter)
+                    bottomSheetDialog.dismiss()
+                }
+                dialogViewBinding.filterOld.setOnClickListener {
+                    viewModel.filter = PostFilter.OLDEST
+                    viewModel.refreshPostListWithFilter(viewModel.filter)
+                    bottomSheetDialog.dismiss()
+                }
+                bottomSheetDialog.show()
+            }
+
             override fun onJoinClick() {
                 if (viewModel.community.value?.isJoined == true){
                     val leaveCommunityConfirmationDialog = ConfirmationDialogFragment("Are you sure you want to leave this Community?")
@@ -90,6 +116,10 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                     putExtra("CommunityObject", viewModel.community.value)
                     startActivity(this)
                 }
+            }
+
+            override fun onShareBtnClick(postId: Int, communityId: Int) {
+                TODO("Not yet implemented")
             }
         })
         adapter.resources = resources

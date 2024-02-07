@@ -60,6 +60,11 @@
             android:theme="@style/Theme.Eden.CreatePostScreen">
         </activity>
 
+        <activity
+            android:name=".ui.PostInteractionsActivity"
+            android:theme="@style/Theme.Eden.CreatePostScreen">
+        </activity>
+
         <activity android:name=".ui.SearchableActivity"
             android:theme="@style/Theme.Eden.CreatePostScreen"
             android:launchMode="singleTop"

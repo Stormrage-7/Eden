@@ -13,6 +13,7 @@ import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.entities.relations.PostWithCommunities
+import com.example.eden.enums.VoteStatus
 
 
 @Dao
@@ -94,11 +95,11 @@ interface EdenDao {
     /*************************** POST OF COMMUNITY *************************/
     @Query("SELECT * FROM Post_Table WHERE communityId = :communityId")
     fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>>
-    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter ASC")
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY communityId DESC")
     fun getHotPostsOfCommunity(communityId: Int): LiveData<List<Post>>
     @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter DESC")
     fun getTopPostsOfCommunity(communityId: Int): LiveData<List<Post>>
-    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter DESC")
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY communityId ASC")
     fun getOldPostsOfCommunity(communityId: Int): LiveData<List<Post>>
 
     /************************************/
@@ -107,5 +108,8 @@ interface EdenDao {
 
     @Query("UPDATE Community_Table SET noOfPosts = noOfPosts-1 WHERE communityId = :communityId")
     suspend fun decreasePostCount(communityId: Int)
+
+    @Query("SELECT * FROM post_table WHERE voteStatus = :voteStatus")
+    fun getPosts(voteStatus: VoteStatus): LiveData<List<Post>>
 
 }

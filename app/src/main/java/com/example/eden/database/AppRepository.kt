@@ -8,6 +8,7 @@ import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.enums.PostFilter
+import com.example.eden.enums.VoteStatus
 
 class AppRepository(private val databaseDao: EdenDao) {
 
@@ -113,7 +114,13 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.deletePost(post)
     }
 
+    fun getUpvotedPosts(): LiveData<List<Post>> {
+        return databaseDao.getPosts(VoteStatus.UPVOTED)
+    }
 
+    fun getDownvotedPosts(): LiveData<List<Post>> {
+        return databaseDao.getPosts(VoteStatus.DOWNVOTED)
+    }
 
 
 }

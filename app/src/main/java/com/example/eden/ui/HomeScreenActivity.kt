@@ -52,6 +52,23 @@ class HomeScreenActivity: AppCompatActivity(){
 //            }
         }
 
+        activityHomeScreenBinding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId){
+                R.id.add_community_btn -> {
+                    Intent(this, NewCommunityActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                }
+                R.id.post_interactions_btn -> {
+                    Intent(this, PostInteractionsActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                }
+            }
+            activityHomeScreenBinding.drawerLayout.close()
+            false
+        }
+
         activityHomeScreenBinding.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 activityHomeScreenBinding.homeScreenSearchView.setQuery("", false)

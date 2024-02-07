@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
-        android:id="@+id/main_item"
-        android:title="Navigation Drawer">
-        <menu>
-            <item
-                android:id="@+id/inbox_item"
-                android:icon="@drawable/community_add_24"
-                android:title="Add Community"
-                android:checkable="true"/>
-            <item
-                android:id="@+id/outbox_item"
-                android:icon="@drawable/icon_logo"
-                android:title="Item 2"
-                android:checkable="true"/>
-            <item
-                android:id="@+id/favourites_item"
-                android:icon="@drawable/icon_logo"
-                android:title="Item 3"
-                android:checkable="true"/>
-        </menu>
-    </item>
+        android:id="@+id/add_community_btn"
+        android:icon="@drawable/community_add_24"
+        android:title="Add Community"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/post_interactions_btn"
+        android:icon="@drawable/ic_post_interactions"
+        android:title="Post Interactions"
+        android:checkable="true"/>
+
 </menu>
