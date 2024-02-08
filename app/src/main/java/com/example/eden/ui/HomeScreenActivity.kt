@@ -67,6 +67,11 @@ class HomeScreenActivity: AppCompatActivity(){
                         startActivity(this)
                     }
                 }
+                R.id.profile_btn -> {
+                    Intent(this, ProfileActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                }
             }
             activityHomeScreenBinding.drawerLayout.close()
             false
