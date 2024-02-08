@@ -86,7 +86,7 @@ class PostDetailedActivity: AppCompatActivity(),
             }
             else {
                 postFound = false
-                Toast.makeText(this@PostDetailedActivity, "Post Doesn't Exist!", Toast.LENGTH_LONG).show()
+//                Toast.makeText(this@PostDetailedActivity, "Post Doesn't Exist!", Toast.LENGTH_LONG).show()
                 activityDetailedPostViewBinding.apply {
                     editButton.visibility = View.GONE
                     deleteButton.visibility = View.GONE

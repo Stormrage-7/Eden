@@ -33,7 +33,28 @@ class PostAdapter(
     var communityList: List<Community> = listOf()
     private var filter = PostFilter.HOT
 
-    inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root)
+    inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.apply {
+                likeBtn.setOnClickListener {
+                    postListener.onUpvoteBtnClick(postList[bindingAdapterPosition])
+                }
+                dislikeBtn.setOnClickListener {
+                    postListener.onDownvoteBtnClick(postList[bindingAdapterPosition])
+                }
+
+                shareBtn.setOnClickListener {
+                    postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId)
+                }
+            }
+            itemView.setOnClickListener {
+                val community = communityList.find { it.communityId == postList[bindingAdapterPosition].communityId }
+                if (community != null) {
+                    postListener.onPostClick(postList[bindingAdapterPosition], community)
+                }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -78,18 +99,18 @@ class PostAdapter(
                 }
             }
             //TITLE
-            textViewTitle.text = postList[position].title
+            textViewTitle.text = post.title
 
             //MEDIA
             if(post.containsImage and UriValidation.validate(context, post.imageUri)){
                 imageViewPost.visibility = View.VISIBLE
-                imageViewPost.setImageURI(Uri.parse(postList[position].imageUri))
+                imageViewPost.setImageURI(Uri.parse(post.imageUri))
                 imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             else imageViewPost.visibility = View.GONE
 
             //BODY TEXT
-            if(postList[position].bodyText.isEmpty()){
+            if(post.bodyText.isEmpty()){
                 textViewDescription.visibility = View.GONE
             }
             else{
@@ -98,9 +119,9 @@ class PostAdapter(
             }
 
             //UPVOTE AND DOWNVOTE
-            textViewVoteCounter.text = postList[position].voteCounter.toString()
+            textViewVoteCounter.text = post.voteCounter.toString()
 
-            when (postList[position].voteStatus) {
+            when (post.voteStatus) {
                 VoteStatus.UPVOTED -> {
                     likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
                     dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
@@ -130,35 +151,6 @@ class PostAdapter(
                 shareBtn2.setOnClickListener {
                     postListener.onShareBtnClick(post.postId, post.communityId)
                 }
-            }
-
-                // CHANGES TO THE VOTE
-            likeBtn.setOnClickListener {
-                Log.i("Like", "Button pressed!")
-                postListener.onUpvoteBtnClick(post)
-            }
-
-            dislikeBtn.setOnClickListener {
-                Log.i("Dislike", "Button pressed! ${position}")
-                postListener.onDownvoteBtnClick(post)
-            }
-
-            shareBtn.setOnClickListener {
-//                val intent: Intent = Intent(Intent.ACTION_SEND).apply {
-//                    type = "text/plain"
-//                    putExtra(Intent.EXTRA_TEXT, "HI")
-//                }
-//
-//                if (intent.resolveActivity(context.packageManager) != null){
-//                    context.startActivity(intent)
-//                }
-                postListener.onShareBtnClick(post.postId, post.communityId)
-            }
-        }
-
-        holder.itemView.setOnClickListener {
-            if (community != null) {
-                postListener.onPostClick(post, community)
             }
         }
     }

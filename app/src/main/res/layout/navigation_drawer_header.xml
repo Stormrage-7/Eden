@@ -10,15 +10,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/Theme.Material3.Light">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
-        style="@style/roundedProfileImageView"
         android:layout_width="66dp"
         android:layout_height="72dp"
+        android:background="@color/white"
+        app:shapeAppearanceOverlay="@style/roundedProfileImageView"
+        style="@style/roundedProfileImageView"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/ic_profile_24" />
+        android:src="@drawable/playstation_logo"
+        app:srcCompat="@drawable/ic_avatar"/>
 
     <TextView
         android:layout_width="match_parent"

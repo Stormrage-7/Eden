@@ -8,6 +8,12 @@ import com.example.eden.database.AppRepository
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.entities.relations.PostCommunityCrossRef
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.job
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
 class NewPostViewModel(private val repository: AppRepository,
@@ -28,10 +34,12 @@ class NewPostViewModel(private val repository: AppRepository,
 
     fun upsertPost(post: Post, communityId: Int): Int{
         viewModelScope.launch {
-            postId = repository.upsertPost(post).toInt()
+            val postId1 = async{
+                repository.upsertPost(post) }
+            repository.insertPostCommunityCrossRef(PostCommunityCrossRef(postId1.await().toInt(), communityId))
             repository.increasePostCount(communityId)
         }
-        return postId
+        return 1
     }
 
     fun insertPostCommunityCrossRef(postCommunityCrossRef: PostCommunityCrossRef){

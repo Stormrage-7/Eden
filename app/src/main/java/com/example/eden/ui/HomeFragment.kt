@@ -95,6 +95,9 @@ class HomeFragment: Fragment(){
             }
 
         })
+
+        fragmentHomeBinding.rvPosts.setItemViewCacheSize(10)
+        fragmentHomeBinding.rvPosts.setHasFixedSize(true)
         fragmentHomeBinding.rvPosts.adapter = adapter
         fragmentHomeBinding.rvPosts.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.rvPosts.addItemDecoration(
@@ -103,6 +106,13 @@ class HomeFragment: Fragment(){
                 LinearLayoutManager(context).orientation
             )
         )
+
+        /******** TESTING ***********/
+        viewModel.postCommunityCrossRefList.observe(this.requireActivity()) {
+            if (it!=null){
+                Log.i("PostCommunityCrossRef", it.toString())
+            } else Log.i("PostCommunityCrossRef", "null")
+        }
 
         viewModel.joinedCommunitiesList.observe(this.requireActivity()) {
             adapter.joinedCommunitiesList = it
