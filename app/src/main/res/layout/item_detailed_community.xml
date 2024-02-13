@@ -8,6 +8,7 @@
     android:visibility="visible"
     android:padding="7sp"
     android:elevation="5sp"
+    android:theme="@style/Theme.Material3.Light.NoActionBar"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
@@ -21,15 +22,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/createPostButton"
         android:layout_width="wrap_content"
         android:layout_height="45sp"
         android:src="@drawable/ic_new_post_24"
+        android:textColor="@color/black"
+        android:backgroundTint="?attr/colorPrimaryContainer"
         android:text="Create Post"
-        android:textColor="@color/white"
         android:textStyle="bold"
-        android:backgroundTint="@color/azure"
         app:layout_constraintTop_toTopOf="@id/imageViewCommunity"
         app:layout_constraintBottom_toBottomOf="@id/imageViewCommunity"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -56,26 +57,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewCommunityName"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/filterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_hot_24"
+        android:textColor="@color/black"
+        android:backgroundTint="?attr/colorPrimaryContainer"
         android:drawableRight="@drawable/arrow_down_24"
         android:outlineProvider="none"
-        android:backgroundTint="@color/azure"
         android:text="Hot"
-        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewCommunityDescription"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/join_button"
         android:layout_width="wrap_content"
         android:layout_height="35sp"
         android:text="Join"
-        android:backgroundTint="@color/azure"
         android:textColor="@color/white"
+        android:backgroundTint="@color/azure"
         android:textSize="13sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

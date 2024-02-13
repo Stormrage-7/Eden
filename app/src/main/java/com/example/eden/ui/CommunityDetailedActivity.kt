@@ -1,10 +1,17 @@
 package com.example.eden.ui
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.size
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,18 +21,24 @@ import com.example.eden.ui.viewmodels.DetailedCommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.adapters.CommunityWithPostsAdapter
+import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.ActivityDetailedCommunityViewBinding
 import com.example.eden.databinding.BottomSheetPostFilterBinding
+import com.example.eden.databinding.ItemDetailedCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.PostFilter
 import com.example.eden.util.PostUriGenerator
+import com.example.eden.util.UriValidation
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.divider.MaterialDividerItemDecoration
+import kotlin.math.abs
 
 class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogListener,
     AppCompatActivity() {
 
+    private var topBarMenuHidden = true
     private lateinit var detailedCommunityViewBinding: ActivityDetailedCommunityViewBinding
     private lateinit var viewModel: DetailedCommunityViewModel
     private lateinit var repository: AppRepository
@@ -45,27 +58,39 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedCommunityViewModel::class.java]
 
-        detailedCommunityViewBinding.editButton.setOnClickListener {
-            Intent(this@CommunityDetailedActivity, NewCommunityActivity::class.java).apply {
-                putExtra("Context", "CommunityDetailedActivity")
-                putExtra("CommunityObject", viewModel.community.value)
-                startActivity(this)
+        setSupportActionBar(detailedCommunityViewBinding.detailedCommunityToolbar)
+        detailedCommunityViewBinding.communityAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            if (abs(verticalOffset) == appBarLayout.totalScrollRange){
+                //Collapsed
+                topBarMenuHidden = false
+                detailedCommunityViewBinding.textViewCommunityDescription.visibility = View.INVISIBLE
+                invalidateOptionsMenu()
             }
-
+            else if (verticalOffset == 0) {
+                //Expanded
+                topBarMenuHidden = true
+                detailedCommunityViewBinding.textViewCommunityDescription.visibility = View.VISIBLE
+                invalidateOptionsMenu()
+            }
+            else{
+                //In-Between
+                topBarMenuHidden = true
+                detailedCommunityViewBinding.textViewCommunityDescription.visibility = View.VISIBLE
+                invalidateOptionsMenu()
+            }
         }
 
-        detailedCommunityViewBinding.backBtn.setOnClickListener { finish() }
+        // INITIALIZING ADAPTER FOR RECYCLERVIEW
+        val adapter = PostAdapter(context = this, object : PostAdapter.PostListener {
 
-        val adapter = CommunityWithPostsAdapter(context = this, object : CommunityWithPostsAdapter.PostListener {
-
-            override fun onCommunityClick(community: Community) {
-                //TODO
-            }
-            override fun onPostClick(post: Post, community: Community) {
+            override fun onPostClick(post: Post) {
                 Intent(this@CommunityDetailedActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     startActivity(this)
                 }
+            }
+
+            override fun onCommunityClick(community: Community) {
             }
 
             override fun onUpvoteBtnClick(post: Post) {
@@ -76,23 +101,20 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 viewModel.downvotePost(post)
             }
 
-            override fun setFilter(filter: PostFilter) {
-                viewModel.filter = filter
-            }
-
-            override fun onFilterClick() {
-                TODO("Not yet implemented")
-            }
-
-            override fun onJoinClick() {
-                if (viewModel.community.value?.isJoined == true){
-                    val leaveCommunityConfirmationDialog = ConfirmationDialogFragment("Are you sure you want to leave this Community?")
-                    leaveCommunityConfirmationDialog.show(supportFragmentManager, "LeaveCommunityConfirmationDialog")
+            override fun onShareBtnClick(postId: Int, communityId: Int) {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, PostUriGenerator.generate(postId, communityId))
+                    type = "text/plain"
                 }
-                else viewModel.onJoinClick()
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
             }
+        })
 
-            override fun onCreateClick() {
+        // INITIALIZING ON-CLICK LISTENERS FOR BUTTONS
+        detailedCommunityViewBinding.apply {
+            createPostButton.setOnClickListener {
                 Intent(this@CommunityDetailedActivity, NewPostActivity::class.java).apply {
                     putExtra("Context", "CommunityDetailedActivity")
                     putExtra("CommunityObject", viewModel.community.value)
@@ -100,23 +122,52 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 }
             }
 
-            override fun onShareBtnClick(postId: Int, communityId: Int) {
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, PostUriGenerator.generate(postId, communityId))
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
+            joinButton.setOnClickListener {
+                viewModel.onJoinClick()
             }
-        })
-        adapter.resources = resources
+            detailedCommunityToolbar.setNavigationOnClickListener { finish() }
+
+            // FILTER BUTTON
+            filterButton.setOnClickListener {
+                val dialogViewBinding = BottomSheetPostFilterBinding.inflate(LayoutInflater.from(this@CommunityDetailedActivity))
+                bottomSheetDialog = BottomSheetDialog(this@CommunityDetailedActivity)
+                bottomSheetDialog.setContentView(dialogViewBinding.root)
+
+                dialogViewBinding.filterHot.setOnClickListener {
+                    viewModel.filter = PostFilter.HOT
+                    filterButton.apply {
+                        text = viewModel.filter.text
+                        setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                    }
+                    adapter.updateFilter(viewModel.filter)
+                    bottomSheetDialog.dismiss()
+                }
+                dialogViewBinding.filterTop.setOnClickListener {
+                    viewModel.filter = PostFilter.TOP
+                    filterButton.apply {
+                        text = viewModel.filter.text
+                        setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                    }
+                    adapter.updateFilter(viewModel.filter)
+                    bottomSheetDialog.dismiss()
+                }
+                dialogViewBinding.filterOld.setOnClickListener {
+                    viewModel.filter = PostFilter.OLDEST
+                    filterButton.apply {
+                        text = viewModel.filter.text
+                        setCompoundDrawablesWithIntrinsicBounds(viewModel.filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
+                    }
+                    adapter.updateFilter(viewModel.filter)
+                    bottomSheetDialog.dismiss()
+                }
+                bottomSheetDialog.show()
+            }
+        }
+
         detailedCommunityViewBinding.apply {
             rvDetailedCommunity.adapter = adapter
-            rvDetailedCommunity.layoutManager = LinearLayoutManager(this@CommunityDetailedActivity)
             rvDetailedCommunity.addItemDecoration(
-                DividerItemDecoration(
+                MaterialDividerItemDecoration(
                     this@CommunityDetailedActivity,
                     LinearLayoutManager(this@CommunityDetailedActivity).orientation
                 )
@@ -124,24 +175,56 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         }
 
         viewModel.community.observe(this) {
-            adapter.currentCommunity = it
-            adapter.notifyDataSetChanged()
+            detailedCommunityViewBinding.apply {
+                if (it.isCustomImage) {
+                    if (UriValidation.validate(this@CommunityDetailedActivity, it.imageUri)) imageViewCommunity.setImageURI(
+                        Uri.parse(it.imageUri))
+                    else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                }
+                else imageViewCommunity.setImageResource(it.imageUri.toInt())
+
+                textViewCommunityName.text = it.communityName
+                detailedCommunityViewBinding.detailedCommunityToolbar.title = it.communityName
+                textViewCommunityDescription.text = it.description
+                updateJoinStatus(it.isJoined)
+            }
         }
 
         viewModel.postList.observe(this) {
             it.let {
                 if (it.isEmpty()) {
-                    detailedCommunityViewBinding.tempImgView.visibility = View.VISIBLE
-                    detailedCommunityViewBinding.tempTextView.visibility = View.VISIBLE
-                    adapter.updatePostList(it)
+//                    detailedCommunityViewBinding.tempImgView.visibility = View.VISIBLE
+//                    detailedCommunityViewBinding.tempTextView.visibility = View.VISIBLE
                 } else {
-                    detailedCommunityViewBinding.tempImgView.visibility = View.GONE
-                    detailedCommunityViewBinding.tempTextView.visibility = View.GONE
-                    adapter.updatePostList(it)
+//                    detailedCommunityViewBinding.tempImgView.visibility = View.GONE
+//                    detailedCommunityViewBinding.tempTextView.visibility = View.GONE
                 }
+                adapter.updatePostList(it)
             }
         }
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.community_topbar_menu, menu)
+        if (menu != null) {
+            if (topBarMenuHidden) for (index in 0 until menu.size) menu.getItem(index).isVisible = false
+            else for (index in 0 until menu.size) menu.getItem(index).isVisible = true
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.toolbarEditButton -> {
+                Intent(this@CommunityDetailedActivity, NewCommunityActivity::class.java).apply {
+                    putExtra("Context", "CommunityDetailedActivity")
+                    putExtra("CommunityObject", viewModel.community.value)
+                    startActivity(this)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onDialogPositiveClick() {
@@ -150,6 +233,21 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
 
     override fun onDialogNegativeClick() {
     }
-
+    private fun updateJoinStatus(isJoined: Boolean) {
+        detailedCommunityViewBinding.apply {
+            if (isJoined){
+                joinButton.text = "Joined"
+                joinButton.backgroundTintList = ColorStateList.valueOf(
+                    ResourcesCompat.getColor(resources, R.color.grey, null)
+                )
+            }
+            else{
+                joinButton.text = "Join"
+                joinButton.backgroundTintList = ColorStateList.valueOf(
+                    ResourcesCompat.getColor(resources, R.color.azure, null)
+                )
+            }
+        }
+    }
 
 }

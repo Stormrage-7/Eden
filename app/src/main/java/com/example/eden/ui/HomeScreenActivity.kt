@@ -2,25 +2,24 @@ package com.example.eden.ui
 
 import android.app.SearchManager
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.inputmethod.InputMethodManager
-import android.widget.SearchView
-import android.widget.Toast
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.example.eden.Eden
 import com.example.eden.database.EdenDao
 import com.example.eden.R
+import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityHomeScreenBinding
-import com.example.eden.dialogs.ConfirmationDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.example.eden.ui.viewmodels.HomeViewModel
+import com.example.eden.ui.viewmodels.HomeViewModelFactory
+import com.example.eden.util.UriValidation
 import timber.log.Timber
 
 class HomeScreenActivity: AppCompatActivity(){
@@ -28,17 +27,39 @@ class HomeScreenActivity: AppCompatActivity(){
     private lateinit var navController : NavController
     private lateinit var databaseDao: EdenDao
     private lateinit var current: Fragment
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var repository: AppRepository
+    private lateinit var factory: HomeViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         databaseDao = (application as Eden).edenDao
+        repository = (application as Eden).repository
+        factory = HomeViewModelFactory(repository, this)
+        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
         activityHomeScreenBinding = ActivityHomeScreenBinding.inflate(layoutInflater)
         setContentView(activityHomeScreenBinding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.findNavController()
+        viewModel.user.observe(this) { user ->
+            if (user!=null) {
+                val headerView = activityHomeScreenBinding.navigationView.getHeaderView(0)
+                val imageViewProfile = headerView.findViewById<ImageView>(R.id.imageViewNavDrawer)
+                val textViewProfile = headerView.findViewById<TextView>(R.id.textViewNavDrawer)
+                if (!user.isCustomImage) imageViewProfile.setImageResource(user.profileImageUri.toInt())
+                else {
+                    if (UriValidation.validate(this, user.profileImageUri)) imageViewProfile.setImageURI(
+                        Uri.parse(user.profileImageUri))
+                    else imageViewProfile.setImageResource(user.profileImageUri.toInt())
+                }
+                textViewProfile.text = user.username
+            }
+        }
+
+//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+//        navController = navHostFragment.findNavController()
+
 
         val homeFragment = HomeFragment()
         val communitiesFragment = CommunitiesFragment()
@@ -94,31 +115,6 @@ class HomeScreenActivity: AppCompatActivity(){
             activityHomeScreenBinding.homeScreenSearchView.hide()
             false
         }
-//        activityHomeScreenBinding.homeScreenSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-////                activityHomeScreenBinding.homeScreenSearchView.setQuery("", false)
-////                activityHomeScreenBinding.homeScreenSearchView.clearFocus()
-////                activityHomeScreenBinding.topAppBar.requestFocus()
-//                if (query?.startsWith("https://www.eden.com") == true){
-//                    Intent(this@HomeScreenActivity, PostDetailedActivity::class.java).apply {
-//                        putExtra("UriObject", query)
-//                        startActivity(this)
-//                    }
-//                }
-//                else {
-//                    Intent(this@HomeScreenActivity, SearchableActivity::class.java).apply {
-//                        putExtra(SearchManager.QUERY, query)
-//                        startActivity(this)
-//                    }
-//                }
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return false
-//            }
-//
-//        })
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
@@ -161,7 +157,9 @@ class HomeScreenActivity: AppCompatActivity(){
     override fun onBackPressed() {
         if (activityHomeScreenBinding.drawerLayout.isOpen){
             activityHomeScreenBinding.drawerLayout.close()
-            return
+        }
+        else if (activityHomeScreenBinding.homeScreenSearchView.isShowing){
+            activityHomeScreenBinding.homeScreenSearchView.hide()
         }
         else {
             super.onBackPressed()

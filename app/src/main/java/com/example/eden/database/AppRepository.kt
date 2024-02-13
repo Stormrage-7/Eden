@@ -7,6 +7,7 @@ import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
+import com.example.eden.entities.User
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
@@ -137,6 +138,14 @@ class AppRepository(private val databaseDao: EdenDao) {
 
     fun getDownvotedPosts(): LiveData<List<Post>> {
         return databaseDao.getPosts(VoteStatus.DOWNVOTED)
+    }
+
+    suspend fun upsertUser(user: User) {
+        databaseDao.upsertUser(user)
+    }
+
+    fun getUser(): LiveData<User> {
+        return databaseDao.getUser()
     }
 
 

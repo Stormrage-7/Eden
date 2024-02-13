@@ -66,45 +66,11 @@ class CommunityWithPostsAdapter(
 
                 createPostButton.setOnClickListener { postListener.onCreateClick() }
                 joinButton.setOnClickListener { postListener.onJoinClick()
-                    updateJoinStatus(binding)
+//                    updateJoinStatus(binding)
                 }
 
                 filterButton.setOnClickListener {
-                    val dialogViewBinding = BottomSheetPostFilterBinding.inflate(LayoutInflater.from(context))
-                    bottomSheetDialog = BottomSheetDialog(context)
-                    bottomSheetDialog.setContentView(dialogViewBinding.root)
 
-                    dialogViewBinding.filterHot.setOnClickListener {
-                        postListener.setFilter(PostFilter.HOT)
-                        filter = PostFilter.HOT
-                        binding.filterButton.apply {
-                            text = filter.text
-                            setCompoundDrawablesWithIntrinsicBounds(filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
-                        }
-                        updateFilter()
-                        bottomSheetDialog.dismiss()
-                    }
-                    dialogViewBinding.filterTop.setOnClickListener {
-                        postListener.setFilter(PostFilter.TOP)
-                        filter = PostFilter.TOP
-                        binding.filterButton.apply {
-                            text = filter.text
-                            setCompoundDrawablesWithIntrinsicBounds(filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
-                        }
-                        updateFilter()
-                        bottomSheetDialog.dismiss()
-                    }
-                    dialogViewBinding.filterOld.setOnClickListener {
-                        postListener.setFilter(PostFilter.OLDEST)
-                        filter = PostFilter.OLDEST
-                        binding.filterButton.apply {
-                            text = filter.text
-                            setCompoundDrawablesWithIntrinsicBounds(filter.imgSrc, 0, R.drawable.arrow_down_24, 0)
-                        }
-                        updateFilter()
-                        bottomSheetDialog.dismiss()
-                    }
-                    bottomSheetDialog.show()
                 }
             }
         }
@@ -137,24 +103,24 @@ class CommunityWithPostsAdapter(
 
                 textViewVoteCounter.text = post.voteCounter.toString()
 
-                when (post.voteStatus) {
-                    VoteStatus.UPVOTED -> {
-                        likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
-
-                    }
-                    VoteStatus.DOWNVOTED -> {
-                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
-                    }
-                    VoteStatus.NONE -> {
-                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    }
-                }
+//                when (post.voteStatus) {
+//                    VoteStatus.UPVOTED -> {
+//                        likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
+//                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+//                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
+//
+//                    }
+//                    VoteStatus.DOWNVOTED -> {
+//                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
+//                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+//                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
+//                    }
+//                    VoteStatus.NONE -> {
+//                        likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
+//                        dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
+//                        textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+//                    }
+//                }
 
                 // CHANGES TO THE VOTE
                 likeBtn.setOnClickListener {
@@ -226,31 +192,6 @@ class CommunityWithPostsAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateFilter() {
-        when(filter){
-            PostFilter.HOT -> postList.sortByDescending { it.postId }
-            PostFilter.TOP -> postList.sortByDescending { it.voteCounter }
-            PostFilter.OLDEST -> postList.sortBy { it.postId }
-        }
-        notifyDataSetChanged()
-    }
-
-    private fun updateJoinStatus(binding: ItemDetailedCommunityBinding) {
-        binding.apply {
-            if (currentCommunity.isJoined){
-                joinButton.text = "Joined"
-                joinButton.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(resources, R.color.grey, null)
-                )
-            }
-            else{
-                joinButton.text = "Join"
-                joinButton.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(resources, R.color.azure, null)
-                )
-            }
-        }
-    }
 
     interface PostListener{
         fun onPostClick(post: Post, community: Community)

@@ -70,6 +70,11 @@
             android:theme="@style/Theme.Material3.Light.NoActionBar">
         </activity>
 
+        <activity
+            android:name=".ui.EditProfileActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar">
+        </activity>
+
         <activity android:name=".ui.SearchableActivity"
             android:theme="@style/Theme.Eden.CreatePostScreen"
             android:launchMode="singleTop"

@@ -23,6 +23,7 @@ import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.util.PostUriGenerator
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import timber.log.Timber
 
 class HomeFragment: Fragment(){
@@ -43,8 +44,7 @@ class HomeFragment: Fragment(){
         )
 
         val application = requireActivity()
-        repository = (application.application as Eden).repository
-        requireActivity().application
+        repository = (requireActivity().application as Eden).repository
         factory = HomeViewModelFactory(repository, application)
         viewModel = ViewModelProvider(this.requireActivity(), factory)[HomeViewModel::class.java]
 
@@ -53,9 +53,6 @@ class HomeFragment: Fragment(){
 
 
         val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener {
-            override fun getCommunityIdFromPostId(position: Int): Int {
-                return 1
-            }
 
             override fun onCommunityClick(community: Community) {
                 Intent(requireActivity(), CommunityDetailedActivity:: class.java).apply {
@@ -64,10 +61,9 @@ class HomeFragment: Fragment(){
                 }
             }
 
-            override fun onPostClick(post: Post, community: Community) {
+            override fun onPostClick(post: Post) {
                 Intent(requireActivity(), PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
-                    putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
@@ -90,10 +86,6 @@ class HomeFragment: Fragment(){
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
-
-            override fun onPostLongClick(position: Int) {
-            }
-
         })
 
         fragmentHomeBinding.rvPosts.setItemViewCacheSize(10)
@@ -101,8 +93,8 @@ class HomeFragment: Fragment(){
         fragmentHomeBinding.rvPosts.adapter = adapter
         fragmentHomeBinding.rvPosts.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.rvPosts.addItemDecoration(
-            DividerItemDecoration(
-                context,
+            MaterialDividerItemDecoration(
+                requireContext(),
                 LinearLayoutManager(context).orientation
             )
         )

@@ -58,6 +58,27 @@ class DetailedPostViewModel(private val repository: AppRepository,
         }
     }
 
+    fun upvoteComment(comment: Comment){
+        val temp: Comment = when(comment.voteStatus){
+            VoteStatus.UPVOTED -> comment.copy(voteCounter = comment.voteCounter-1, voteStatus = VoteStatus.NONE)
+            VoteStatus.DOWNVOTED -> comment.copy(voteCounter = comment.voteCounter+2, voteStatus = VoteStatus.UPVOTED)
+            VoteStatus.NONE -> comment.copy(voteCounter = comment.voteCounter+1, voteStatus = VoteStatus.UPVOTED)
+        }
+        viewModelScope.launch {
+            repository.upsertComment(temp)
+        }
+    }
+    fun downvoteComment(comment: Comment){
+        val temp: Comment = when(comment.voteStatus){
+            VoteStatus.UPVOTED -> comment.copy(voteCounter = comment.voteCounter-2, voteStatus = VoteStatus.DOWNVOTED)
+            VoteStatus.DOWNVOTED -> comment.copy(voteCounter = comment.voteCounter+1, voteStatus = VoteStatus.NONE)
+            VoteStatus.NONE -> comment.copy(voteCounter = comment.voteCounter-1, voteStatus = VoteStatus.DOWNVOTED)
+        }
+        viewModelScope.launch {
+            repository.upsertComment(temp)
+        }
+    }
+
 //    fun getCommunityForPost(communityId: Int){
 //        viewModelScope.launch {
 //            community = repository.getCommunity(communityId)

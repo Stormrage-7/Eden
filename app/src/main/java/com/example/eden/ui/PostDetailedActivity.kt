@@ -20,7 +20,9 @@ import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.PostUriParser
+import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class PostDetailedActivity: AppCompatActivity(),
     ConfirmationDialogFragment.ConfirmationDialogListener{
@@ -66,7 +68,6 @@ class PostDetailedActivity: AppCompatActivity(),
         val adapter = PostWithCommentsAdapter(context = this, object : PostWithCommentsAdapter.PostListener {
 
             override fun onCommunityClick(community: Community) {
-                //TODO
             }
 
             override fun onUpvoteBtnClick() {
@@ -75,6 +76,24 @@ class PostDetailedActivity: AppCompatActivity(),
 
             override fun onDownvoteBtnClick() {
                 viewModel.downvotePost()
+            }
+
+            override fun commentUpvoteButtonClick(comment: Comment) {
+                viewModel.upvoteComment(comment)
+            }
+
+            override fun commentDownvoteButtonClick(comment: Comment) {
+                viewModel.downvoteComment(comment)
+            }
+
+            override fun onShareClick(postId: Int, communityId: Int) {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, PostUriGenerator.generate(postId, communityId))
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
             }
         })
 
@@ -162,7 +181,7 @@ class PostDetailedActivity: AppCompatActivity(),
         activityDetailedPostViewBinding.rvComments.adapter = adapter
         activityDetailedPostViewBinding.rvComments.layoutManager = LinearLayoutManager(this)
         activityDetailedPostViewBinding.rvComments.addItemDecoration(
-            DividerItemDecoration(
+            MaterialDividerItemDecoration(
                 this,
                 LinearLayoutManager(this).orientation
             )

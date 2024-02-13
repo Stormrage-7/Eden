@@ -13,9 +13,9 @@
     android:theme="@style/Theme.Material3.Light">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewNavDrawer"
         android:layout_width="66dp"
-        android:layout_height="72dp"
+        android:layout_height="74dp"
         android:background="@color/white"
         app:shapeAppearanceOverlay="@style/roundedProfileImageView"
         style="@style/roundedProfileImageView"
@@ -24,6 +24,7 @@
         app:srcCompat="@drawable/ic_avatar"/>
 
     <TextView
+        android:id="@+id/textViewNavDrawer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"

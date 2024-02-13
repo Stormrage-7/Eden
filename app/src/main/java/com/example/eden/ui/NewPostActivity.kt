@@ -41,7 +41,7 @@ class NewPostActivity: AppCompatActivity(),
     private var imageUri = ""
     private var communityId = -1
     companion object {
-        private const val PICK_IMAGE = 100
+        internal const val PICK_IMAGE = 100
         private const val PICK_COMMUNITY = 101
     }
 

@@ -44,9 +44,6 @@ class CustomFeedFragment: Fragment() {
 
 
         val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener{
-            override fun getCommunityIdFromPostId(position: Int): Int {
-                return 1
-            }
 
             override fun onCommunityClick(community: Community) {
                 Intent(requireActivity() as HomeScreenActivity, CommunityDetailedActivity:: class.java).apply {
@@ -55,10 +52,9 @@ class CustomFeedFragment: Fragment() {
                 }
             }
 
-            override fun onPostClick(post: Post, community: Community) {
+            override fun onPostClick(post: Post) {
                 Intent(requireActivity(), PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
-                    putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
@@ -81,10 +77,6 @@ class CustomFeedFragment: Fragment() {
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
-
-            override fun onPostLongClick(position: Int) {
-            }
-
         })
 
         fragmentCustomFeedBinding.rvPosts.adapter = adapter

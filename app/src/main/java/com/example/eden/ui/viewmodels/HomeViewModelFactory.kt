@@ -8,10 +8,10 @@ import com.example.eden.Eden
 
 class HomeViewModelFactory(
     private val repository: AppRepository,
-    private val application: Activity): ViewModelProvider.Factory{
+    private val activity: Activity): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)){
-            return HomeViewModel(repository, application.application as Eden) as T
+            return HomeViewModel(repository, activity.application as Eden) as T
         }
         throw IllegalArgumentException("Unknown ViewModel Class!")
 

@@ -7,7 +7,7 @@ import java.io.InputStream
 
 
 object UriValidation {
-    fun validate(context: Context, uri: String): Boolean{
+    fun validate(context: Context, uri: String?): Boolean{
         var bool = false
 
         if (null != uri) {

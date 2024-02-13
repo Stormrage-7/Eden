@@ -33,7 +33,6 @@ class DownvotedPostsFragment: Fragment() {
         fragmentPostSearchBinding.lifecycleOwner = this
 
         val adapter = PostAdapter(activity as PostInteractionsActivity, object : PostAdapter.PostListener {
-            override fun getCommunityIdFromPostId(position: Int): Int {return 1}
 
             override fun onCommunityClick(community: Community) {
                 Intent(requireActivity() as SearchableActivity, CommunityDetailedActivity::class.java).apply {
@@ -41,10 +40,9 @@ class DownvotedPostsFragment: Fragment() {
                     startActivity(this)
                 }
             }
-            override fun onPostClick(post: Post, community: Community) {
+            override fun onPostClick(post: Post) {
                 Intent(requireActivity(), PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
-                    putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
@@ -61,8 +59,6 @@ class DownvotedPostsFragment: Fragment() {
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
-
-            override fun onPostLongClick(position: Int) {}
         })
 
         fragmentPostSearchBinding.rvPosts.adapter = adapter

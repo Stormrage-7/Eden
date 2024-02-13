@@ -17,7 +17,14 @@ import com.example.eden.util.UriValidation
 class CommunityAdapter(val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
     private var communityList = listOf<Community>()
-    inner class CommunityViewHolder(val binding: ItemCommunityBinding): RecyclerView.ViewHolder(binding.root)
+    inner class CommunityViewHolder(val binding: ItemCommunityBinding): RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.apply {
+                joinButton.setOnClickListener { clickListener.onJoinClick(bindingAdapterPosition) }
+            }
+            itemView.setOnClickListener { clickListener.onClick(communityList[position]) }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommunityViewHolder {
         val binding = ItemCommunityBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -59,15 +66,9 @@ class CommunityAdapter(val context: Context, private val clickListener: Communit
             }
 
             textViewCommunityName.text = currentItem.communityName
-            textViewMemberCounter.text = currentItem.noOfMembers.toString() + " members"
-            textViewPostCount.text = currentItem.noOfPosts.toString() + " Posts"
+            textViewMemberCounter.text = "${currentItem.noOfMembers} members"
+            textViewPostCount.text = "${currentItem.noOfPosts} Posts"
             textViewDescription.text = currentItem.description
-            joinButton.setOnClickListener {
-                clickListener.onJoinClick(position)
-            }
-        }
-        holder.itemView.setOnClickListener {
-            clickListener.onClick(communityList[position])
         }
     }
 

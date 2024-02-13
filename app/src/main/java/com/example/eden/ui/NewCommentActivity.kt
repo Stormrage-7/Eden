@@ -1,9 +1,16 @@
 package com.example.eden.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
@@ -14,8 +21,14 @@ import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityNewCommentBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
+import com.example.eden.entities.Community
+import com.example.eden.entities.Post
+import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.CommentsViewModel
 import com.example.eden.ui.viewmodels.CommentsViewModelFactory
+import com.example.eden.util.UriValidation
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class NewCommentActivity: AppCompatActivity(),
     ConfirmationDialogFragment.ConfirmationDialogListener{
@@ -25,6 +38,8 @@ class NewCommentActivity: AppCompatActivity(),
     private lateinit var database: AppDatabase
     private lateinit var repository: AppRepository
     private lateinit var factory: CommentsViewModelFactory
+    private var isImageAttached = false
+    private var imageUri = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +88,44 @@ class NewCommentActivity: AppCompatActivity(),
         activityNewCommentBinding.postTitleTextView.text = postTitle
         activityNewCommentBinding.nextButton.setOnClickListener {
             val comment = activityNewCommentBinding.commentEditText.text.toString()
-            viewModel.upsertComment(Comment(0, text = comment, postId = postId, communityId = communityId))
+            if (isImageAttached) {
+                if (UriValidation.validate(this, imageUri)) {
+                    viewModel.upsertComment(
+                        Comment(
+                            0,
+                            text = comment,
+                            voteCounter = (0..25).random(),
+                            imageUri = imageUri,
+                            postId = postId,
+                            communityId = communityId
+                        )
+                    )
+                    Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Uploaded image not found!", Toast.LENGTH_LONG).show()
+                    isImageAttached = false
+                    imageUri = ""
+                    activityNewCommentBinding.imageViewComment.visibility = View.GONE
+                    return@setOnClickListener
+                }
+            } else viewModel.upsertComment(Comment(0, text = comment, voteCounter = (0..25).random(), postId = postId, communityId = communityId))
+
             finish()
+        }
+
+        activityNewCommentBinding.insertImagesBtn.setOnClickListener {
+            val pickImage = Intent().apply {
+                type = "image/*"
+                action = Intent.ACTION_OPEN_DOCUMENT
+                addCategory(Intent.CATEGORY_OPENABLE)
+            }
+            startActivityForResult(pickImage, PICK_IMAGE)
+        }
+
+        activityNewCommentBinding.removeImageButton.setOnClickListener {
+            activityNewCommentBinding.imageViewComment.visibility = View.GONE
+            isImageAttached = false
+            imageUri = ""
         }
     }
 
@@ -83,6 +134,36 @@ class NewCommentActivity: AppCompatActivity(),
     }
 
     override fun onDialogNegativeClick() {
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE && data != null) {
+            val takeFlags =
+                (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+
+            if (data.data != null) {
+                // if single image is selected
+                imageUri = data.data.toString()
+                application.contentResolver.takePersistableUriPermission(
+                    Uri.parse(imageUri),
+                    takeFlags
+                )
+            }
+
+            Log.i("IMAGE URI", imageUri)
+
+            if (UriValidation.validate(this, imageUri)){
+                activityNewCommentBinding.imageViewComment.setImageURI(Uri.parse(imageUri))
+                activityNewCommentBinding.imageViewComment.visibility = View.VISIBLE
+                activityNewCommentBinding.imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP
+                isImageAttached = true
+            }
+            else{
+                imageUri = ""
+                isImageAttached = false
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onBackPressed() {

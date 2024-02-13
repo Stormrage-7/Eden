@@ -15,6 +15,7 @@ class HomeViewModel(private val repository: AppRepository,
                     application: Eden
 ): AndroidViewModel(application) {
 
+    val user = repository.getUser()
     val postList = repository.postList
     val communityList = repository.communityList
     val postCommunityCrossRefList = repository.postCommunityCrossRefList

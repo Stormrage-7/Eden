@@ -1,57 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/white">
 
-    <ImageButton
-        android:id="@+id/back_btn"
-        android:layout_width="36sp"
-        android:layout_height="36sp"
-        android:src="@drawable/ic_arrow_back_24"
-        android:backgroundTint="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/community_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:elevation="5sp"
+        android:theme="@style/Theme.Material3.Light">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/editButton"
-        android:layout_width="36sp"
-        android:layout_height="36sp"
-        android:layout_marginHorizontal="10sp"
-        android:src="@drawable/ic_edit_24"
-        android:backgroundTint="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:toolbarId="@+id/detailedCommunityToolbar"
+            app:expandedTitleTextColor="@color/transparent"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            android:elevation="5sp"
+            app:expandedTitleTextAppearance="@style/TransparentText">
+
+            <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/community_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="64sp"
+                android:padding="20sp"
+                android:elevation="5sp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imageViewCommunity"
+                    app:shapeAppearanceOverlay="@style/roundedProfileImageView"
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    style="@style/roundedImageView"
+                    android:src="@drawable/icon_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/createPostButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45sp"
+                    android:src="@drawable/ic_new_post_24"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/azure"
+                    android:text="Create Post"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="@id/imageViewCommunity"
+                    app:layout_constraintBottom_toBottomOf="@id/imageViewCommunity"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textViewCommunityName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Community Name"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewCommunity"/>
+
+                <TextView
+                    android:id="@+id/textViewCommunityDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:layout_marginTop="5sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textViewCommunityName"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/join_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35sp"
+                    android:text="Join"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/azure"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/textViewCommunityName"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewCommunityName"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/detailedCommunityToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="top"
+                app:layout_collapseMode="pin"
+                app:menu="@menu/community_topbar_menu"
+                app:navigationIcon="@drawable/ic_arrow_back_24"
+                app:popupTheme="@style/Theme.Material3.Light" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/filterStickyHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/community_app_bar"
+        app:layout_anchorGravity="bottom"
+        android:orientation="horizontal"
+        android:theme="@style/Theme.Material3.Light.NoActionBar">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filterButton"
+            android:layout_marginTop="48sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_hot_24"
+            android:textColor="@color/black"
+            android:backgroundTint="?attr/colorPrimaryContainer"
+            android:drawableRight="@drawable/arrow_down_24"
+            android:outlineProvider="none"
+            android:text="Hot"
+            android:layout_marginStart="15sp"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDetailedCommunity"
+        android:layout_marginTop="48sp"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:padding="5sp"
-        app:layout_constraintTop_toBottomOf="@id/back_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        android:layout_height="match_parent"
+        android:paddingHorizontal="5sp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <ImageView
-        android:id="@+id/tempImgView"
-        android:layout_width="140sp"
-        android:layout_height="140sp"
-        android:src="@drawable/icon_logo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/back_btn"
-        />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <TextView
-        android:id="@+id/tempTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Posts"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tempImgView"/>
+<!--    <ImageView-->
+<!--        android:id="@+id/tempImgView"-->
+<!--        android:layout_width="140sp"-->
+<!--        android:layout_height="140sp"-->
+<!--        android:src="@drawable/icon_logo"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/back_btn"-->
+<!--        />-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<!--    <TextView-->
+<!--        android:id="@+id/tempTextView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="No Posts"-->
+<!--        android:textSize="25sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tempImgView"/>-->
+

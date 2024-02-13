@@ -1,5 +1,6 @@
 package com.example.eden.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -40,15 +41,53 @@ class PostWithCommentsAdapter(
     lateinit var resources: Resources
 
     inner class CommentViewHolder(val binding: ItemCommentBinding): RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.apply {
+                likeBtn.setOnClickListener {
+                    postListener.commentUpvoteButtonClick( commentList[bindingAdapterPosition-1] )
+//                    notifyItemChanged(bindingAdapterPosition)
+                }
+                dislikeBtn.setOnClickListener {
+                    postListener.commentDownvoteButtonClick( commentList[bindingAdapterPosition-1])
+//                    notifyItemChanged(bindingAdapterPosition)
+                }
+            }
+        }
         fun bind(comment: Comment){
             binding.apply {
                 textViewUserName.text = comment.posterName
                 commentTextView.text = comment.text
+                if (UriValidation.validate(context, comment.imageUri)){
+                    imageViewComment.visibility = View.VISIBLE
+                    imageViewComment.setImageURI(Uri.parse(comment.imageUri))
+                    imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP
+                }
+
+                textViewVoteCounter.text = comment.voteCounter.toString()
+                likeBtn.setIconResource(comment.voteStatus.upvoteIconDrawable)
+                dislikeBtn.setIconResource(comment.voteStatus.downvoteIconDrawable)
+                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, comment.voteStatus.textViewColor))
             }
         }
     }
 
     inner class PostViewHolder(val binding: ItemDetailedPostBinding): RecyclerView.ViewHolder(binding.root){
+
+        init {
+            binding.apply {
+                // CHANGES TO THE VOTE
+                likeBtn.setOnClickListener { postListener.onUpvoteBtnClick() }
+                dislikeBtn.setOnClickListener { postListener.onDownvoteBtnClick() }
+
+//                    shareBtn.visibility = View.INVISIBLE
+                shareBtn.setOnClickListener {
+                    if (post != null) {
+                        postListener.onShareClick(post!!.postId, post!!.communityId)
+                    }
+                }
+            }
+        }
+        @SuppressLint("ResourceAsColor")
         fun bind(post: Post?, community: Community?){
             binding.apply {
                 //COMMUNITY DETAILS
@@ -62,8 +101,8 @@ class PostWithCommentsAdapter(
                         else imageViewCommunity.setImageResource(R.drawable.icon_logo)
                     }
                     else imageViewCommunity.setImageResource(community.imageUri.toInt())
-
                     textViewCommunityName.text = community.communityName
+
                 } else {
                     imageViewCommunity.setImageResource(R.drawable.icon_logo)
                     textViewCommunityName.text = ""
@@ -93,63 +132,9 @@ class PostWithCommentsAdapter(
                     //VOTE SYSTEM
                     textViewVoteCounter.text = post.voteCounter.toString()
 
-                    when (post.voteStatus) {
-                        VoteStatus.UPVOTED -> {
-                            likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-                            dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                            textViewVoteCounter.setTextColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.green
-                                )
-                            )
-                        }
-
-                        VoteStatus.DOWNVOTED -> {
-                            dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-                            likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                            textViewVoteCounter.setTextColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.red
-                                )
-                            )
-                        }
-
-                        VoteStatus.NONE -> {
-                            likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                            dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                            textViewVoteCounter.setTextColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.black
-                                )
-                            )
-                        }
-                    }
-
-                    // CHANGES TO THE VOTE
-                    likeBtn.setOnClickListener {
-                        Log.i("Like", "Button pressed!")
-                        postListener.onUpvoteBtnClick()
-                    }
-
-                    dislikeBtn.setOnClickListener {
-                        Log.i("Dislike", "Button pressed!")
-                        postListener.onDownvoteBtnClick()
-                    }
-
-                    shareBtn.visibility = View.INVISIBLE
-                    shareBtn.setOnClickListener {
-                        val intent: Intent = Intent(Intent.ACTION_SEND).apply {
-                            type = "text/plain"
-                            putExtra(Intent.EXTRA_TEXT, "HI")
-                        }
-
-                        if (intent.resolveActivity(context.packageManager) != null) {
-                            context.startActivity(intent)
-                        }
-                    }
+                    likeBtn.setIconResource(post.voteStatus.upvoteIconDrawable)
+                    dislikeBtn.setIconResource(post.voteStatus.downvoteIconDrawable)
+                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, post.voteStatus.textViewColor))
                 }
             }
         }
@@ -170,9 +155,7 @@ class PostWithCommentsAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return commentList.size+1
-    }
+    override fun getItemCount(): Int = commentList.size+1
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
@@ -186,51 +169,13 @@ class PostWithCommentsAdapter(
         notifyDataSetChanged()
     }
 
-//    private fun updateVoteSystem(binding: ItemDetailedPostBinding) {
-//        binding.apply {
-//            textViewVoteCounter.text = post.voteCounter.toString()
-//
-//            when (post.voteStatus) {
-//                VoteStatus.UPVOTED -> {
-//                    likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-//                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-//                    textViewVoteCounter.setTextColor(
-//                        ContextCompat.getColor(
-//                            context,
-//                            R.color.green
-//                        )
-//                    )
-//                }
-//
-//                VoteStatus.DOWNVOTED -> {
-//                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-//                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-//                    textViewVoteCounter.setTextColor(
-//                        ContextCompat.getColor(
-//                            context,
-//                            R.color.red
-//                        )
-//                    )
-//                }
-//
-//                VoteStatus.NONE -> {
-//                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-//                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-//                    textViewVoteCounter.setTextColor(
-//                        ContextCompat.getColor(
-//                            context,
-//                            R.color.black
-//                        )
-//                    )
-//                }
-//            }
-//        }
-//    }
-
     interface PostListener{
         fun onCommunityClick(community: Community)
         fun onUpvoteBtnClick()
         fun onDownvoteBtnClick()
+        fun commentUpvoteButtonClick(comment: Comment)
+        fun commentDownvoteButtonClick(comment: Comment)
+        fun onShareClick(postId: Int, communityId: Int)
     }
 
 }

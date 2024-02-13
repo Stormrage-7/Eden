@@ -7,7 +7,7 @@
     android:background="@color/profileBackground">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/community_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -36,11 +36,13 @@
                 android:background="?attr/colorPrimaryContainer">
 
                 <ImageView
+                    android:id="@+id/imageViewProfileHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_avatar" />
 
                 <TextView
+                    android:id="@+id/textViewUserNameProfileHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="\@Sharan Kumar"
@@ -48,6 +50,7 @@
                     android:textStyle="bold"/>
 
                 <TextView
+                    android:id="@+id/textViewEmailProfileHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="developer@email.com"
@@ -86,7 +89,9 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_profile" />
+    <include
+        android:id="@+id/includedLayout"
+        layout="@layout/content_profile" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

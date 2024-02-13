@@ -11,6 +11,7 @@ import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.JoinedCommunities
 import com.example.eden.entities.Post
+import com.example.eden.entities.User
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.entities.relations.PostWithCommunities
 import com.example.eden.enums.VoteStatus
@@ -111,5 +112,12 @@ interface EdenDao {
 
     @Query("SELECT * FROM post_table WHERE voteStatus = :voteStatus")
     fun getPosts(voteStatus: VoteStatus): LiveData<List<Post>>
+
+    /******************* USER QUERIES ******************/
+    @Query("SELECT * FROM user_table LIMIT 1")
+    fun getUser(): LiveData<User>
+
+    @Upsert
+    suspend fun upsertUser(user: User)
 
 }

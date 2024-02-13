@@ -81,17 +81,17 @@
         android:paddingBottom="4sp"/>
 
 
-    <ImageButton
+    <com.google.android.material.button.MaterialButton
+        style="?attr/materialIconButtonStyle"
         android:id="@+id/likeBtn"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:layout_marginLeft="10sp"
-        android:src="@drawable/upvote_circle_up_24"
-        android:backgroundTint="@color/white"
-        android:padding="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/icon_upvote_new"
+        app:iconTintMode="multiply"
+        app:iconTint="@color/green"
         app:layout_constraintBottom_toBottomOf="@+id/shareBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
+        app:layout_constraintTop_toTopOf="@id/shareBtn" />
 
     <TextView
         android:id="@+id/textViewVoteCounter"
@@ -123,22 +123,24 @@
         app:layout_constraintStart_toEndOf="@+id/textViewVoteCounter"
         app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
-    <ImageButton
+    <com.google.android.material.button.MaterialButton
+        style="?attr/materialIconButtonStyle"
         android:id="@+id/dislikeBtn"
-        android:layout_width="24sp"
-        android:layout_height="24sp"
-        android:src="@drawable/downvote_circle_down_24"
-        android:backgroundTint="@color/white"
-        android:padding="20sp"
+        android:contentDescription="Dislike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/icon_downvote_new"
+        app:iconTint="@color/red"
+        app:iconTintMode="multiply"
         app:layout_constraintBottom_toBottomOf="@+id/shareBtn"
         app:layout_constraintStart_toEndOf="@+id/textViewVoteCounter"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
+        app:layout_constraintTop_toTopOf="@id/shareBtn" />
 
     <Button
         style="@style/Theme.Material3.Light"
         android:id="@+id/shareBtn"
         android:layout_width="wrap_content"
-        android:layout_height="40sp"
+        android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_share_black_24"
         android:outlineProvider="none"
         android:backgroundTint="?attr/colorPrimaryContainer"
@@ -150,11 +152,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
     <Button
+        style="@style/Theme.Material3.Light"
         android:id="@+id/shareBtn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_share_black_24"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="?attr/colorPrimaryContainer"
         android:outlineProvider="none"
         android:text="Share"
         android:textSize="10sp"

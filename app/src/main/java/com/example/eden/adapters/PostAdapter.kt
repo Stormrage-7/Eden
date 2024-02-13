@@ -48,10 +48,11 @@ class PostAdapter(
                 }
             }
             itemView.setOnClickListener {
-                val community = communityList.find { it.communityId == postList[bindingAdapterPosition].communityId }
-                if (community != null) {
-                    postListener.onPostClick(postList[bindingAdapterPosition], community)
-                }
+//                val community = communityList.find { it.communityId == postList[bindingAdapterPosition].communityId }
+//                if (community != null) {
+//                    postListener.onPostClick(postList[bindingAdapterPosition], community)
+//                }
+                postListener.onPostClick(postList[bindingAdapterPosition])
             }
         }
     }
@@ -61,19 +62,16 @@ class PostAdapter(
         return PostViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return postList.size
-    }
+    override fun getItemCount(): Int = postList.size
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = postList[position]
         val communityId = post.communityId
-
         val community: Community? = communityList.find { it.communityId == communityId }
 
         holder.binding.apply {
-            //COMMUNITY DETAILS
 
+            //COMMUNITY DETAILS
             if (context is CommunityDetailedActivity){
                 communityBar.visibility = View.GONE
             }
@@ -121,25 +119,9 @@ class PostAdapter(
             //UPVOTE AND DOWNVOTE
             textViewVoteCounter.text = post.voteCounter.toString()
 
-            when (post.voteStatus) {
-                VoteStatus.UPVOTED -> {
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_green_24)
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.green))
-                }
-
-                VoteStatus.DOWNVOTED -> {
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_red_24)
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.red))
-                }
-
-                VoteStatus.NONE -> {
-                    likeBtn.setImageResource(R.drawable.upvote_circle_up_24)
-                    dislikeBtn.setImageResource(R.drawable.downvote_circle_down_24)
-                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
-                }
-            }
+            likeBtn.setIconResource(post.voteStatus.upvoteIconDrawable)
+            dislikeBtn.setIconResource(post.voteStatus.downvoteIconDrawable)
+            textViewVoteCounter.setTextColor(ContextCompat.getColor(context, post.voteStatus.textViewColor))
 
             if ((context is SearchableActivity) or (context is PostInteractionsActivity)){
                 textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
@@ -184,14 +166,22 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
+    fun updateFilter(filter: PostFilter) {
+        this.filter = filter
+        when(this.filter){
+            PostFilter.HOT -> postList.sortByDescending { it.postId }
+            PostFilter.TOP -> postList.sortByDescending { it.voteCounter }
+            PostFilter.OLDEST -> postList.sortBy { it.postId }
+        }
+        notifyDataSetChanged()
+    }
+
     interface PostListener{
-        fun getCommunityIdFromPostId(position: Int): Int
-        fun onPostClick(post: Post, community: Community)
+        fun onPostClick(post: Post)
         fun onCommunityClick(community: Community)
         fun onUpvoteBtnClick(post: Post)
         fun onDownvoteBtnClick(post: Post)
         fun onShareBtnClick(postId: Int, communityId: Int)
-        fun onPostLongClick(position: Int)
     }
 
 }
