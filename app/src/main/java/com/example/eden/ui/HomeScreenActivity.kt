@@ -42,11 +42,14 @@ class HomeScreenActivity: AppCompatActivity(){
         activityHomeScreenBinding = ActivityHomeScreenBinding.inflate(layoutInflater)
         setContentView(activityHomeScreenBinding.root)
 
+        val headerView = activityHomeScreenBinding.navigationView.getHeaderView(0)
+        val imageViewProfile = headerView.findViewById<ImageView>(R.id.imageViewNavDrawer)
+        val textViewProfile = headerView.findViewById<TextView>(R.id.textViewNavDrawer)
+        imageViewProfile.setOnClickListener { openProfile() }
+        textViewProfile.setOnClickListener { openProfile() }
+
         viewModel.user.observe(this) { user ->
             if (user!=null) {
-                val headerView = activityHomeScreenBinding.navigationView.getHeaderView(0)
-                val imageViewProfile = headerView.findViewById<ImageView>(R.id.imageViewNavDrawer)
-                val textViewProfile = headerView.findViewById<TextView>(R.id.textViewNavDrawer)
                 if (!user.isCustomImage) imageViewProfile.setImageResource(user.profileImageUri.toInt())
                 else {
                     if (UriValidation.validate(this, user.profileImageUri)) imageViewProfile.setImageURI(
@@ -89,9 +92,7 @@ class HomeScreenActivity: AppCompatActivity(){
                     }
                 }
                 R.id.profile_btn -> {
-                    Intent(this, ProfileActivity::class.java).apply {
-                        startActivity(this)
-                    }
+                    openProfile()
                 }
             }
             activityHomeScreenBinding.drawerLayout.close()
@@ -189,4 +190,9 @@ class HomeScreenActivity: AppCompatActivity(){
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id
     }
 
+    private fun openProfile(){
+        Intent(this, ProfileActivity::class.java).apply {
+            startActivity(this)
+        }
+    }
 }

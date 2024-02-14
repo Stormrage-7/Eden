@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.Eden
@@ -12,8 +13,6 @@ import com.example.eden.R
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityProfileBinding
-import com.example.eden.ui.viewmodels.CommentsViewModel
-import com.example.eden.ui.viewmodels.CommentsViewModelFactory
 import com.example.eden.ui.viewmodels.ProfileViewModel
 import com.example.eden.ui.viewmodels.ProfileViewModelFactory
 import com.example.eden.util.DateUtils
@@ -47,6 +46,7 @@ class ProfileActivity : AppCompatActivity() {
                 if (user.isCustomImage and UriValidation.validate(this@ProfileActivity, user.profileImageUri)){
                     imageViewProfileHeader.setImageURI(
                         Uri.parse(user.profileImageUri))
+                    imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
                 }
                 else imageViewProfileHeader.setImageResource(user.profileImageUri.toInt())
 
@@ -56,13 +56,13 @@ class ProfileActivity : AppCompatActivity() {
                 includedLayout.emailTextViewProfile.text = user.email
                 includedLayout.mobileTextViewProfile.text = user.mobileNo
                 includedLayout.dobTextViewProfile.text = DateUtils.toSimpleString(user.dob)
-                includedLayout.countryTextViewProfile.text = user.country
+                includedLayout.countryTextViewProfile.text = user.country.text
             }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.edit_profile_menu, menu)
+        menuInflater.inflate(R.menu.profile_menu, menu)
         return true
     }
 

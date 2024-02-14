@@ -127,12 +127,7 @@ class PostAdapter(
                 textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
                 likeBtn.visibility = View.GONE
                 dislikeBtn.visibility = View.GONE
-                shareBtn.visibility = View.GONE
                 textView.visibility = View.VISIBLE
-                shareBtn2.visibility = View.VISIBLE
-                shareBtn2.setOnClickListener {
-                    postListener.onShareBtnClick(post.postId, post.communityId)
-                }
             }
         }
     }

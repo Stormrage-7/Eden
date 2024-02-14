@@ -2,13 +2,21 @@ package com.example.eden.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.eden.R
 import com.example.eden.databinding.ItemCommentBinding
 import com.example.eden.entities.Comment
 import com.example.eden.ui.PostDetailedActivity
+import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.util.UriValidation
+import kotlin.math.abs
 
 class CommentAdapter(
     val context: Context, private val commentClickListener: CommentClickListener): RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
@@ -31,11 +39,32 @@ class CommentAdapter(
             val comment = commentList[position]
             textViewUserName.text = comment.posterName
             commentTextView.text = comment.text
-        }
-        if (context is SearchableActivity) {
-            holder.itemView.setOnClickListener {
-                commentClickListener.onCommentClick(commentList[position])
+            if (UriValidation.validate(context, comment.imageUri)) {
+                imageViewComment.visibility = View.VISIBLE
+                imageViewComment.setImageURI(Uri.parse(comment.imageUri))
+                imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP
             }
+            textViewVoteCounter.text = comment.voteCounter.toString()
+
+            if (context is SearchableActivity) {
+                holder.binding.apply {
+                    if (comment.voteCounter<0){
+                        textViewVoteCounter.text = abs(comment.voteCounter).toString()
+                        textView.text = "Downvotes"
+                    }
+                    else textView.text = "Upvotes"
+
+
+
+                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, R.color.black))
+                    likeBtn.visibility = View.GONE
+                    dislikeBtn.visibility = View.GONE
+                    textView.visibility = View.VISIBLE
+                }
+            }
+        }
+        holder.itemView.setOnClickListener {
+            commentClickListener.onCommentClick(commentList[position])
         }
     }
 

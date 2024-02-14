@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.eden.R
+import com.example.eden.enums.Countries
 import java.util.Date
 
 @Entity(tableName = "User_Table")
@@ -16,7 +17,7 @@ data class User(
     val email: String,
     val mobileNo: String,
     val dob: Date,
-    val country: String,
+    val country: Countries,
     val isCustomImage: Boolean,
     val profileImageUri: String
 )

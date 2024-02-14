@@ -108,5 +108,9 @@
         <item name="android:background">@color/profileAccentColor</item>
         <item name="android:layout_marginTop">5dp</item>
     </style>
+    
+    <style name="myToolbarStyle" parent="Theme.Material3.Light">
+        <item name="android:textColorSecondary">#333333</item>
+    </style>
 
 </resources>

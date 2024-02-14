@@ -35,10 +35,11 @@
                 android:id="@+id/linearLayout"
                 android:background="?attr/colorPrimaryContainer">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imageViewProfileHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:shapeAppearanceOverlay="@style/roundedProfileImageView"
                     android:src="@drawable/ic_avatar" />
 
                 <TextView

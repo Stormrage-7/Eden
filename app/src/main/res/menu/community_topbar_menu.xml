@@ -4,7 +4,7 @@
     <item
         android:id="@+id/toolbarEditButton"
         android:title="Edit Community"
-        android:icon="@drawable/ic_edit_24"
+        android:icon="@drawable/outline_edit_white_24"
         app:showAsAction="always"/>
     <item
         android:id="@+id/toolbarCreatePostButton"

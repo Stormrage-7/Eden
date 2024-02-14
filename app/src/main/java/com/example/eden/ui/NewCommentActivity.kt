@@ -100,7 +100,6 @@ class NewCommentActivity: AppCompatActivity(),
                             communityId = communityId
                         )
                     )
-                    Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                 } else {
                     Toast.makeText(this, "Uploaded image not found!", Toast.LENGTH_LONG).show()
                     isImageAttached = false

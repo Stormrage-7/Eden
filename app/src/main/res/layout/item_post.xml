@@ -148,25 +148,26 @@
         android:textSize="10sp"
         android:textColor="@color/black"
         android:layout_marginStart="10sp"
-        app:layout_constraintStart_toEndOf="@id/dislikeBtn"
+        android:layout_marginEnd="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
-    <Button
-        style="@style/Theme.Material3.Light"
-        android:id="@+id/shareBtn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_share_black_24"
-        android:backgroundTint="?attr/colorPrimaryContainer"
-        android:outlineProvider="none"
-        android:text="Share"
-        android:textSize="10sp"
-        android:textColor="@color/black"
-        android:visibility="gone"
-        android:layout_marginStart="10sp"
-        app:layout_constraintStart_toEndOf="@id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView"
-        app:layout_constraintBottom_toBottomOf="@id/textView"/>
+<!--    <Button-->
+<!--        style="@style/Theme.Material3.Light"-->
+<!--        android:id="@+id/shareBtn2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:drawableLeft="@drawable/ic_share_black_24"-->
+<!--        android:backgroundTint="?attr/colorPrimaryContainer"-->
+<!--        android:outlineProvider="none"-->
+<!--        android:text="Share"-->
+<!--        android:textSize="10sp"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_marginStart="10sp"-->
+<!--        app:layout_constraintStart_toEndOf="@id/textView"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/textView"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/textView"/>-->
     <!--    <ImageButton-->
     <!--        android:id="@+id/btnMore"-->
     <!--        android:layout_width="0dp"-->
