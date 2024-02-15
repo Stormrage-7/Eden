@@ -64,7 +64,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
         setSupportActionBar(binding.editProfileToolbar)
         binding.editProfileToolbar.title = "Edit Profile"
         binding.editProfileToolbar.setNavigationOnClickListener {
-            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard any changes made and exit?")
             discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
         }
         binding.imageViewProfile.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -179,7 +179,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
                         .setCalendarConstraints(
                             CalendarConstraints.Builder()
                                 .setEnd(cal.timeInMillis)
-                                .setOpenAt(dob.time)
+                                .setOpenAt(cal.timeInMillis)
                                 .setValidator(DateValidatorPointBackward.now())
                                 .build()
                         )

@@ -40,6 +40,7 @@ class ProfileActivity : AppCompatActivity() {
         binding.backToHomeTextView.setOnClickListener {
             finish()
         }
+        binding.imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
 
         viewModel.user.observe(this) {user ->
             binding.apply {

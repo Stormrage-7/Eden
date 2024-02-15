@@ -4,7 +4,7 @@
     <item
         android:id="@+id/miHome"
         android:title="Home"
-        android:icon="@drawable/ic_home_24"
+        android:icon="@drawable/ic_home_material"
 
         />
 
@@ -23,7 +23,7 @@
     <item
         android:id="@+id/miCommunities"
         android:title="Communities"
-        android:icon="@drawable/ic_discover_24"
+        android:icon="@drawable/ic_communities_material_24"
         />
 
 

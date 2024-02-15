@@ -7,27 +7,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.size
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
 import com.example.eden.ui.viewmodels.DetailedCommunityViewModel
 import com.example.eden.ui.viewmodels.DetailedCommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
-import com.example.eden.adapters.CommunityWithPostsAdapter
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.ActivityDetailedCommunityViewBinding
 import com.example.eden.databinding.BottomSheetPostFilterBinding
-import com.example.eden.databinding.ItemDetailedCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
@@ -234,7 +228,6 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
 //            }
 //            else for (index in 0 until menu.size) menu.getItem(index).isVisible = true
 //        }
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

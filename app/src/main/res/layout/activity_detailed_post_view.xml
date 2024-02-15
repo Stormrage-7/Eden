@@ -46,27 +46,28 @@
         app:layout_constraintTop_toBottomOf="@id/back_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomCommentBar"
         />
 
-    <ImageView
-        android:id="@+id/tempImgView"
-        android:layout_width="100sp"
-        android:layout_height="100sp"
-        android:layout_marginTop="50sp"
-        android:src="@drawable/icon_logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvComments" />
+<!--    <ImageView-->
+<!--        android:id="@+id/tempImgView"-->
+<!--        android:layout_width="100sp"-->
+<!--        android:layout_height="100sp"-->
+<!--        android:layout_marginTop="50sp"-->
+<!--        android:src="@drawable/icon_logo"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/rvComments" />-->
 
-    <TextView
-        android:id="@+id/tempTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Comments"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tempImgView"/>
+<!--    <TextView-->
+<!--        android:id="@+id/tempTextView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="No Comments"-->
+<!--        android:textSize="30sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tempImgView"/>-->
 
     <ImageView
         android:id="@+id/noPostImgView"
@@ -89,7 +90,7 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tempImgView"/>
+        app:layout_constraintTop_toBottomOf="@id/noPostImgView"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomCommentBar"

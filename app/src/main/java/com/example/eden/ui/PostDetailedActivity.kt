@@ -111,8 +111,6 @@ class PostDetailedActivity: AppCompatActivity(),
                     deleteButton.visibility = View.GONE
                     bottomCommentBar.visibility = View.GONE
                     rvComments.visibility = View.GONE
-                    tempTextView.visibility = View.GONE
-                    tempImgView.visibility = View.GONE
                     noPostTextView.visibility = View.VISIBLE
                     noPostImgView.visibility = View.VISIBLE
                 }
@@ -128,20 +126,6 @@ class PostDetailedActivity: AppCompatActivity(),
 
         viewModel.commentList.observe(this) {
             it?.let {
-                if (it.isEmpty() and postFound) {
-                    activityDetailedPostViewBinding.apply {
-                        tempImgView.visibility = View.VISIBLE
-                        tempTextView.visibility = View.VISIBLE
-                    }
-                } else {
-                    activityDetailedPostViewBinding.apply {
-                        rvComments.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                            bottomToTop = bottomCommentBar.id
-                        }
-                        tempImgView.visibility = View.GONE
-                        tempTextView.visibility = View.GONE
-                    }
-                }
                 adapter.updateCommentList(it)
             }
         }
@@ -180,12 +164,13 @@ class PostDetailedActivity: AppCompatActivity(),
 
         activityDetailedPostViewBinding.rvComments.adapter = adapter
         activityDetailedPostViewBinding.rvComments.layoutManager = LinearLayoutManager(this)
-        activityDetailedPostViewBinding.rvComments.addItemDecoration(
-            MaterialDividerItemDecoration(
-                this,
-                LinearLayoutManager(this).orientation
-            )
+        val materialDecoration = MaterialDividerItemDecoration(
+            this,
+            LinearLayoutManager(this).orientation
         )
+        materialDecoration.isLastItemDecorated = false
+        activityDetailedPostViewBinding.rvComments.addItemDecoration(materialDecoration)
+
     }
 
     override fun onDialogPositiveClick() {

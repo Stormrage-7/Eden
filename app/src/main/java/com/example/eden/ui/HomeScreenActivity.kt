@@ -114,7 +114,7 @@ class HomeScreenActivity: AppCompatActivity(){
                 }
             }
             activityHomeScreenBinding.homeScreenSearchView.hide()
-            false
+            true
         }
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener { item ->

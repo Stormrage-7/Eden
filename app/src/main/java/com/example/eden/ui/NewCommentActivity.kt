@@ -21,14 +21,10 @@ import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityNewCommentBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
-import com.example.eden.entities.Community
-import com.example.eden.entities.Post
 import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.CommentsViewModel
 import com.example.eden.ui.viewmodels.CommentsViewModelFactory
 import com.example.eden.util.UriValidation
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 class NewCommentActivity: AppCompatActivity(),
     ConfirmationDialogFragment.ConfirmationDialogListener{
