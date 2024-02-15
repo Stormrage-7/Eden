@@ -130,8 +130,8 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
 
             joinButton.setOnClickListener {
                 if (viewModel.community.value?.isJoined == true){
-                    val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to leave this community?")
-                    discardChangesDialog.show(supportFragmentManager, "LeaveCommunityDialog")
+                    val leaveCommunityDialog = ConfirmationDialogFragment("Are you sure you want to leave this community?")
+                    leaveCommunityDialog.show(supportFragmentManager, "LeaveCommunityDialog")
                 }
                 else viewModel.onJoinClick()
             }
@@ -248,7 +248,11 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 true
             }
             R.id.toolbarJoinButton -> {
-                viewModel.onJoinClick()
+                if (viewModel.community.value?.isJoined == true){
+                    val leaveCommunityDialog = ConfirmationDialogFragment("Are you sure you want to leave this community?")
+                    leaveCommunityDialog.show(supportFragmentManager, "LeaveCommunityDialog")
+                }
+                else viewModel.onJoinClick()
                 true
             }
             else -> super.onOptionsItemSelected(item)
