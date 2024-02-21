@@ -1,16 +1,14 @@
 package com.example.eden.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
 import com.example.eden.entities.Comment
-import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class DetailedPostViewModel(private val repository: AppRepository,
                             postId: Int,
@@ -21,9 +19,10 @@ class DetailedPostViewModel(private val repository: AppRepository,
     val post = repository.getPostWithId(postId)
     val commentList = repository.getCommentListForPost(postId)
     val community = repository.getCommunity(communityId)
+    val user = repository.getUser()
 
     init {
-        Log.i("Testing", "DetailedPostViewModel Initialized")
+        Timber.tag("Testing").i("DetailedPostViewModel Initialized")
     }
 
     fun upvotePost(){

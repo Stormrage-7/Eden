@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.ui.setupWithNavController
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.database.AppDatabase
@@ -26,6 +27,7 @@ import com.example.eden.ui.viewmodels.ProfileViewModel
 import com.example.eden.ui.viewmodels.ProfileViewModelFactory
 import com.example.eden.util.DateUtils
 import com.example.eden.util.ProfileValidator
+import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidation
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -64,8 +66,11 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
         setSupportActionBar(binding.editProfileToolbar)
         binding.editProfileToolbar.title = "Edit Profile"
         binding.editProfileToolbar.setNavigationOnClickListener {
-            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard any changes made and exit?")
-            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            if (changesMade()) {
+                val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard any changes made and exit?")
+                discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            }
+            else finish()
         }
         binding.imageViewProfile.scaleType = ImageView.ScaleType.CENTER_CROP
 
@@ -167,7 +172,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
             })
 
             //DOB
-            dobEditText.setOnClickListener {
+            dobEditText.setSafeOnClickListener {
                 val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                 val today = MaterialDatePicker.todayInUtcMilliseconds()
                 cal.timeInMillis = today
@@ -252,8 +257,11 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
     }
 
     override fun onBackPressed() {
-        val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
-        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+         if (changesMade()) {
+            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+        }
+        else super.onBackPressed()
     }
 
     private fun updateProfile(){
@@ -285,5 +293,22 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
                 finish()
             }
         }
+    }
+
+    private fun View.setSafeOnClickListener(onSafeCLick: (View) -> Unit) {
+        val safeClickListener = SafeClickListener {
+            onSafeCLick(it)
+        }
+        setOnClickListener(safeClickListener)
+    }
+
+    private fun changesMade(): Boolean {
+        return firstName != binding.firstNameEditText.text.toString() ||
+            lastName != binding.lastNameEditText.text.toString() ||
+            country != Countries.valueOf(binding.countryDropDown2.text.toString().replace(" ", "_")) ||
+            contactNo != binding.mobileNoEditText.text.toString() ||
+            email != binding.emailEditText.text.toString() ||
+            dob != viewModel.user.value?.dob ||
+            imageUri != viewModel.user.value?.profileImageUri
     }
 }

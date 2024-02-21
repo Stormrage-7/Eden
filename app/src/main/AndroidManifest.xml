@@ -32,7 +32,8 @@
 
         <activity
             android:name=".ui.NewPostActivity"
-            android:theme="@style/Theme.Eden.CreatePostScreen">
+            android:theme="@style/Theme.Eden.CreatePostScreen"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity
@@ -42,7 +43,8 @@
 
         <activity
             android:name=".ui.NewCommunityActivity"
-            android:theme="@style/Theme.Eden.CreatePostScreen">
+            android:theme="@style/Theme.Eden.CreatePostScreen"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity
@@ -72,7 +74,8 @@
 
         <activity
             android:name=".ui.EditProfileActivity"
-            android:theme="@style/Theme.Material3.Light.NoActionBar">
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity android:name=".ui.SearchableActivity"

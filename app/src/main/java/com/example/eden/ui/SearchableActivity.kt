@@ -41,9 +41,22 @@ class SearchableActivity: AppCompatActivity() {
         searchableActivityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchableActivityBinding.searchView.clearFocus()
-                Intent(this@SearchableActivity, SearchableActivity:: class.java).apply {
-                    putExtra(SearchManager.QUERY, query)
-                    startActivity(this)
+//                Intent(this@SearchableActivity, SearchableActivity:: class.java).apply {
+//                    putExtra(SearchManager.QUERY, query)
+//                    startActivity(this)
+//                }
+                if (query != null) {
+                    if (query.isNotEmpty() and query.startsWith("https://www.eden.com")) {
+                        Intent(this@SearchableActivity, PostDetailedActivity::class.java).apply {
+                            putExtra("UriObject", query)
+                            startActivity(this)
+                        }
+                    } else if (query.isNotEmpty()) {
+                        Intent(this@SearchableActivity, SearchableActivity::class.java).apply {
+                            putExtra(SearchManager.QUERY, query)
+                            startActivity(this)
+                        }
+                    }
                 }
                 return true
             }

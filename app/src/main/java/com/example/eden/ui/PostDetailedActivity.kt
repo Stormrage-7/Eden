@@ -100,12 +100,12 @@ class PostDetailedActivity: AppCompatActivity(),
         viewModel.post.observe(this) {
             if (it != null) {
                 postFound = true
+                activityDetailedPostViewBinding.rvComments.visibility = View.VISIBLE
                 adapter.post = it
                 adapter.notifyItemChanged(0)
             }
             else {
                 postFound = false
-//                Toast.makeText(this@PostDetailedActivity, "Post Doesn't Exist!", Toast.LENGTH_LONG).show()
                 activityDetailedPostViewBinding.apply {
                     editButton.visibility = View.GONE
                     deleteButton.visibility = View.GONE
@@ -128,6 +128,11 @@ class PostDetailedActivity: AppCompatActivity(),
             it?.let {
                 adapter.updateCommentList(it)
             }
+        }
+
+        viewModel.user.observe(this) {
+            if (it != null) adapter.user = it
+            adapter.notifyDataSetChanged()
         }
 
         //POST DETAILS

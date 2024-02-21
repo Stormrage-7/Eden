@@ -2,33 +2,24 @@ package com.example.eden.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eden.R
-import com.example.eden.databinding.BottomSheetPostFilterBinding
 import com.example.eden.databinding.ItemCommentBinding
-import com.example.eden.databinding.ItemDetailedCommunityBinding
 import com.example.eden.databinding.ItemDetailedPostBinding
 import com.example.eden.databinding.ItemNoContentBinding
-import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
-import com.example.eden.enums.PostFilter
-import com.example.eden.enums.VoteStatus
+import com.example.eden.entities.User
 import com.example.eden.util.UriValidation
-import com.google.android.material.bottomsheet.BottomSheetDialog
 
 const val ITEM_POST_HEADER = 0
 const val ITEM_COMMENT = 1
@@ -36,14 +27,15 @@ const val ITEM_NO_CONTENT = 2
 class PostWithCommentsAdapter(
     val context: Context,
     private val postListener: PostListener
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+): RecyclerView.Adapter<ViewHolder>() {
 
     private var commentList: List<Comment> = listOf()
+    lateinit var user: User
     var post: Post? = null
     var community: Community? = null
     lateinit var resources: Resources
 
-    inner class NoContentViewHolder(val binding: ItemNoContentBinding): RecyclerView.ViewHolder(binding.root){
+    inner class NoContentViewHolder(val binding: ItemNoContentBinding): ViewHolder(binding.root){
         fun bind(){
             binding.apply {
                 tempTextView.text = "No Comments"
@@ -51,7 +43,7 @@ class PostWithCommentsAdapter(
         }
     }
 
-    inner class CommentViewHolder(val binding: ItemCommentBinding): RecyclerView.ViewHolder(binding.root){
+    inner class CommentViewHolder(val binding: ItemCommentBinding): ViewHolder(binding.root){
         init {
             binding.apply {
                 likeBtn.setOnClickListener {
@@ -66,8 +58,20 @@ class PostWithCommentsAdapter(
         }
         fun bind(comment: Comment){
             binding.apply {
-                textViewUserName.text = comment.posterName
-                commentTextView.text = comment.text
+                if (user != null) {
+                    textViewUserName.text = "${user.firstName} ${user.lastName}"
+                    if (!user.isCustomImage) imageViewUser.setImageResource(user.profileImageUri.toInt())
+                    else {
+                        if (UriValidation.validate(context, user.profileImageUri)) imageViewUser.setImageURI(
+                            Uri.parse(user.profileImageUri))
+                        else imageViewUser.setImageResource(user.profileImageUri.toInt())
+                    }
+                }
+                if (comment.text.isEmpty()) commentTextView.visibility = View.GONE
+                else {
+                    commentTextView.visibility = View.VISIBLE
+                    commentTextView.text = comment.text
+                }
                 if (UriValidation.validate(context, comment.imageUri)){
                     imageViewComment.visibility = View.VISIBLE
                     imageViewComment.setImageURI(Uri.parse(comment.imageUri))
@@ -82,19 +86,15 @@ class PostWithCommentsAdapter(
         }
     }
 
-    inner class PostViewHolder(val binding: ItemDetailedPostBinding): RecyclerView.ViewHolder(binding.root){
+    inner class PostViewHolder(val binding: ItemDetailedPostBinding): ViewHolder(binding.root){
 
         init {
             binding.apply {
                 // CHANGES TO THE VOTE
                 likeBtn.setOnClickListener { postListener.onUpvoteBtnClick() }
                 dislikeBtn.setOnClickListener { postListener.onDownvoteBtnClick() }
-
-//                    shareBtn.visibility = View.INVISIBLE
                 shareBtn.setOnClickListener {
-                    if (post != null) {
-                        postListener.onShareClick(post!!.postId, post!!.communityId)
-                    }
+                    if (post != null) postListener.onShareClick(post!!.postId, post!!.communityId)
                 }
             }
         }
@@ -152,15 +152,14 @@ class PostWithCommentsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (commentList.isEmpty()){
-            return if (position == 0) ITEM_POST_HEADER else ITEM_NO_CONTENT
-        }
-        else{
-            return if (position==0) ITEM_POST_HEADER else ITEM_COMMENT
+        return if (commentList.isEmpty()){
+            if (position == 0) ITEM_POST_HEADER else ITEM_NO_CONTENT
+        } else{
+            if (position == 0) ITEM_POST_HEADER else ITEM_COMMENT
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         return when (viewType){
             ITEM_POST_HEADER -> {
@@ -190,7 +189,7 @@ class PostWithCommentsAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         if (getItemViewType(position) == ITEM_POST_HEADER) (holder as PostViewHolder).bind(post, community)
         else if (getItemViewType(position) == ITEM_NO_CONTENT) (holder as NoContentViewHolder).bind()

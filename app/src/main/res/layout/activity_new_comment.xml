@@ -118,34 +118,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!--        <ImageButton-->
-        <!--            android:id="@+id/insert_link_btn"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:src="@drawable/insert_link_24"-->
-        <!--            android:backgroundTint="@color/white"/>-->
-
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
+            style="?attr/materialIconButtonStyle"
             android:id="@+id/insert_images_btn"
+            android:layout_marginStart="10sp"
+            android:contentDescription="Insert Image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/insert_image_24"
-            android:backgroundTint="@color/white"/>
-
-        <!--        <ImageButton-->
-        <!--            android:id="@+id/insert_video_btn"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:src="@drawable/insert_video_24"-->
-        <!--            android:backgroundTint="@color/white"/>-->
-
-        <!--        <ImageButton-->
-        <!--            android:id="@+id/insert_poll_btn"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:src="@drawable/insert_poll_24"-->
-        <!--            android:backgroundTint="@color/white"/>-->
-
+            app:iconTint="@color/white"
+            android:backgroundTint="?attr/colorPrimary"
+            app:icon="@drawable/insert_image_24"/>
 
     </LinearLayout>
 

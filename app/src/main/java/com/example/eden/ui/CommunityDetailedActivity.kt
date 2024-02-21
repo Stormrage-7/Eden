@@ -28,6 +28,7 @@ import com.example.eden.entities.Post
 import com.example.eden.enums.CollapsingToolBarState
 import com.example.eden.enums.PostFilter
 import com.example.eden.util.PostUriGenerator
+import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -59,29 +60,32 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
 
         setSupportActionBar(detailedCommunityViewBinding.detailedCommunityToolbar)
 
-        detailedCommunityViewBinding.communityAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+        detailedCommunityViewBinding.appBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (abs(verticalOffset) == appBarLayout.totalScrollRange){
                 //Collapsed
                 collapsingToolBarState = CollapsingToolBarState.COLLAPSED
-                detailedCommunityViewBinding.textViewCommunityDescription.visibility = View.INVISIBLE
-                detailedCommunityViewBinding.detailedCommunityToolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.arrow_back_white_24)
-                invalidateOptionsMenu()
+                detailedCommunityViewBinding.apply {
+                    textViewCommunityDescription.visibility = View.INVISIBLE
+                    detailedCommunityToolbar.navigationIcon = ContextCompat.getDrawable(this@CommunityDetailedActivity, R.drawable.arrow_back_white_24)
+                }
             }
             else if (verticalOffset == 0) {
                 //Expanded
                 collapsingToolBarState = CollapsingToolBarState.EXPANDED
-                detailedCommunityViewBinding.textViewCommunityDescription.visibility = View.VISIBLE
-                detailedCommunityViewBinding.detailedCommunityToolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_24)
-                detailedCommunityViewBinding.detailedCommunityToolbar.popupTheme
-                invalidateOptionsMenu()
+                detailedCommunityViewBinding.apply {
+                    textViewCommunityDescription.visibility = View.VISIBLE
+                    detailedCommunityToolbar.navigationIcon = ContextCompat.getDrawable(this@CommunityDetailedActivity, R.drawable.ic_arrow_back_24)
+                }
             }
             else{
                 //In-Between
                 collapsingToolBarState = CollapsingToolBarState.IN_BETWEEN
-                detailedCommunityViewBinding.textViewCommunityDescription.visibility = View.VISIBLE
-                detailedCommunityViewBinding.detailedCommunityToolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.arrow_back_white_24)
-                invalidateOptionsMenu()
+                detailedCommunityViewBinding.apply {
+                    textViewCommunityDescription.visibility = View.VISIBLE
+                    detailedCommunityToolbar.navigationIcon = ContextCompat.getDrawable(this@CommunityDetailedActivity, R.drawable.arrow_back_white_24)
+                }
             }
+            invalidateOptionsMenu()
         }
 
         // INITIALIZING ADAPTER FOR RECYCLERVIEW
@@ -137,7 +141,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             detailedCommunityToolbar.setNavigationOnClickListener { finish() }
 
             // FILTER BUTTON
-            filterButton.setOnClickListener {
+            filterButton.setSafeClickListener {
                 val dialogViewBinding = BottomSheetPostFilterBinding.inflate(LayoutInflater.from(this@CommunityDetailedActivity))
                 bottomSheetDialog = BottomSheetDialog(this@CommunityDetailedActivity)
                 bottomSheetDialog.setContentView(dialogViewBinding.root)
@@ -291,4 +295,10 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         }
     }
 
+    private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
+        val safeClickListener = SafeClickListener {
+            onSafeCLick(it)
+        }
+        setOnClickListener(safeClickListener)
+    }
 }

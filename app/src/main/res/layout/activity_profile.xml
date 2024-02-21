@@ -7,7 +7,7 @@
     android:background="@color/profileBackground">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/community_app_bar"
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"

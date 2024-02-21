@@ -113,4 +113,10 @@
         <item name="android:textColorSecondary">#333333</item>
     </style>
 
+    <style name="CustomToolbarTheme" parent="Theme.Material3.Dark">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorControlNormal">?attr/colorPrimary</item>
+        <item name="contentScrim">?attr/colorPrimary</item>
+    </style>
+
 </resources>

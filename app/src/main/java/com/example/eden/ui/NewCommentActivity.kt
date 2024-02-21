@@ -49,8 +49,12 @@ class NewCommentActivity: AppCompatActivity(),
 
         activityNewCommentBinding.nextButton.isEnabled = false
         activityNewCommentBinding.closeBtn.setOnClickListener {
-            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
-            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            if (isPageEdited()) {
+                val discardChangesDialog =
+                    ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+                discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            }
+            else finish()
         }
 
         activityNewCommentBinding.commentEditText.addTextChangedListener(object : TextWatcher {
@@ -59,7 +63,7 @@ class NewCommentActivity: AppCompatActivity(),
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (p0?.trim()?.isNotEmpty() == true) {
+                if (isPageEdited()) {
                     activityNewCommentBinding.nextButton.isEnabled = true
                     activityNewCommentBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
                         ResourcesCompat.getColor(resources, R.color.azure, null)
@@ -121,6 +125,9 @@ class NewCommentActivity: AppCompatActivity(),
             activityNewCommentBinding.imageViewComment.visibility = View.GONE
             isImageAttached = false
             imageUri = ""
+            if (!isPageEdited()) activityNewCommentBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
+                ResourcesCompat.getColor(resources, R.color.grey, null)
+            )
         }
     }
 
@@ -148,9 +155,15 @@ class NewCommentActivity: AppCompatActivity(),
             Log.i("IMAGE URI", imageUri)
 
             if (UriValidation.validate(this, imageUri)){
-                activityNewCommentBinding.imageViewComment.setImageURI(Uri.parse(imageUri))
-                activityNewCommentBinding.imageViewComment.visibility = View.VISIBLE
-                activityNewCommentBinding.imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP
+                activityNewCommentBinding.apply {
+                    imageViewComment.setImageURI(Uri.parse(imageUri))
+                    imageViewComment.visibility = View.VISIBLE
+                    imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP
+                    nextButton.isEnabled = true
+                    nextButton.backgroundTintList = ColorStateList.valueOf(
+                        ResourcesCompat.getColor(resources, R.color.azure, null)
+                    )
+                }
                 isImageAttached = true
             }
             else{
@@ -161,9 +174,16 @@ class NewCommentActivity: AppCompatActivity(),
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        if (isPageEdited()) showDiscardChangesDialog()
+        else super.onBackPressed()
+    }
+
+    private fun isPageEdited() = (activityNewCommentBinding.commentEditText.text.toString().trim().isNotEmpty() || isImageAttached)
+
+    private fun showDiscardChangesDialog(){
         val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
         discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
-//        super.onBackPressed()
     }
 }

@@ -8,7 +8,7 @@
     android:background="@color/white">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/community_app_bar"
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -91,8 +91,6 @@
                     android:text=""
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:ellipsize="end"
-                    android:maxLines="3"
                     android:layout_marginTop="5sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textViewCommunityName"/>
@@ -130,7 +128,7 @@
         android:id="@+id/filterStickyHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/community_app_bar"
+        app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom"
         android:orientation="horizontal"
         android:theme="@style/Theme.Material3.Light.NoActionBar">
