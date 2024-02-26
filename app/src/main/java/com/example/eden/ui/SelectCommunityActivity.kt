@@ -51,7 +51,7 @@ class SelectCommunityActivity: AppCompatActivity() {
             it.let {
                 adapter.updateAdapter(it)
             }
-            if(activitySelectCommunityBinding.recyclerViewCommunitites.adapter!=adapter){
+            if(activitySelectCommunityBinding.recyclerViewCommunitites.adapter != adapter){
                 activitySelectCommunityBinding.recyclerViewCommunitites.apply {
                     this.adapter = adapter
                     this.layoutManager = LinearLayoutManager(context)

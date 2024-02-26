@@ -13,7 +13,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.database.AppDatabase
@@ -25,7 +24,7 @@ import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 
 
 class NewCommunityActivity: AppCompatActivity(),
@@ -61,8 +60,11 @@ class NewCommunityActivity: AppCompatActivity(),
 
         //CLOSE BUTTON
         activityNewCommunityBinding.closeBtn.setOnClickListener {
-            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
-            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            if (isPageEdited()) {
+                val discardChangesDialog =
+                    ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+                discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            } else finish()
         }
 
         activityNewCommunityBinding.nextButton.apply {
@@ -171,7 +173,7 @@ class NewCommunityActivity: AppCompatActivity(),
                     takeFlags
                 )
                 Log.i("IMAGE URI before setting", imageUri)
-                if (UriValidation.validate(this, imageUri)){
+                if (UriValidator.validate(this, imageUri)){
                     activityNewCommunityBinding.imageViewCommunity.setImageURI(Uri.parse(imageUri))
                     activityNewCommunityBinding.deleteImageBtn.visibility = View.VISIBLE
                     activityNewCommunityBinding.imageViewCommunity.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -195,9 +197,15 @@ class NewCommunityActivity: AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
-        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+        if (isPageEdited()) {
+            val discardChangesDialog =
+                ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+        } else finish()
 //        super.onBackPressed()
     }
+
+    private fun isPageEdited() = (activityNewCommunityBinding.communityNameEditText.text.toString().trim().isNotEmpty() ||
+            activityNewCommunityBinding.communityDescriptionEditText.text.toString().trim().isNotEmpty() || isImageAttached)
 
 }

@@ -12,7 +12,7 @@ import com.example.eden.R
 import com.example.eden.entities.Community
 import com.example.eden.databinding.ItemCommunityBinding
 import com.example.eden.ui.SelectCommunityActivity
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 
 class CommunityAdapter(val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
@@ -40,7 +40,7 @@ class CommunityAdapter(val context: Context, private val clickListener: Communit
             val currentItem = communityList[position]
 
             if (currentItem.isCustomImage) {
-                if (UriValidation.validate(context, currentItem.imageUri)) imageViewCommunity.setImageURI(Uri.parse(currentItem.imageUri))
+                if (UriValidator.validate(context, currentItem.imageUri)) imageViewCommunity.setImageURI(Uri.parse(currentItem.imageUri))
                 else imageViewCommunity.setImageResource(R.drawable.icon_logo)
             }
             else imageViewCommunity.setImageResource(currentItem.imageUri.toInt())

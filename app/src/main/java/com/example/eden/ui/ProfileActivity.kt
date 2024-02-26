@@ -16,7 +16,7 @@ import com.example.eden.databinding.ActivityProfileBinding
 import com.example.eden.ui.viewmodels.ProfileViewModel
 import com.example.eden.ui.viewmodels.ProfileViewModelFactory
 import com.example.eden.util.DateUtils
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
@@ -44,7 +44,7 @@ class ProfileActivity : AppCompatActivity() {
 
         viewModel.user.observe(this) {user ->
             binding.apply {
-                if (user.isCustomImage and UriValidation.validate(this@ProfileActivity, user.profileImageUri)){
+                if (user.isCustomImage and UriValidator.validate(this@ProfileActivity, user.profileImageUri)){
                     imageViewProfileHeader.setImageURI(
                         Uri.parse(user.profileImageUri))
                     imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP

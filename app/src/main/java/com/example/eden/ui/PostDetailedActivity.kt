@@ -55,7 +55,7 @@ class PostDetailedActivity: AppCompatActivity(),
                 comment.communityId,
                 application)
         } else {
-            val uri = intent.getStringExtra("UriObject")
+            val uri = intent.getStringExtra("Uri")
             val (postId, communityId) = PostUriParser.parse(uri!!)
             DetailedPostViewModelFactory(repository,
                 postId,

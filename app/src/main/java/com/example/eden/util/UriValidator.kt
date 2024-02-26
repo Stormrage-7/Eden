@@ -6,7 +6,7 @@ import android.util.Log
 import java.io.InputStream
 
 
-object UriValidation {
+object UriValidator {
     fun validate(context: Context, uri: String?): Boolean{
         var bool = false
 

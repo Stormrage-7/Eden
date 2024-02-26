@@ -26,7 +26,7 @@ import com.example.eden.entities.Post
 import com.example.eden.databinding.ActivityNewPostBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -62,8 +62,11 @@ class NewPostActivity: AppCompatActivity(),
         }
 
         activityNewPostBinding.closeBtn.setOnClickListener {
-            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
-            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            if (isPageEdited()) {
+                val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+                discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+            }
+            else finish()
         }
 
         activityNewPostBinding.TitleEditTV.addTextChangedListener(object : TextWatcher {
@@ -112,7 +115,8 @@ class NewPostActivity: AppCompatActivity(),
                     val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as Community
                     communityId = community.communityId
                     TitleEditTV.setText(post.title)
-                    TitleEditTV.visibility = View.GONE
+//                    TitleEditTV.visibility = View.GONE
+                    TitleEditTV.isEnabled = false
                     insertImagesBtn.visibility = View.GONE
                     bodyTextEditTV.setText(post.bodyText)
                     nextButton.text = "Save"
@@ -145,7 +149,7 @@ class NewPostActivity: AppCompatActivity(),
                 }
                 else{
                     if (isImageAttached){
-                        if (UriValidation.validate(this@NewPostActivity, imageUri)) {
+                        if (UriValidator.validate(this@NewPostActivity, imageUri)) {
                             newPost = Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
                                 ZoneOffset.UTC), voteCounter = (0..25).random())
                             viewModel.upsertPost(newPost, communityId)
@@ -155,7 +159,10 @@ class NewPostActivity: AppCompatActivity(),
                             Toast.makeText(this, "Uploaded image not found!", Toast.LENGTH_LONG).show()
                             isImageAttached = false
                             imageUri = ""
-                            activityNewPostBinding.imageViewPost.visibility = View.GONE
+                            activityNewPostBinding.apply {
+                                imageViewPost.visibility = View.GONE
+                                removeImageButton.visibility = View.GONE
+                            }
                             return@setOnClickListener
                         }
                     } else {
@@ -169,6 +176,14 @@ class NewPostActivity: AppCompatActivity(),
             }
         }
 
+        activityNewPostBinding.removeImageButton.setOnClickListener {
+            activityNewPostBinding.apply {
+                imageViewPost.visibility = View.GONE
+                removeImageButton.visibility = View.GONE
+            }
+            isImageAttached = false
+            imageUri = ""
+        }
 
         activityNewPostBinding.insertImagesBtn.setOnClickListener {
             val pickImage = Intent().apply {
@@ -214,10 +229,13 @@ class NewPostActivity: AppCompatActivity(),
 
             Log.i("IMAGE URI", imageUri)
 
-            if (UriValidation.validate(this, imageUri)){
-                activityNewPostBinding.imageViewPost.setImageURI(Uri.parse(imageUri))
-                activityNewPostBinding.imageViewPost.visibility = View.VISIBLE
-                activityNewPostBinding.imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+            if (UriValidator.validate(this, imageUri)){
+                activityNewPostBinding.apply {
+                    imageViewPost.setImageURI(Uri.parse(imageUri))
+                    imageViewPost.visibility = View.VISIBLE
+                    imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+                    removeImageButton.visibility = View.VISIBLE
+                }
                 isImageAttached = true
             }
             else{
@@ -230,9 +248,8 @@ class NewPostActivity: AppCompatActivity(),
                 communityBar.visibility = View.VISIBLE
                 val community = data.getSerializableExtra("CommunityObject") as Community
                 communityId = community.communityId
-                Log.d("NewPostActivity", communityId.toString())
                 if (community.isCustomImage) {
-                    if (UriValidation.validate(this@NewPostActivity, community.imageUri))
+                    if (UriValidator.validate(this@NewPostActivity, community.imageUri))
                         imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
                     else
                         imageViewCommunity.setImageResource(R.drawable.icon_logo)
@@ -254,10 +271,17 @@ class NewPostActivity: AppCompatActivity(),
     override fun onDialogNegativeClick() {
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
-        discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+        if (isPageEdited()) {
+            val discardChangesDialog = ConfirmationDialogFragment("Are you sure you want to discard changes and exit?")
+            discardChangesDialog.show(supportFragmentManager, "DiscardChangesDialog")
+        }
+        else finish()
 //        super.onBackPressed()
     }
+
+    private fun isPageEdited() = (activityNewPostBinding.TitleEditTV.text.toString().trim().isNotEmpty() ||
+            activityNewPostBinding.bodyTextEditTV.text.toString().trim().isNotEmpty() || isImageAttached)
 
 }

@@ -29,7 +29,7 @@ import com.example.eden.enums.CollapsingToolBarState
 import com.example.eden.enums.PostFilter
 import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.SafeClickListener
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import kotlin.math.abs
@@ -190,7 +190,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         viewModel.community.observe(this) {
             detailedCommunityViewBinding.apply {
                 if (it.isCustomImage) {
-                    if (UriValidation.validate(this@CommunityDetailedActivity, it.imageUri)) imageViewCommunity.setImageURI(
+                    if (UriValidator.validate(this@CommunityDetailedActivity, it.imageUri)) imageViewCommunity.setImageURI(
                         Uri.parse(it.imageUri))
                     else imageViewCommunity.setImageResource(R.drawable.icon_logo)
                 }

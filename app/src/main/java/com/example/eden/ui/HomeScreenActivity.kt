@@ -19,7 +19,8 @@ import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityHomeScreenBinding
 import com.example.eden.ui.viewmodels.HomeViewModel
 import com.example.eden.ui.viewmodels.HomeViewModelFactory
-import com.example.eden.util.UriValidation
+import com.example.eden.util.PostUriValidator
+import com.example.eden.util.UriValidator
 import timber.log.Timber
 
 class HomeScreenActivity: AppCompatActivity(){
@@ -52,7 +53,7 @@ class HomeScreenActivity: AppCompatActivity(){
             if (user!=null) {
                 if (!user.isCustomImage) imageViewProfile.setImageResource(user.profileImageUri.toInt())
                 else {
-                    if (UriValidation.validate(this, user.profileImageUri)) imageViewProfile.setImageURI(
+                    if (UriValidator.validate(this, user.profileImageUri)) imageViewProfile.setImageURI(
                         Uri.parse(user.profileImageUri))
                     else imageViewProfile.setImageResource(user.profileImageUri.toInt())
                 }
@@ -99,11 +100,11 @@ class HomeScreenActivity: AppCompatActivity(){
             false
         }
 
-        activityHomeScreenBinding.homeScreenSearchView.editText.setOnEditorActionListener { v, actionId, event ->
+        activityHomeScreenBinding.homeScreenSearchView.editText.setOnEditorActionListener { _, _, _ ->
             val query = activityHomeScreenBinding.homeScreenSearchView.text.toString().trim()
-            if (query.isNotEmpty() and query.startsWith("https://www.eden.com")){
+            if (query.isNotEmpty() and PostUriValidator.validate(query)){
                 Intent(this@HomeScreenActivity, PostDetailedActivity::class.java).apply {
-                    putExtra("UriObject", query)
+                    putExtra("Uri", query)
                     startActivity(this)
                 }
             }
@@ -148,10 +149,6 @@ class HomeScreenActivity: AppCompatActivity(){
     override fun onStart() {
         super.onStart()
         Timber.i("This is a log message!")
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     @Deprecated("Deprecated in Java")

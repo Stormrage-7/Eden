@@ -13,14 +13,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ui.setupWithNavController
 import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityEditProfileBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
-import com.example.eden.entities.Comment
 import com.example.eden.enums.Countries
 import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.ProfileViewModel
@@ -28,7 +26,7 @@ import com.example.eden.ui.viewmodels.ProfileViewModelFactory
 import com.example.eden.util.DateUtils
 import com.example.eden.util.ProfileValidator
 import com.example.eden.util.SafeClickListener
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -76,7 +74,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
 
         viewModel.user.observe(this) { user ->
             binding.apply {
-                if (user.isCustomImage and UriValidation.validate(this@EditProfileActivity, user.profileImageUri)){
+                if (user.isCustomImage and UriValidator.validate(this@EditProfileActivity, user.profileImageUri)){
                     imageViewProfile.setImageURI(
                         Uri.parse(user.profileImageUri))
                     deleteImageBtn.visibility = View.VISIBLE
@@ -233,7 +231,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
 
             Log.i("IMAGE URI", imageUri)
 
-            if (UriValidation.validate(this, imageUri)){
+            if (UriValidator.validate(this, imageUri)){
                 binding.imageViewProfile.setImageURI(Uri.parse(imageUri))
                 binding.imageViewProfile.visibility = View.VISIBLE
                 binding.imageViewProfile.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -278,7 +276,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
 
             // IMAGE Uri Validation
             if (isImageAttached) {
-                if (UriValidation.validate(this, imageUri)) {
+                if (UriValidator.validate(this, imageUri)) {
                     viewModel.updateProfile(firstName, lastName, country, contactNo, email, dob, isImageAttached, imageUri)
                     finish()
                 } else {

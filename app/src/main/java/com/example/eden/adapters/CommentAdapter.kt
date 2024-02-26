@@ -1,7 +1,6 @@
 package com.example.eden.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.R
 import com.example.eden.databinding.ItemCommentBinding
 import com.example.eden.entities.Comment
-import com.example.eden.ui.PostDetailedActivity
-import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 import kotlin.math.abs
 
 class CommentAdapter(
@@ -39,7 +36,7 @@ class CommentAdapter(
             val comment = commentList[position]
             textViewUserName.text = comment.posterName
             commentTextView.text = comment.text
-            if (UriValidation.validate(context, comment.imageUri)) {
+            if (UriValidator.validate(context, comment.imageUri)) {
                 imageViewComment.visibility = View.VISIBLE
                 imageViewComment.setImageURI(Uri.parse(comment.imageUri))
                 imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP

@@ -1,7 +1,6 @@
 package com.example.eden.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,16 +11,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.R
 import com.example.eden.entities.Post
-import com.example.eden.enums.VoteStatus
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
-import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.enums.PostFilter
 import com.example.eden.ui.CommunityDetailedActivity
-import com.example.eden.ui.HomeScreenActivity
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 
 class PostAdapter(
     val context: Context,
@@ -79,7 +75,7 @@ class PostAdapter(
                 if (community != null) {
                     textViewCommunityName.text = community.communityName
                     if (community.isCustomImage) {
-                        if (UriValidation.validate(
+                        if (UriValidator.validate(
                                 context,
                                 community.imageUri
                             )
@@ -100,7 +96,7 @@ class PostAdapter(
             textViewTitle.text = post.title
 
             //MEDIA
-            if(post.containsImage and UriValidation.validate(context, post.imageUri)){
+            if(post.containsImage and UriValidator.validate(context, post.imageUri)){
                 imageViewPost.visibility = View.VISIBLE
                 imageViewPost.setImageURI(Uri.parse(post.imageUri))
                 imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP

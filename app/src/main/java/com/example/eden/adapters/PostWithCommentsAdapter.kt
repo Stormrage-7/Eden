@@ -19,7 +19,7 @@ import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.entities.User
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 
 const val ITEM_POST_HEADER = 0
 const val ITEM_COMMENT = 1
@@ -62,7 +62,7 @@ class PostWithCommentsAdapter(
                     textViewUserName.text = "${user.firstName} ${user.lastName}"
                     if (!user.isCustomImage) imageViewUser.setImageResource(user.profileImageUri.toInt())
                     else {
-                        if (UriValidation.validate(context, user.profileImageUri)) imageViewUser.setImageURI(
+                        if (UriValidator.validate(context, user.profileImageUri)) imageViewUser.setImageURI(
                             Uri.parse(user.profileImageUri))
                         else imageViewUser.setImageResource(user.profileImageUri.toInt())
                     }
@@ -72,7 +72,7 @@ class PostWithCommentsAdapter(
                     commentTextView.visibility = View.VISIBLE
                     commentTextView.text = comment.text
                 }
-                if (UriValidation.validate(context, comment.imageUri)){
+                if (UriValidator.validate(context, comment.imageUri)){
                     imageViewComment.visibility = View.VISIBLE
                     imageViewComment.setImageURI(Uri.parse(comment.imageUri))
                     imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -104,7 +104,7 @@ class PostWithCommentsAdapter(
                 //COMMUNITY DETAILS
                 if (community != null) {
                     if (community.isCustomImage) {
-                        if (UriValidation.validate(
+                        if (UriValidator.validate(
                                 context,
                                 community.imageUri
                             )
@@ -123,7 +123,7 @@ class PostWithCommentsAdapter(
                     textViewTitle.text = post.title
 
                     //MEDIA
-                    if(post.containsImage and UriValidation.validate(context, post.imageUri)){
+                    if(post.containsImage and UriValidator.validate(context, post.imageUri)){
                         imageViewPost.apply {
                             visibility = View.VISIBLE
                             setImageURI(Uri.parse(post.imageUri))

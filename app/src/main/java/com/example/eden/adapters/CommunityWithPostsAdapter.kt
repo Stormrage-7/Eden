@@ -10,20 +10,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.R
-import com.example.eden.databinding.BottomSheetPostFilterBinding
 import com.example.eden.databinding.ItemDetailedCommunityBinding
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.PostFilter
-import com.example.eden.enums.VoteStatus
-import com.example.eden.ui.CommunityDetailedActivity
-import com.example.eden.ui.SearchableActivity
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 private const val ITEM_COMMUNITY_HEADER = 0
@@ -43,7 +38,7 @@ class CommunityWithPostsAdapter(
         fun bind(community: Community){
             binding.apply {
                 if (community.isCustomImage) {
-                    if (UriValidation.validate(context, community.imageUri)) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                    if (UriValidator.validate(context, community.imageUri)) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
                     else imageViewCommunity.setImageResource(R.drawable.icon_logo)
                 }
                 else imageViewCommunity.setImageResource(community.imageUri.toInt())
@@ -83,7 +78,7 @@ class CommunityWithPostsAdapter(
                 textViewTitle.text = post.title
 
                 //MEDIA
-                if(post.containsImage and UriValidation.validate(context, post.imageUri)){
+                if(post.containsImage and UriValidator.validate(context, post.imageUri)){
                     imageViewPost.apply {
                         visibility = View.VISIBLE
                         setImageURI(Uri.parse(post.imageUri))

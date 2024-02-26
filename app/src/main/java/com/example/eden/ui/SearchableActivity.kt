@@ -11,6 +11,7 @@ import com.example.eden.ui.viewmodels.SearchViewModel
 import com.example.eden.ui.viewmodels.SearchViewModelFactory
 import com.example.eden.adapters.ViewPagerAdapter
 import com.example.eden.databinding.ActivitySearchableBinding
+import com.example.eden.util.PostUriValidator
 import com.google.android.material.tabs.TabLayoutMediator
 
 class SearchableActivity: AppCompatActivity() {
@@ -41,14 +42,11 @@ class SearchableActivity: AppCompatActivity() {
         searchableActivityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchableActivityBinding.searchView.clearFocus()
-//                Intent(this@SearchableActivity, SearchableActivity:: class.java).apply {
-//                    putExtra(SearchManager.QUERY, query)
-//                    startActivity(this)
-//                }
+
                 if (query != null) {
-                    if (query.isNotEmpty() and query.startsWith("https://www.eden.com")) {
+                    if (query.isNotEmpty() and PostUriValidator.validate(query)) {
                         Intent(this@SearchableActivity, PostDetailedActivity::class.java).apply {
-                            putExtra("UriObject", query)
+                            putExtra("Uri", query)
                             startActivity(this)
                         }
                     } else if (query.isNotEmpty()) {

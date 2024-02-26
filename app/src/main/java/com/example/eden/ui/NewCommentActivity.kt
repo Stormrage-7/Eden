@@ -24,7 +24,7 @@ import com.example.eden.entities.Comment
 import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.CommentsViewModel
 import com.example.eden.ui.viewmodels.CommentsViewModelFactory
-import com.example.eden.util.UriValidation
+import com.example.eden.util.UriValidator
 
 class NewCommentActivity: AppCompatActivity(),
     ConfirmationDialogFragment.ConfirmationDialogListener{
@@ -89,7 +89,7 @@ class NewCommentActivity: AppCompatActivity(),
         activityNewCommentBinding.nextButton.setOnClickListener {
             val comment = activityNewCommentBinding.commentEditText.text.toString()
             if (isImageAttached) {
-                if (UriValidation.validate(this, imageUri)) {
+                if (UriValidator.validate(this, imageUri)) {
                     viewModel.upsertComment(
                         Comment(
                             0,
@@ -105,9 +105,10 @@ class NewCommentActivity: AppCompatActivity(),
                     isImageAttached = false
                     imageUri = ""
                     activityNewCommentBinding.imageViewComment.visibility = View.GONE
+                    activityNewCommentBinding.removeImageButton.visibility = View.GONE
                     return@setOnClickListener
                 }
-            } else viewModel.upsertComment(Comment(0, text = comment, voteCounter = (0..25).random(), postId = postId, communityId = communityId))
+            } else if (isPageEdited()) viewModel.upsertComment(Comment(0, text = comment, voteCounter = (0..25).random(), postId = postId, communityId = communityId))
 
             finish()
         }
@@ -128,6 +129,7 @@ class NewCommentActivity: AppCompatActivity(),
             if (!isPageEdited()) activityNewCommentBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
                 ResourcesCompat.getColor(resources, R.color.grey, null)
             )
+            activityNewCommentBinding.removeImageButton.visibility = View.GONE
         }
     }
 
@@ -154,7 +156,7 @@ class NewCommentActivity: AppCompatActivity(),
 
             Log.i("IMAGE URI", imageUri)
 
-            if (UriValidation.validate(this, imageUri)){
+            if (UriValidator.validate(this, imageUri)){
                 activityNewCommentBinding.apply {
                     imageViewComment.setImageURI(Uri.parse(imageUri))
                     imageViewComment.visibility = View.VISIBLE
@@ -163,6 +165,7 @@ class NewCommentActivity: AppCompatActivity(),
                     nextButton.backgroundTintList = ColorStateList.valueOf(
                         ResourcesCompat.getColor(resources, R.color.azure, null)
                     )
+                    removeImageButton.visibility = View.VISIBLE
                 }
                 isImageAttached = true
             }
