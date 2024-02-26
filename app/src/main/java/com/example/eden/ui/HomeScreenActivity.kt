@@ -55,7 +55,7 @@ class HomeScreenActivity: AppCompatActivity(){
                 else {
                     if (UriValidator.validate(this, user.profileImageUri)) imageViewProfile.setImageURI(
                         Uri.parse(user.profileImageUri))
-                    else imageViewProfile.setImageResource(user.profileImageUri.toInt())
+                    else imageViewProfile.setImageResource(R.drawable.ic_avatar)
                 }
                 textViewProfile.text = user.username
             }

@@ -85,7 +85,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
                     imageViewProfile.setImageResource(user.profileImageUri.toInt())
                     deleteImageBtn.visibility = View.INVISIBLE
                     isImageAttached = false
-                    imageUri = user.profileImageUri
+                    imageUri = R.drawable.ic_avatar.toString()
                 }
 
                 firstName = user.firstName

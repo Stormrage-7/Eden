@@ -49,7 +49,7 @@ class ProfileActivity : AppCompatActivity() {
                         Uri.parse(user.profileImageUri))
                     imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
                 }
-                else imageViewProfileHeader.setImageResource(user.profileImageUri.toInt())
+                else imageViewProfileHeader.setImageResource(R.drawable.ic_avatar)
 
                 textViewUserNameProfileHeader.text = user.username
                 textViewEmailProfileHeader.text = user.email

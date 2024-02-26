@@ -9,7 +9,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
-import com.example.eden.entities.JoinedCommunities
+import com.example.eden.entities.relations.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.User
 import com.example.eden.entities.relations.PostCommunityCrossRef
