@@ -12,6 +12,7 @@
         android:layout_height="35sp"
         style="@style/roundedImageView"
         android:src="@drawable/icon_logo"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

@@ -12,6 +12,8 @@
     <color name="cerise_red">#DE3163</color>
     <color name="millennial_pink">#F3CFC6</color>
     <color name="transparent">#00000000</color>
+    <color name="purple">#6750A4</color>
+
 
     <!--colors for profile-->
     <color name="profilePrimaryDark">#FF3B30</color>

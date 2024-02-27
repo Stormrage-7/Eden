@@ -20,13 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/purple"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:toolbarId="@+id/detailedCommunityToolbar"
             app:expandedTitleTextColor="@color/transparent"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             android:elevation="5sp"
+            android:theme="@style/Theme.Material3.Dark"
             app:expandedTitleTextAppearance="@style/TransparentText">
 
             <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -116,10 +117,10 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="top"
                 app:layout_collapseMode="pin"
+                app:titleTextColor="@color/white"
                 app:menu="@menu/community_topbar_menu"
                 app:navigationIcon="@drawable/arrow_back_white_24"
-                android:theme="@style/Theme.Material3.Dark"
-                app:popupTheme="@style/Theme.Material3.Dark" />
+                android:theme="@style/Theme.Material3.Dark" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

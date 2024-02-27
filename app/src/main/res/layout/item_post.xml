@@ -21,6 +21,7 @@
             app:shapeAppearanceOverlay="@style/roundedProfileImageView"
             android:layout_width="20sp"
             android:layout_height="20sp"
+            android:scaleType="centerCrop"
             style="@style/roundedImageView"
             android:src="@drawable/icon_logo"
             app:layout_constraintStart_toStartOf="parent"

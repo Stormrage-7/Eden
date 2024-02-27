@@ -13,7 +13,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
@@ -24,14 +23,11 @@ import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
-import com.example.eden.entities.Post
 import com.example.eden.entities.relations.ImageUri
 import com.example.eden.util.FileGenerationResponse
 import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator
 import timber.log.Timber
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 
 class NewCommunityActivity: AppCompatActivity(),
