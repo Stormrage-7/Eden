@@ -26,7 +26,11 @@ import com.example.eden.entities.Post
 import com.example.eden.databinding.ActivityNewPostBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
+import com.example.eden.entities.relations.ImageUri
+import com.example.eden.util.FileGenerationResponse
+import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator
+import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -56,6 +60,9 @@ class NewPostActivity: AppCompatActivity(),
         factory = NewPostViewModelFactory(repository, application)
         viewModel = ViewModelProvider(this, factory)[NewPostViewModel::class.java]
 
+        viewModel._counter.observe(this) {
+            if (it != null) viewModel.counter = it
+        }
 
         activityNewPostBinding.nextButton.apply {
             isEnabled = false
@@ -150,10 +157,18 @@ class NewPostActivity: AppCompatActivity(),
                 else{
                     if (isImageAttached){
                         if (UriValidator.validate(this@NewPostActivity, imageUri)) {
-                            newPost = Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
-                                ZoneOffset.UTC), voteCounter = (0..25).random())
-                            viewModel.upsertPost(newPost, communityId)
-                            Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+                            when (val fileGenerationResponse = ImageGenerator.generate(this, imageUri, viewModel.counter)){
+                                FileGenerationResponse.Error -> {
+                                    Timber.tag("FileGenerationResponse").i("Error")
+                                    return@setOnClickListener
+                                }
+                                is FileGenerationResponse.Success -> {
+                                    newPost = Post(0, titleText, isImageAttached, fileGenerationResponse.uri.toString(),  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
+                                        ZoneOffset.UTC), voteCounter = (0..25).random())
+                                    viewModel.upsertPost(newPost, communityId, ImageUri(0, fileGenerationResponse.uri.toString()))
+                                    Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
+                                }
+                            }
                         }
                         else {
                             Toast.makeText(this, "Uploaded image not found!", Toast.LENGTH_LONG).show()

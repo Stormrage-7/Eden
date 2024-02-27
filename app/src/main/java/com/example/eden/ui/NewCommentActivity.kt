@@ -21,10 +21,15 @@ import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityNewCommentBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
+import com.example.eden.entities.Community
+import com.example.eden.entities.relations.ImageUri
 import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.CommentsViewModel
 import com.example.eden.ui.viewmodels.CommentsViewModelFactory
+import com.example.eden.util.FileGenerationResponse
+import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator
+import timber.log.Timber
 
 class NewCommentActivity: AppCompatActivity(),
     ConfirmationDialogFragment.ConfirmationDialogListener{
@@ -46,6 +51,10 @@ class NewCommentActivity: AppCompatActivity(),
         repository = AppRepository(database.edenDao())
         factory = CommentsViewModelFactory(repository, application as Eden)
         viewModel = ViewModelProvider(this, factory)[CommentsViewModel::class.java]
+
+        viewModel._counter.observe(this) {
+            if (it != null) viewModel.counter =it
+        }
 
         activityNewCommentBinding.nextButton.isEnabled = false
         activityNewCommentBinding.closeBtn.setOnClickListener {
@@ -90,16 +99,18 @@ class NewCommentActivity: AppCompatActivity(),
             val comment = activityNewCommentBinding.commentEditText.text.toString()
             if (isImageAttached) {
                 if (UriValidator.validate(this, imageUri)) {
-                    viewModel.upsertComment(
-                        Comment(
-                            0,
-                            text = comment,
-                            voteCounter = (0..25).random(),
-                            imageUri = imageUri,
-                            postId = postId,
-                            communityId = communityId
-                        )
-                    )
+                    when (val fileGenerationResponse = ImageGenerator.generate(this, imageUri, viewModel.counter)){
+                        FileGenerationResponse.Error -> {
+                            Timber.tag("FileGenerationResponse").i("Error")
+                            return@setOnClickListener
+                        }
+                        is FileGenerationResponse.Success -> {
+                            val community = Comment(0, text = comment,
+                                voteCounter = (0..25).random(), imageUri = fileGenerationResponse.uri.toString(),
+                                postId = postId, communityId = communityId)
+                            viewModel.upsertComment(community, ImageUri(0, fileGenerationResponse.uri.toString()))
+                        }
+                    }
                 } else {
                     Toast.makeText(this, "Uploaded image not found!", Toast.LENGTH_LONG).show()
                     isImageAttached = false
@@ -109,7 +120,6 @@ class NewCommentActivity: AppCompatActivity(),
                     return@setOnClickListener
                 }
             } else if (isPageEdited()) viewModel.upsertComment(Comment(0, text = comment, voteCounter = (0..25).random(), postId = postId, communityId = communityId))
-
             finish()
         }
 

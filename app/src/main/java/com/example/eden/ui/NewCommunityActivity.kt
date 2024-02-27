@@ -24,7 +24,14 @@ import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
+import com.example.eden.entities.Post
+import com.example.eden.entities.relations.ImageUri
+import com.example.eden.util.FileGenerationResponse
+import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator
+import timber.log.Timber
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 
 class NewCommunityActivity: AppCompatActivity(),
@@ -50,10 +57,14 @@ class NewCommunityActivity: AppCompatActivity(),
         factory = CommunityViewModelFactory(repository, application as Eden)
         viewModel = ViewModelProvider(this, factory)[CommunitiesViewModel::class.java]
 
-        viewModel.communityList.observe(this, Observer {
+        viewModel._counter.observe(this) {
+            if (it != null) viewModel.counter = it
+        }
+
+        viewModel.communityList.observe(this) {
             viewModel.updateCommunityNameList(it)
             setContentView(activityNewCommunityBinding.root)
-        })
+        }
 
         Log.i("NEW COMMUNITY out function", viewModel.communityNameList.toString())
 
@@ -131,15 +142,47 @@ class NewCommunityActivity: AppCompatActivity(),
             }
             else{
                 Log.i("Inside Create Button!", "HELLO!")
-                var newCommunity: Community
                 if (intent.hasExtra("Context")) {
                     val community = intent.getSerializableExtra("CommunityObject") as Community
-                    newCommunity = community.copy(description = communityDescription)
+                    viewModel.upsertCommunity(community.copy(description = communityDescription))
+                    Toast.makeText(this, "Community has been edited!", Toast.LENGTH_LONG).show()
                 }
-                else newCommunity = Community(0, communityName = communityName, description = communityDescription, isCustomImage = isImageAttached, imageUri = imageUri)
-                viewModel.upsertCommunity(newCommunity)
-                if (intent.hasExtra("Context")) Toast.makeText(this, "Community has been edited!", Toast.LENGTH_LONG).show()
-                else Toast.makeText(this, "Community has been created!", Toast.LENGTH_LONG).show()
+                else {
+                    if (isImageAttached){
+                        if (UriValidator.validate(this, imageUri)) {
+                            when (val fileGenerationResponse = ImageGenerator.generate(this, imageUri, viewModel.counter)){
+                                FileGenerationResponse.Error -> {
+                                    Timber.tag("FileGenerationResponse").i("Error")
+                                    return@setOnClickListener
+                                }
+                                is FileGenerationResponse.Success -> {
+                                    val community = Community(0, communityName = communityName,
+                                        description = communityDescription, isCustomImage = isImageAttached,
+                                        imageUri = fileGenerationResponse.uri.toString())
+                                    viewModel.upsertCommunity(community, ImageUri(0, fileGenerationResponse.uri.toString()))
+                                }
+                            }
+                        }
+                        else {
+                            Toast.makeText(this, "Uploaded image not found!", Toast.LENGTH_LONG).show()
+                            imageUri = R.drawable.icon_logo.toString()
+                            activityNewCommunityBinding.apply {
+                                imageViewCommunity.setImageResource(imageUri.toInt())
+                                deleteImageBtn.visibility = View.GONE
+                                tempTextView.visibility = View.VISIBLE
+                            }
+                            isImageAttached = false
+                            return@setOnClickListener
+                        }
+                    }
+                    else {
+                        val community = Community(0, communityName = communityName,
+                            description = communityDescription, isCustomImage = isImageAttached,
+                            imageUri = imageUri)
+                        viewModel.upsertCommunity(community)
+                    }
+                    Toast.makeText(this, "Community has been created!", Toast.LENGTH_LONG).show()
+                }
                 finish()
             }
         }
@@ -183,6 +226,7 @@ class NewCommunityActivity: AppCompatActivity(),
                 else{
                     imageUri = R.drawable.icon_logo.toString()
                     isImageAttached = false
+                    activityNewCommunityBinding.deleteImageBtn.visibility = View.GONE
                 }
             }
         }

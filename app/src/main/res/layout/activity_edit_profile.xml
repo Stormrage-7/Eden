@@ -52,6 +52,7 @@
                 android:layout_height="160sp"
                 android:src="@drawable/icon_logo"
                 android:visibility="visible"
+                android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 app:shapeAppearanceOverlay="@style/roundedProfileImageView"
                 app:layout_constraintStart_toStartOf="parent"

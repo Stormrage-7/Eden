@@ -1,37 +1,33 @@
 package com.example.eden.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eden.database.AppRepository
-import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.entities.relations.ImageUri
 import com.example.eden.entities.relations.PostCommunityCrossRef
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.job
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class NewPostViewModel(private val repository: AppRepository,
                        application: Application): AndroidViewModel(application) {
 
-    var postId: Int = -1
+    val _counter = repository.getImgFileCounter()
+    var counter = -1
     init {
-        Log.i("NewPostViewModel", "NewPostViewModel Initialized!")
+        Timber.tag("NewPostViewModel").i("NewPostViewModel Initialized!")
     }
 
-    fun upsertPost(post: Post): Int{
-//        val result = MutableLiveData<Int>()
+    //Edit
+    fun upsertPost(post: Post){
         viewModelScope.launch {
-            postId = repository.upsertPost(post).toInt()
+            repository.upsertPost(post).toInt()
         }
-        return postId
     }
 
+    //Create
     fun upsertPost(post: Post, communityId: Int): Int{
         viewModelScope.launch {
             val postId1 = async{
@@ -42,17 +38,21 @@ class NewPostViewModel(private val repository: AppRepository,
         return 1
     }
 
-    fun insertPostCommunityCrossRef(postCommunityCrossRef: PostCommunityCrossRef){
+    fun upsertPost(post: Post, communityId: Int, imgUri: ImageUri): Int{
         viewModelScope.launch {
-            repository.insertPostCommunityCrossRef(postCommunityCrossRef)
+            repository.upsertImgUri(imgUri)
+            val postId1 = async{
+                repository.upsertPost(post) }
+            repository.insertPostCommunityCrossRef(PostCommunityCrossRef(postId1.await().toInt(), communityId))
+            repository.increasePostCount(communityId)
         }
+        return 1
     }
 
-//    fun insertPost(post: Post): Int {
-//        viewModelScope.launch(Dispatchers.Default) {
-//            postId = repository.insertPost(post)
+//    fun insertPostCommunityCrossRef(postCommunityCrossRef: PostCommunityCrossRef){
+//        viewModelScope.launch {
+//            repository.insertPostCommunityCrossRef(postCommunityCrossRef)
 //        }
-//        return postId
 //    }
 
 }

@@ -12,6 +12,7 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.relations.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.User
+import com.example.eden.entities.relations.ImageUri
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.entities.relations.PostWithCommunities
 import com.example.eden.enums.VoteStatus
@@ -119,5 +120,10 @@ interface EdenDao {
 
     @Upsert
     suspend fun upsertUser(user: User)
+
+    @Upsert
+    suspend fun upsertImgUri(imageUri: ImageUri)
+    @Query("SELECT COUNT(id) FROM image_uri_table")
+    fun getImgFileCounter(): LiveData<Int>
 
 }

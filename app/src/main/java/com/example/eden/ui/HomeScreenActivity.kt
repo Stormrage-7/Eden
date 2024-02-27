@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import com.example.eden.Eden
 import com.example.eden.database.EdenDao
 import com.example.eden.R
@@ -25,7 +23,6 @@ import timber.log.Timber
 
 class HomeScreenActivity: AppCompatActivity(){
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
-    private lateinit var navController : NavController
     private lateinit var databaseDao: EdenDao
     private lateinit var current: Fragment
     private lateinit var viewModel: HomeViewModel
@@ -183,9 +180,9 @@ class HomeScreenActivity: AppCompatActivity(){
             commit()
         }
 
-    private fun isValidDestination(destination: Int) : Boolean{
-        return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id
-    }
+//    private fun isValidDestination(destination: Int) : Boolean{
+//        return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id
+//    }
 
     private fun openProfile(){
         Intent(this, ProfileActivity::class.java).apply {

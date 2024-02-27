@@ -7,7 +7,7 @@ import android.util.Log
 import java.io.File
 
 object ImageGenerator {
-    fun generate (context: Context, uri: String) : FileGenerationResponse{
+    fun generate (context: Context, uri: String, counter: Int) : FileGenerationResponse{
         if (!UriValidator.validate(context, uri)) return FileGenerationResponse.Error
 
         val albumName = "Eden_Media"
@@ -17,7 +17,7 @@ object ImageGenerator {
         if (!rootFolder.exists()) rootFolder.mkdirs()
 
         //TODO INSERT DB COUNT
-        val fileName = "img${}"
+        val fileName = "img${counter}"
         val file = File (rootPath + fileName)
         if (!file.exists()) file.createNewFile()
 

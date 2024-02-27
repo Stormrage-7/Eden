@@ -8,6 +8,7 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.relations.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.User
+import com.example.eden.entities.relations.ImageUri
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
@@ -147,6 +148,12 @@ class AppRepository(private val databaseDao: EdenDao) {
     fun getUser(): LiveData<User> {
         return databaseDao.getUser()
     }
+
+
+    suspend fun upsertImgUri(imgUri: ImageUri) {
+        databaseDao.upsertImgUri(imgUri)
+    }
+    fun getImgFileCounter(): LiveData<Int> = databaseDao.getImgFileCounter()
 
 
 }

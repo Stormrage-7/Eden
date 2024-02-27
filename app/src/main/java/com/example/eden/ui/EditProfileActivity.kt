@@ -19,17 +19,22 @@ import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityEditProfileBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
+import com.example.eden.entities.Comment
+import com.example.eden.entities.relations.ImageUri
 import com.example.eden.enums.Countries
 import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.ProfileViewModel
 import com.example.eden.ui.viewmodels.ProfileViewModelFactory
 import com.example.eden.util.DateUtils
+import com.example.eden.util.FileGenerationResponse
+import com.example.eden.util.ImageGenerator
 import com.example.eden.util.ProfileValidator
 import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidator
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -61,6 +66,10 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
         factory = ProfileViewModelFactory(repository, application as Eden)
         viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
 
+        viewModel._counter.observe(this) {
+            if (it != null) viewModel.counter = it
+        }
+
         setSupportActionBar(binding.editProfileToolbar)
         binding.editProfileToolbar.title = "Edit Profile"
         binding.editProfileToolbar.setNavigationOnClickListener {
@@ -70,7 +79,6 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
             }
             else finish()
         }
-        binding.imageViewProfile.scaleType = ImageView.ScaleType.CENTER_CROP
 
         viewModel.user.observe(this) { user ->
             binding.apply {
@@ -82,7 +90,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
                     imageUri = user.profileImageUri
                 }
                 else{
-                    imageViewProfile.setImageResource(user.profileImageUri.toInt())
+                    imageViewProfile.setImageResource(R.drawable.ic_avatar)
                     deleteImageBtn.visibility = View.INVISIBLE
                     isImageAttached = false
                     imageUri = R.drawable.ic_avatar.toString()
@@ -277,7 +285,15 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
             // IMAGE Uri Validation
             if (isImageAttached) {
                 if (UriValidator.validate(this, imageUri)) {
-                    viewModel.updateProfile(firstName, lastName, country, contactNo, email, dob, isImageAttached, imageUri)
+                    when (val fileGenerationResponse = ImageGenerator.generate(this, imageUri, viewModel.counter)){
+                        FileGenerationResponse.Error -> {
+                            Timber.tag("FileGenerationResponse").i("Error")
+                            return
+                        }
+                        is FileGenerationResponse.Success -> viewModel.updateProfileAndImgUri(firstName, lastName,
+                            country, contactNo, email,
+                            dob, isImageAttached, fileGenerationResponse.uri.toString())
+                    }
                     finish()
                 } else {
                     Toast.makeText(this, "Uploaded image not found!", Toast.LENGTH_LONG).show()

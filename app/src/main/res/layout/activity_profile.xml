@@ -37,8 +37,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imageViewProfileHeader"
-                    android:layout_width="144sp"
-                    android:layout_height="144sp"
+                    android:layout_width="144dp"
+                    android:layout_height="144dp"
                     app:shapeAppearanceOverlay="@style/roundedProfileImageView"
                     android:src="@drawable/ic_avatar" />
 

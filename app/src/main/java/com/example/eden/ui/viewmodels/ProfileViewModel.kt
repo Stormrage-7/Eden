@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.eden.Eden
 import com.example.eden.database.AppRepository
 import com.example.eden.entities.User
+import com.example.eden.entities.relations.ImageUri
 import com.example.eden.enums.Countries
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -15,6 +16,8 @@ class ProfileViewModel(
     application: Eden
 ): AndroidViewModel(application) {
 
+    val _counter = repository.getImgFileCounter()
+    var counter = -1
     var user = repository.getUser()
     init {
         Log.i("Profile", "ProfileViewModel Initialized!")
@@ -25,6 +28,16 @@ class ProfileViewModel(
         val temp = user.value!!.copy(firstName = firstName, lastName = lastName, email = email, mobileNo = contactNo, dob = dob,
             country = country, isCustomImage = isCustomImage, profileImageUri = imageUri)
         viewModelScope.launch {
+            repository.upsertUser(temp)
+        }
+    }
+
+    fun updateProfileAndImgUri(firstName: String, lastName: String, country: Countries, contactNo: String, email: String, dob: Date,
+                      isCustomImage: Boolean, imageUri: String){
+        val temp = user.value!!.copy(firstName = firstName, lastName = lastName, email = email, mobileNo = contactNo, dob = dob,
+            country = country, isCustomImage = isCustomImage, profileImageUri = imageUri)
+        viewModelScope.launch {
+            repository.upsertImgUri(ImageUri(0, imageUri))
             repository.upsertUser(temp)
         }
     }
