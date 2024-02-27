@@ -296,7 +296,17 @@ class NewPostActivity: AppCompatActivity(),
 //        super.onBackPressed()
     }
 
-    private fun isPageEdited() = (activityNewPostBinding.TitleEditTV.text.toString().trim().isNotEmpty() ||
-            activityNewPostBinding.bodyTextEditTV.text.toString().trim().isNotEmpty() || isImageAttached)
+    private fun isPageEdited(): Boolean{
+        return if (intent.hasExtra("Context") && intent.getStringExtra("Context") == "PostDetailedActivity"){
+            val post = intent.getSerializableExtra("PostObject") as Post
+            (activityNewPostBinding.bodyTextEditTV.text.toString().trim() != post.bodyText)
+
+        } else {
+            (activityNewPostBinding.TitleEditTV.text.toString().trim().isNotEmpty() ||
+                    activityNewPostBinding.bodyTextEditTV.text.toString().trim()
+                        .isNotEmpty() || isImageAttached)
+        }
+
+    }
 
 }

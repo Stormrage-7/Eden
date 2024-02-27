@@ -249,7 +249,16 @@ class NewCommunityActivity: AppCompatActivity(),
 //        super.onBackPressed()
     }
 
-    private fun isPageEdited() = (activityNewCommunityBinding.communityNameEditText.text.toString().trim().isNotEmpty() ||
-            activityNewCommunityBinding.communityDescriptionEditText.text.toString().trim().isNotEmpty() || isImageAttached)
+    private fun isPageEdited(): Boolean{
+
+        return if (intent.hasExtra("Context")){
+            val community = intent.getSerializableExtra("CommunityObject") as Community
+            (activityNewCommunityBinding.communityDescriptionEditText.text.toString().trim() != community.description)
+
+        } else {
+            (activityNewCommunityBinding.communityNameEditText.text.toString().trim().isNotEmpty() ||
+                    activityNewCommunityBinding.communityDescriptionEditText.text.toString().trim().isNotEmpty() || isImageAttached)
+        }
+    }
 
 }

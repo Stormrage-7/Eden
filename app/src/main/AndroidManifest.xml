@@ -59,7 +59,8 @@
 
         <activity
             android:name=".ui.NewCommentActivity"
-            android:theme="@style/Theme.Eden.CreatePostScreen">
+            android:theme="@style/Theme.Eden.CreatePostScreen"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity

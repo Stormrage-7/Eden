@@ -17,11 +17,11 @@
         android:layout_width="66dp"
         android:layout_height="74dp"
         android:background="@color/white"
+        android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/roundedProfileImageView"
         style="@style/roundedProfileImageView"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/ic_avatar"
-        app:srcCompat="@drawable/ic_avatar"/>
+        android:src="@drawable/ic_avatar" />
 
     <TextView
         android:id="@+id/textViewNavDrawer"
@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Sharan Kumar"
+        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 <!--    <TextView-->

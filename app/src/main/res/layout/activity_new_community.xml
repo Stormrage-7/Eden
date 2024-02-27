@@ -56,64 +56,77 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <EditText
-        android:id="@+id/communityNameEditText"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:hint="Community Name"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:paddingVertical="6sp"
-        android:paddingHorizontal="12sp"
+        android:layout_height="0sp"
+        android:layout_marginBottom="10sp"
         app:layout_constraintTop_toBottomOf="@id/TopBarConstraintLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/communityNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="Community Name"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:paddingVertical="6sp"
+                android:paddingHorizontal="12sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
 
-    <EditText
-        android:id="@+id/communityDescriptionEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:hint="Description (Optional)"
-        android:textSize="18sp"
-        android:paddingVertical="6sp"
-        android:paddingHorizontal="12sp"
-        app:layout_constraintTop_toBottomOf="@id/communityNameEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <EditText
+                android:id="@+id/communityDescriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="Description (Optional)"
+                android:textSize="18sp"
+                android:paddingVertical="6sp"
+                android:paddingHorizontal="12sp"
+                app:layout_constraintTop_toBottomOf="@id/communityNameEditText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageViewCommunity"
-        android:layout_width="240sp"
-        android:layout_height="240sp"
-        android:src="@drawable/icon_logo"
-        android:visibility="visible"
-        android:layout_marginTop="60sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/communityDescriptionEditText"
-        app:shapeAppearanceOverlay="@style/roundedProfileImageView" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageViewCommunity"
+                android:layout_width="240sp"
+                android:layout_height="240sp"
+                android:src="@drawable/icon_logo"
+                android:visibility="visible"
+                android:layout_marginTop="60sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/communityDescriptionEditText"
+                app:shapeAppearanceOverlay="@style/roundedProfileImageView" />
 
-    <TextView
-        android:id="@+id/tempTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:text="Click on the Image to add your own Image"
-        app:layout_constraintTop_toBottomOf="@id/imageViewCommunity"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <TextView
+                android:id="@+id/tempTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:text="Click on the Image to add your own Image"
+                app:layout_constraintTop_toBottomOf="@id/imageViewCommunity"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-    <ImageButton
-        android:id="@+id/delete_image_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/ic_close_48"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/communityDescriptionEditText" />
+            <ImageButton
+                android:id="@+id/delete_image_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_close_48"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/communityDescriptionEditText" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

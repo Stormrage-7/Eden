@@ -55,64 +55,77 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <TextView
-        android:id="@+id/postTitleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:hint="Post Title"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:paddingVertical="6sp"
-        android:paddingHorizontal="12sp"
-        app:layout_constraintTop_toBottomOf="@id/TopBarConstraintLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageViewComment"
-        android:layout_width="match_parent"
-        android:layout_height="240sp"
-        android:visibility="gone"
-        android:layout_marginHorizontal="6sp"
-        android:layout_marginVertical="6sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/removeImageButton"
-        app:shapeAppearanceOverlay="@style/roundedImageView" />
-
-    <ImageButton
-        android:id="@+id/removeImageButton"
-        android:layout_width="48sp"
-        android:layout_height="48sp"
-        android:src="@drawable/ic_close_24"
-        android:visibility="gone"
-        android:backgroundTint="@color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/postTitleTextView"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <EditText
-        android:id="@+id/commentEditText"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:background="@color/white"
-        android:textColor="@color/black"
-        android:hint="Enter your comment..."
-        android:gravity="top"
-        android:textSize="18sp"
-        android:paddingVertical="6sp"
-        android:paddingHorizontal="12sp"
-        app:layout_constraintTop_toBottomOf="@id/imageViewComment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_marginBottom="10sp"
+        app:layout_constraintTop_toBottomOf="@id/TopBarConstraintLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottomAppBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/postTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="Post Title"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:paddingVertical="6sp"
+                android:paddingHorizontal="12sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageViewComment"
+                android:layout_width="match_parent"
+                android:layout_height="240sp"
+                android:visibility="gone"
+                android:layout_marginHorizontal="6sp"
+                android:layout_marginVertical="6sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/removeImageButton"
+                app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+            <ImageButton
+                android:id="@+id/removeImageButton"
+                android:layout_width="48sp"
+                android:layout_height="48sp"
+                android:src="@drawable/ic_close_24"
+                android:visibility="gone"
+                android:backgroundTint="@color/transparent"
+                app:layout_constraintTop_toBottomOf="@id/postTitleTextView"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <EditText
+                android:id="@+id/commentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:hint="Enter your comment..."
+                android:gravity="top"
+                android:textSize="18sp"
+                android:paddingVertical="6sp"
+                android:paddingHorizontal="12sp"
+                app:layout_constraintTop_toBottomOf="@id/imageViewComment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="5sp"
         app:layout_constraintBottom_toBottomOf="parent"
