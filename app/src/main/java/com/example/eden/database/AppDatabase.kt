@@ -31,7 +31,7 @@ import java.util.Date
         User :: class,
         ImageUri::class
     ],
-    version = 44)
+    version = 45)
 @TypeConverters(Converters::class)
 
 abstract class AppDatabase : RoomDatabase() {
@@ -64,7 +64,7 @@ abstract class AppDatabase : RoomDatabase() {
                             it.edenDao().upsertCommunity(Community(0, "Android", "Description 3", 100, isCustomImage = false, imageUri = R.drawable.android_logo.toString()))
                             it.edenDao().upsertCommunity(Community(0, "IOS", "Description 4", 500, isCustomImage = false, imageUri = R.drawable.icon_logo.toString()))
                             it.edenDao().upsertCommunity(Community(0, "PCMasterRace", "Description 5", 3, isCustomImage = false, imageUri = R.drawable.icon_logo.toString()))
-                            it.edenDao().upsertUser(User(0, "Sharan", "first", "last", "email@email.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar.toString()))
+                            it.edenDao().upsertUser(User(0, "Sharan451", "first", "last", "email@email.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar.toString()))
                             }
                         }
                     }
