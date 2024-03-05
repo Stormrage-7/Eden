@@ -16,14 +16,13 @@ import com.example.eden.util.UriValidator
 import kotlin.math.abs
 
 class CommentAdapter(
-    val context: Context, private val commentClickListener: CommentClickListener): RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
+    private val context: Context, private val commentClickListener: CommentClickListener): RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
     private var commentList: List<Comment> = listOf()
     inner class CommentViewHolder(val binding: ItemCommentBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val binding = ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val holder = CommentViewHolder(binding)
         return CommentViewHolder(binding)
     }
 

@@ -25,7 +25,7 @@ const val ITEM_POST_HEADER = 0
 const val ITEM_COMMENT = 1
 const val ITEM_NO_CONTENT = 2
 class PostWithCommentsAdapter(
-    val context: Context,
+    private val context: Context,
     private val postListener: PostListener
 ): RecyclerView.Adapter<ViewHolder>() {
 

@@ -14,7 +14,7 @@ import com.example.eden.databinding.ItemCommunityBinding
 import com.example.eden.ui.SelectCommunityActivity
 import com.example.eden.util.UriValidator
 
-class CommunityAdapter(val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
+class CommunityAdapter(private val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
     private var communityList = listOf<Community>()
     inner class CommunityViewHolder(val binding: ItemCommunityBinding): RecyclerView.ViewHolder(binding.root){

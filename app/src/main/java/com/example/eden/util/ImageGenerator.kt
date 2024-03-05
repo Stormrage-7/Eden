@@ -11,7 +11,9 @@ object ImageGenerator {
         if (!UriValidator.validate(context, uri)) return FileGenerationResponse.Error
 
         val albumName = "Eden_Media"
-        val rootPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath + "/$albumName/"
+//        val rootPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath + "/$albumName/"
+        val rootPath = context.filesDir.absolutePath + "/$albumName/"
+
         Log.i("root", "$rootPath")
         val rootFolder = File(rootPath)
         if (!rootFolder.exists()) rootFolder.mkdirs()

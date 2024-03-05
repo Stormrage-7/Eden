@@ -22,6 +22,7 @@
             android:layout_height="20sp"
             style="@style/roundedImageView"
             android:src="@drawable/ic_profile_24"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

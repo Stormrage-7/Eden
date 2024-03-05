@@ -27,6 +27,7 @@
             android:layout_height="20sp"
             style="@style/roundedImageView"
             android:src="@drawable/icon_logo"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -57,6 +58,7 @@
         android:id="@+id/imageViewPost"
         android:layout_width="match_parent"
         android:layout_height="240sp"
+        android:scaleType="centerCrop"
         android:visibility="gone"
         android:layout_marginHorizontal="6sp"
         android:layout_marginVertical="6sp"

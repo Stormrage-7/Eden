@@ -24,7 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 private const val ITEM_COMMUNITY_HEADER = 0
 private const val ITEM_POST = 1
 class CommunityWithPostsAdapter(
-    val context: Context,
+    private val context: Context,
     private val postListener: PostListener
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

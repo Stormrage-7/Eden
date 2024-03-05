@@ -20,7 +20,7 @@ import com.example.eden.ui.SearchableActivity
 import com.example.eden.util.UriValidator
 
 class PostAdapter(
-    val context: Context,
+    private val context: Context,
     private val postListener: PostListener
 ): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 

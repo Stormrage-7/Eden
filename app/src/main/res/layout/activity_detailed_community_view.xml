@@ -30,7 +30,7 @@
             android:theme="@style/Theme.Material3.Dark"
             app:expandedTitleTextAppearance="@style/TransparentText">
 
-            <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/community_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,6 +58,7 @@
                     android:layout_marginTop="20sp"
                     style="@style/roundedImageView"
                     android:src="@drawable/icon_logo"
+                    android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
