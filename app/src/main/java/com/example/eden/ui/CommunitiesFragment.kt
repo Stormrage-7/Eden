@@ -2,6 +2,7 @@ package com.example.eden.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.eden.ui.viewmodels.CommunitiesViewModel
-import com.example.eden.adapters.CommunityAdapter
-import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 import com.example.eden.Eden
 import com.example.eden.R
+import com.example.eden.adapters.CommunityAdapter
 import com.example.eden.databinding.FragmentCommunitiesBinding
 import com.example.eden.entities.Community
+import com.example.eden.ui.viewmodels.CommunitiesViewModel
+import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 
 class CommunitiesFragment: Fragment() {
     private lateinit var fragmentCommunitiesBinding: FragmentCommunitiesBinding
@@ -77,8 +78,9 @@ class CommunitiesFragment: Fragment() {
         }
 
         viewModel.communityList.observe(this.requireActivity()) {
-            it.let {
-                adapter.updateAdapter(it)
+            it?.let {
+                Handler().postDelayed({ adapter.updateAdapter(it) }, 150)
+//                adapter.updateAdapter(it)
             }
         }
 

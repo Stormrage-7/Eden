@@ -2,6 +2,8 @@ package com.example.eden.adapters
 
 import android.content.Context
 import android.net.Uri
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,7 @@ import com.example.eden.enums.PostFilter
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidator
 
 class PostAdapter(
@@ -39,11 +42,11 @@ class PostAdapter(
                     postListener.onDownvoteBtnClick(postList[bindingAdapterPosition])
                 }
 
-                shareBtn.setOnClickListener {
+                shareBtn.setSafeClickListener {
                     postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId)
                 }
             }
-            itemView.setOnClickListener {
+            itemView.setSafeClickListener {
 //                val community = communityList.find { it.communityId == postList[bindingAdapterPosition].communityId }
 //                if (community != null) {
 //                    postListener.onPostClick(postList[bindingAdapterPosition], community)
@@ -99,7 +102,7 @@ class PostAdapter(
             if(post.containsImage and UriValidator.validate(context, post.imageUri)){
                 imageViewPost.visibility = View.VISIBLE
                 imageViewPost.setImageURI(Uri.parse(post.imageUri))
-                imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+//                imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             else imageViewPost.visibility = View.GONE
 
@@ -175,4 +178,10 @@ class PostAdapter(
         fun onShareBtnClick(postId: Int, communityId: Int)
     }
 
+    private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
+        val safeClickListener = SafeClickListener {
+            onSafeCLick(it)
+        }
+        setOnClickListener(safeClickListener)
+    }
 }

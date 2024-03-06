@@ -10,6 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import com.example.eden.Eden
 import com.example.eden.database.EdenDao
 import com.example.eden.R
@@ -28,6 +33,8 @@ class HomeScreenActivity: AppCompatActivity(){
     private lateinit var viewModel: HomeViewModel
     private lateinit var repository: AppRepository
     private lateinit var factory: HomeViewModelFactory
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,18 +65,21 @@ class HomeScreenActivity: AppCompatActivity(){
             }
         }
 
-//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-//        navController = navHostFragment.findNavController()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        navController = navHostFragment.findNavController()
+
+        // Setup the bottom navigation view with navController
+//        activityHomeScreenBinding.bottomNavigationView.setupWithNavController(navController)
 
 
-        val homeFragment = HomeFragment()
-        val communitiesFragment = CommunitiesFragment()
-        val yourFeedFragment = CustomFeedFragment()
-        current = homeFragment
+//        val homeFragment = HomeFragment()
+//        val communitiesFragment = CommunitiesFragment()
+//        val yourFeedFragment = CustomFeedFragment()
+//        current = homeFragment
 //        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, communitiesFragment, "3").hide(communitiesFragment).commit()
 //        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, yourFeedFragment, "2").hide(yourFeedFragment).commit()
 //        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, homeFragment, "1").commit()
-        setCurrentFragment(homeFragment)
+//        setCurrentFragment(homeFragment)
 
         setSupportActionBar(activityHomeScreenBinding.topAppBar)
         activityHomeScreenBinding.homeScreenSearchView.setupWithSearchBar(activityHomeScreenBinding.searchBar)
@@ -115,11 +125,50 @@ class HomeScreenActivity: AppCompatActivity(){
             true
         }
 
-        activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when(item.itemId) {
+//        activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener { item ->
+//            when(item.itemId) {
+//                R.id.miHome -> {
+//                    setCurrentFragment(homeFragment)
+//                    current = homeFragment
+//                    true
+//                }
+//                R.id.miCreatePost -> {
+//                    Intent(this, NewPostActivity::class.java).apply {
+//                        startActivity(this)
+//                    }
+//                    false
+//                }
+//                R.id.miCustomFeed -> {
+//                    setCurrentFragment(yourFeedFragment)
+//                    current = yourFeedFragment
+//                    true
+//                }
+//                R.id.miCommunities -> {
+//                    setCurrentFragment(communitiesFragment)
+//                    current = communitiesFragment
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
+
+        activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
+            activityHomeScreenBinding.topAppBar.requestFocus()
+            when(it.itemId){
                 R.id.miHome -> {
-                    setCurrentFragment(homeFragment)
-                    current = homeFragment
+
+                    if( isValidDestination(R.id.homeFragment) and !navController.popBackStack(R.id.homeFragment, false)) {
+                        navController.navigate(R.id.homeFragment)
+                    }
+                    true
+
+                }
+                R.id.miCommunities -> {
+
+                    if( isValidDestination(R.id.communitiesFragment) and !navController.popBackStack(
+                            R.id.communitiesFragment, false)) {
+                        navController.navigate(R.id.communitiesFragment)
+                    }
                     true
                 }
                 R.id.miCreatePost -> {
@@ -129,13 +178,10 @@ class HomeScreenActivity: AppCompatActivity(){
                     false
                 }
                 R.id.miCustomFeed -> {
-                    setCurrentFragment(yourFeedFragment)
-                    current = yourFeedFragment
-                    true
-                }
-                R.id.miCommunities -> {
-                    setCurrentFragment(communitiesFragment)
-                    current = communitiesFragment
+                    if( isValidDestination(R.id.customFeedFragment) and !navController.popBackStack(
+                            R.id.customFeedFragment, false)) {
+                        navController.navigate(R.id.customFeedFragment)
+                    }
                     true
                 }
                 else -> false
@@ -158,31 +204,31 @@ class HomeScreenActivity: AppCompatActivity(){
         }
         else {
             super.onBackPressed()
-//            activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this,
-//                R.id.nav_host_fragment
-//            ).currentDestination!!.id){
-//                R.id.homeFragment -> R.id.miHome
-//                R.id.communitiesFragment -> R.id.miCommunities
-//                R.id.customFeedFragment -> R.id.miCustomFeed
-//                else -> {0}
-//            }
+            activityHomeScreenBinding.bottomNavigationView.selectedItemId = when(Navigation.findNavController(this,
+                R.id.fragment_container_view
+            ).currentDestination!!.id){
+                R.id.homeFragment -> R.id.miHome
+                R.id.communitiesFragment -> R.id.miCommunities
+                R.id.customFeedFragment -> R.id.miCustomFeed
+                else -> {0}
+            }
         }
     }
 
-    private fun setCurrentFragment(fragment: Fragment) =
+//    private fun setCurrentFragment(fragment: Fragment) =
 //        supportFragmentManager.beginTransaction().apply {
 //            hide(current)
 //            show(fragment)
 //            commit()
 //        }
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.nav_host_fragment, fragment)
-            commit()
-        }
+//        supportFragmentManager.beginTransaction().apply {
+//            replace(R.id.nav_host_fragment, fragment)
+//            commit()
+//        }
 
-//    private fun isValidDestination(destination: Int) : Boolean{
-//        return destination != Navigation.findNavController(this, R.id.nav_host_fragment).currentDestination!!.id
-//    }
+    private fun isValidDestination(destination: Int) : Boolean{
+        return destination != Navigation.findNavController(this, R.id.fragment_container_view).currentDestination!!.id
+    }
 
     private fun openProfile(){
         Intent(this, ProfileActivity::class.java).apply {

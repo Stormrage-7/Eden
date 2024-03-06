@@ -10,12 +10,6 @@
         android:name="com.example.eden.ui.CustomFeedFragment"
         android:label="CustomFeedFragment"
         tools:layout="@layout/fragment_custom_feed" />
-
-    <fragment
-        android:id="@+id/inboxFragment"
-        android:name="com.example.eden.ui.InboxFragment"
-        android:label="InboxFragment"
-        tools:layout="@layout/fragment_inbox" />
     <fragment
         android:id="@+id/communitiesFragment"
         android:name="com.example.eden.ui.CommunitiesFragment"

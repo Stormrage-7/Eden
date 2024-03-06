@@ -23,6 +23,7 @@ import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.util.PostUriGenerator
+import com.example.eden.util.SafeClickListener
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import timber.log.Timber
 
@@ -62,10 +63,7 @@ class HomeFragment: Fragment(){
             }
 
             override fun onPostClick(post: Post) {
-                Intent(requireActivity(), PostDetailedActivity::class.java).apply {
-                    putExtra("PostObject", post)
-                    startActivity(this)
-                }
+                openPost(post)
             }
 
             override fun onUpvoteBtnClick(post: Post) {
@@ -135,7 +133,11 @@ class HomeFragment: Fragment(){
         return fragmentHomeBinding.root
     }
 
-
-
+    private fun openPost(post: Post){
+        Intent(requireActivity(), PostDetailedActivity::class.java).apply {
+            putExtra("PostObject", post)
+            startActivity(this)
+        }
+    }
 
 }

@@ -248,7 +248,7 @@ class NewPostActivity: AppCompatActivity(),
                 activityNewPostBinding.apply {
                     imageViewPost.setImageURI(Uri.parse(imageUri))
                     imageViewPost.visibility = View.VISIBLE
-                    imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+//                    imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
                     removeImageButton.visibility = View.VISIBLE
                 }
                 isImageAttached = true
