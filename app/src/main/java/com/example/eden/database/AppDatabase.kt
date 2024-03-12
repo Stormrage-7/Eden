@@ -171,6 +171,7 @@ abstract class AppDatabase : RoomDatabase() {
                         "\n" +
                         "Quite important in a phone!", postId = 6, communityId = 3))
 
+
             it.edenDao().upsertComment(
                 Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
                         "\n" +
