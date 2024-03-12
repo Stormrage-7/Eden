@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/toolbarEditButton"
+        android:title="Edit Community"
+        android:icon="@drawable/outline_edit_white_24"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/toolbarCreatePostButton"
+        android:title="Create Post"
+        android:icon="@drawable/ic_add_no_circle_24"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/toolbarJoinButton"
+        android:title="Join Community"
+        android:icon="@drawable/ic_new_post_24"
+        app:showAsAction="never"/>
+
+</menu>

@@ -6,24 +6,18 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.example.eden.ui.ChatFragment"
-        android:label="ChatFragment"
-        tools:layout="@layout/fragment_chat" />
-
-    <fragment
-        android:id="@+id/inboxFragment"
-        android:name="com.example.eden.ui.InboxFragment"
-        android:label="InboxFragment"
-        tools:layout="@layout/fragment_inbox" />
+        android:id="@+id/customFeedFragment"
+        android:name="com.example.eden.ui.CustomFeedFragment"
+        android:label="CustomFeedFragment"
+        tools:layout="@layout/fragment_custom_feed" />
     <fragment
         android:id="@+id/communitiesFragment"
-        android:name="com.example.eden.CommunitiesFragment"
+        android:name="com.example.eden.ui.CommunitiesFragment"
         android:label="CommunitiesFragment"
         tools:layout="@layout/fragment_communities" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.eden.HomeFragment"
+        android:name="com.example.eden.ui.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" />
 

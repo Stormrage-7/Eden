@@ -1,0 +1,215 @@
+package com.example.eden.adapters
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Resources
+import android.net.Uri
+import android.transition.AutoTransition
+import android.transition.TransitionManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.eden.R
+import com.example.eden.databinding.ItemCommentBinding
+import com.example.eden.databinding.ItemDetailedPostBinding
+import com.example.eden.databinding.ItemNoContentBinding
+import com.example.eden.entities.Comment
+import com.example.eden.entities.Community
+import com.example.eden.entities.Post
+import com.example.eden.entities.User
+import com.example.eden.util.UriValidator
+
+const val ITEM_POST_HEADER = 0
+const val ITEM_COMMENT = 1
+const val ITEM_NO_CONTENT = 2
+class PostWithCommentsAdapter(
+    private val context: Context,
+    private val postListener: PostListener
+): RecyclerView.Adapter<ViewHolder>() {
+
+    private var commentList: List<Comment> = listOf()
+    lateinit var user: User
+    var post: Post? = null
+    var community: Community? = null
+    lateinit var resources: Resources
+
+    inner class NoContentViewHolder(val binding: ItemNoContentBinding): ViewHolder(binding.root){
+        fun bind(){
+            binding.apply {
+                tempTextView.text = "No Comments"
+            }
+        }
+    }
+
+    inner class CommentViewHolder(val binding: ItemCommentBinding): ViewHolder(binding.root){
+        init {
+            binding.apply {
+                likeBtn.setOnClickListener {
+                    postListener.commentUpvoteButtonClick( commentList[bindingAdapterPosition-1] )
+//                    notifyItemChanged(bindingAdapterPosition)
+                }
+                dislikeBtn.setOnClickListener {
+                    postListener.commentDownvoteButtonClick( commentList[bindingAdapterPosition-1])
+//                    notifyItemChanged(bindingAdapterPosition)
+                }
+            }
+        }
+        fun bind(comment: Comment){
+            binding.apply {
+                if (user != null) {
+                    textViewUserName.text = "${user.firstName} ${user.lastName}"
+                    if (!user.isCustomImage) imageViewUser.setImageResource(user.profileImageUri.toInt())
+                    else {
+                        if (UriValidator.validate(context, user.profileImageUri)) imageViewUser.setImageURI(
+                            Uri.parse(user.profileImageUri))
+                        else imageViewUser.setImageResource(user.profileImageUri.toInt())
+                    }
+                }
+                if (comment.text.isEmpty()) commentTextView.visibility = View.GONE
+                else {
+                    commentTextView.visibility = View.VISIBLE
+                    commentTextView.text = comment.text
+                }
+                if (UriValidator.validate(context, comment.imageUri)){
+                    imageViewComment.visibility = View.VISIBLE
+                    imageViewComment.setImageURI(Uri.parse(comment.imageUri))
+                    imageViewComment.scaleType = ImageView.ScaleType.CENTER_CROP
+                }
+
+                textViewVoteCounter.text = comment.voteCounter.toString()
+                likeBtn.setIconResource(comment.voteStatus.upvoteIconDrawable)
+                dislikeBtn.setIconResource(comment.voteStatus.downvoteIconDrawable)
+                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, comment.voteStatus.textViewColor))
+            }
+        }
+    }
+
+    inner class PostViewHolder(val binding: ItemDetailedPostBinding): ViewHolder(binding.root){
+
+        init {
+            binding.apply {
+                // CHANGES TO THE VOTE
+                likeBtn.setOnClickListener { postListener.onUpvoteBtnClick() }
+                dislikeBtn.setOnClickListener { postListener.onDownvoteBtnClick() }
+                shareBtn.setOnClickListener {
+                    if (post != null) postListener.onShareClick(post!!.postId, post!!.communityId)
+                }
+            }
+        }
+        @SuppressLint("ResourceAsColor")
+        fun bind(post: Post?, community: Community?){
+            binding.apply {
+                //COMMUNITY DETAILS
+                if (community != null) {
+                    if (community.isCustomImage) {
+                        if (UriValidator.validate(
+                                context,
+                                community.imageUri
+                            )
+                        ) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
+                        else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                    }
+                    else imageViewCommunity.setImageResource(community.imageUri.toInt())
+                    textViewCommunityName.text = community.communityName
+
+                } else {
+                    imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                    textViewCommunityName.text = ""
+                }
+                //POST DETAILS
+                if (post != null) {
+                    textViewTitle.text = post.title
+
+                    //MEDIA
+                    if(post.containsImage and UriValidator.validate(context, post.imageUri)){
+                        imageViewPost.apply {
+                            visibility = View.VISIBLE
+                            setImageURI(Uri.parse(post.imageUri))
+                            scaleType = ImageView.ScaleType.CENTER_CROP
+                        }
+                    }
+                    else imageViewPost.visibility = View.GONE
+
+                    //BODY TEXT
+                    if (post.bodyText.isEmpty()) {
+                        textViewDescription.visibility = View.GONE
+                    } else {
+                        textViewDescription.visibility = View.VISIBLE
+                        textViewDescription.text = post.bodyText
+                    }
+
+                    //VOTE SYSTEM
+                    textViewVoteCounter.text = post.voteCounter.toString()
+
+                    likeBtn.setIconResource(post.voteStatus.upvoteIconDrawable)
+                    dislikeBtn.setIconResource(post.voteStatus.downvoteIconDrawable)
+                    textViewVoteCounter.setTextColor(ContextCompat.getColor(context, post.voteStatus.textViewColor))
+                }
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (commentList.isEmpty()){
+            if (position == 0) ITEM_POST_HEADER else ITEM_NO_CONTENT
+        } else{
+            if (position == 0) ITEM_POST_HEADER else ITEM_COMMENT
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
+        return when (viewType){
+            ITEM_POST_HEADER -> {
+                val binding = ItemDetailedPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                PostViewHolder(binding)
+            }
+            ITEM_NO_CONTENT -> {
+                val binding = ItemNoContentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                NoContentViewHolder(binding)
+            }
+            ITEM_COMMENT -> {
+                val binding = ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                CommentViewHolder(binding)
+            }
+            else -> {
+                val binding = ItemDetailedPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                PostViewHolder(binding)
+            }
+        }
+    }
+
+    override fun getItemCount(): Int{
+        return if (commentList.isEmpty()){
+            2
+        } else {
+            commentList.size+1
+        }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        if (getItemViewType(position) == ITEM_POST_HEADER) (holder as PostViewHolder).bind(post, community)
+        else if (getItemViewType(position) == ITEM_NO_CONTENT) (holder as NoContentViewHolder).bind()
+        else (holder as CommentViewHolder).bind(commentList[position - 1])
+    }
+
+    fun updateCommentList(commentList: List<Comment>) {
+        this.commentList = commentList
+        notifyDataSetChanged()
+    }
+
+    interface PostListener{
+        fun onCommunityClick(community: Community)
+        fun onUpvoteBtnClick()
+        fun onDownvoteBtnClick()
+        fun commentUpvoteButtonClick(comment: Comment)
+        fun commentDownvoteButtonClick(comment: Comment)
+        fun onShareClick(postId: Int, communityId: Int)
+    }
+
+}

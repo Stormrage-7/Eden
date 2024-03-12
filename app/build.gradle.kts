@@ -33,18 +33,20 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     testImplementation("junit:junit:4.13.2")
@@ -53,14 +55,20 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.3")
 
+    //Splash Screen API
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
     // Navigation Components
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.2")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.2")
 
     // Room Components
-    implementation ("androidx.room:room-runtime:2.4.3")
-    kapt ("androidx.room:room-compiler:2.4.3")
-    implementation ("androidx.room:room-ktx:2.4.3")
+    val room_version = "2.5.0"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 
     //ViewModel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")

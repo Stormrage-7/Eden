@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.Material3.Light">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/editProfileToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="E"
+        app:navigationIcon="@drawable/ic_arrow_back_24">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submitButtonEditProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_gravity="end"
+            android:textColor="@color/black"
+            android:backgroundTint="?attr/colorPrimaryContainer"/>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/delete_image_btn"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:contentDescription="Dislike"
+                app:icon="@drawable/ic_close_48"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="160sp"
+                android:layout_height="160sp"
+                android:src="@drawable/icon_logo"
+                android:visibility="visible"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                app:shapeAppearanceOverlay="@style/roundedProfileImageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/delete_image_btn"/>
+
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/uploadImageButton"-->
+<!--                style="?attr/materialIconButtonStyle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="top|end"-->
+<!--                android:contentDescription="Image"-->
+<!--                app:icon="@drawable/image_search_24"-->
+<!--                android:layout_marginLeft="100sp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/imageViewProfile"/>-->
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/uploadImageButton"
+                android:layout_width="56sp"
+                android:layout_height="56sp"
+                android:contentDescription="Image"
+                android:backgroundTint="#9FA6A6A6"
+                android:src="@drawable/image_search_24"
+                android:layout_marginLeft="120sp"
+                android:layout_marginTop="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/imageViewProfile"
+                android:background="@drawable/profile_round"/>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/firstNameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="3sp"
+                android:layout_marginTop="20sp"
+                android:hint="First Name"
+                app:counterEnabled="true"
+                app:counterMaxLength="25"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageViewProfile">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/firstNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lastNameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:layout_marginHorizontal="3sp"
+                android:hint="Last Name"
+                app:counterEnabled="true"
+                app:counterMaxLength="25"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/firstNameLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/lastNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mobileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginHorizontal="3sp"
+                android:hint="Phone/Mobile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/countryLayout2">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/mobileNoEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginHorizontal="3sp"
+                android:hint="Email"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mobileLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dobLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginHorizontal="3sp"
+                android:hint="DOB"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/emailLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dobEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/countryLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_marginTop="5sp"
+                android:layout_marginHorizontal="3sp"
+                android:hint="Country"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lastNameLayout">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/countryDropDown2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    app:simpleItems="@array/countries_array"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

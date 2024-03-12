@@ -4,32 +4,33 @@
     <item
         android:id="@+id/miHome"
         android:title="Home"
-        android:icon="@drawable/ic_home_24"
+        android:icon="@drawable/ic_home_material"
 
+        />
+
+    <item
+        android:id="@+id/miCreatePost"
+        android:title="Create"
+        android:icon="@drawable/ic_new_post_24"
+        />
+
+    <item
+        android:id="@+id/miCustomFeed"
+        android:title="Your Feed"
+        android:icon="@drawable/ic_custom_feed_24"
         />
 
     <item
         android:id="@+id/miCommunities"
         android:title="Communities"
-        android:icon="@drawable/ic_discover_24"
+        android:icon="@drawable/ic_communities_material_24"
         />
 
-    <item
-        android:id="@+id/miCreatePost"
-        android:enabled="false"
-        android:title=""
-        />
 
-    <item
-        android:id="@+id/miChat"
-        android:title="Chat"
-        android:icon="@drawable/ic_chat_24"
-        />
-
-    <item
-        android:id="@+id/miInbox"
-        android:title="Inbox"
-        android:icon="@drawable/ic_notifications_24"
-        />
+<!--    <item-->
+<!--        android:id="@+id/miInbox"-->
+<!--        android:title="Inbox"-->
+<!--        android:icon="@drawable/ic_notifications_24"-->
+<!--        />-->
 
 </menu>

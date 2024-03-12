@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/add_community_btn"
+        android:icon="@drawable/community_add_24"
+        android:title="Add Community"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/post_interactions_btn"
+        android:icon="@drawable/ic_post_interactions"
+        android:title="Post Interactions"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/profile_btn"
+        android:icon="@drawable/ic_profile_24"
+        android:title="Profile"
+        android:checkable="true"/>
+</menu>

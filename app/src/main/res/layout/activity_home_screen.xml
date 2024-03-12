@@ -1,67 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/drawerLayout"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Eden.HomeScreen"
-    tools:context=".HomeScreenActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomConstraintLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph"
-        app:defaultNavHost="true" />
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:id="@+id/homeScreen"
+        android:theme="@style/Theme.Eden.HomeScreen"
+        tools:context=".ui.HomeScreenActivity">
 
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/bottomConstraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBar"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:padding="0sp"
-            app:contentInsetLeft="0sp"
-            app:contentInsetStart="0sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-<!--            app:fabCradleMargin="10sp"-->
-<!--            app:fabCradleRoundedCornerRadius="10sp">-->
+            android:elevation="4dp"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottomNavigationView"
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/search_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:outlineProvider="none"
-                android:outlineSpotShadowColor="@android:color/transparent"
-                android:padding="0sp"
-                app:labelVisibilityMode="labeled"
-                app:menu="@menu/home_screen_bottom_nav_menu" />
+                android:layout_height="wrap_content"
+                android:hint="Search..."
+                app:collapseIcon="@drawable/ic_discover_24"
+                app:navigationIcon="@drawable/ic_menu_24"
+                />
+        </com.google.android.material.appbar.MaterialToolbar>
 
-        </com.google.android.material.bottomappbar.BottomAppBar>
+        <com.google.android.material.search.SearchView
+            android:id="@+id/homeScreenSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Search...">
+            <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
+        </com.google.android.material.search.SearchView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_post"
-            android:layout_width="wrap_content"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container_view"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+            app:layout_constraintTop_toBottomOf="@id/topAppBar"
+            app:navGraph="@navigation/nav_graph"
+            app:defaultNavHost="true"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_input_add"
-            app:layout_anchor="@id/bottomAppBar" />
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/home_screen_bottom_nav_menu" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        app:menu="@menu/navigation_drawer"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/navigation_drawer_header"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

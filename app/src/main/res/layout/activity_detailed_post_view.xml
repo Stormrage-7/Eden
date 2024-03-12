@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingTop="5sp"
+    >
+
+    <ImageButton
+        android:id="@+id/back_btn"
+        android:layout_width="36sp"
+        android:layout_height="36sp"
+        android:src="@drawable/ic_arrow_back_24"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/editButton"
+        android:layout_width="28sp"
+        android:layout_height="28sp"
+        android:layout_marginHorizontal="10sp"
+        android:src="@drawable/ic_edit_24"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/deleteButton"/>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/deleteButton"
+        android:layout_width="28sp"
+        android:layout_height="28sp"
+        android:layout_marginHorizontal="10sp"
+        android:src="@drawable/ic_delete_24"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvComments"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_marginTop="5sp"
+        android:visibility="gone"
+        android:layout_marginHorizontal="10sp"
+        app:layout_constraintTop_toBottomOf="@id/back_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomCommentBar"
+        />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/tempImgView"-->
+<!--        android:layout_width="100sp"-->
+<!--        android:layout_height="100sp"-->
+<!--        android:layout_marginTop="50sp"-->
+<!--        android:src="@drawable/icon_logo"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/rvComments" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tempTextView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="No Comments"-->
+<!--        android:textSize="30sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tempImgView"/>-->
+
+    <ImageView
+        android:id="@+id/noPostImgView"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:visibility="gone"
+        android:src="@drawable/ic_post_not_found"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/noPostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:visibility="gone"
+        android:text="Post not found!"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/noPostImgView"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomCommentBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
+        android:paddingHorizontal="2sp"
+        >
+
+        <TextView
+            android:id="@+id/commentTextView"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:hint="Add Comment"
+            android:background="@drawable/searchview_background"
+            android:paddingLeft="5sp"
+            android:layout_marginBottom="5sp"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+<!--        <Button-->
+<!--            android:id="@+id/post_comment_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="40sp"-->
+<!--            android:text="Post"-->
+<!--            android:backgroundTint="@color/grey"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

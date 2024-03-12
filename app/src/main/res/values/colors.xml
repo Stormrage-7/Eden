@@ -6,6 +6,20 @@
     <color name="grey">#a6a6a6</color>
     <color name="navyblue">#00008B</color>
     <color name="azure">#0080FE</color>
-    <color name="orange">#FFBC6D</color>
+    <color name="green">#34D201</color>
+    <color name="orange">#FFB20A</color>
+    <color name="red">#E80C0C</color>
     <color name="cerise_red">#DE3163</color>
+    <color name="millennial_pink">#F3CFC6</color>
+    <color name="transparent">#00000000</color>
+    <color name="purple">#6750A4</color>
+
+
+    <!--colors for profile-->
+    <color name="profilePrimaryDark">#FF3B30</color>
+    <color name="profileAccentColor">#F7F7F7</color>
+    <color name="whiteTextColor">#fff</color>
+    <color name="profileBackground">#fff</color>
+    <color name="blackTextColor">#000</color>
+    <color name="profileEditTextColor">#707070</color>
 </resources>
