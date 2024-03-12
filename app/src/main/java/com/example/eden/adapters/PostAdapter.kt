@@ -133,6 +133,7 @@ class PostAdapter(
     }
 
     fun setData(newPostList: List<Post>){
+
         val diffUtil = PostDiffUtil(postList, newPostList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         postList = newPostList.toMutableList()
