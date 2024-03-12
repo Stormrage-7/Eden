@@ -9,9 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
@@ -23,9 +21,7 @@ import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.util.PostUriGenerator
-import com.example.eden.util.SafeClickListener
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import timber.log.Timber
 
 class HomeFragment: Fragment(){
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
@@ -93,7 +89,7 @@ class HomeFragment: Fragment(){
         fragmentHomeBinding.rvPosts.addItemDecoration(
             MaterialDividerItemDecoration(
                 requireContext(),
-                LinearLayoutManager(context).orientation
+                LinearLayoutManager(requireContext()).orientation
             )
         )
 
@@ -111,24 +107,21 @@ class HomeFragment: Fragment(){
             adapter.updateCommunityList(it)
         }
 
-        viewModel.postList.observe(this.requireActivity(), Observer {
-            it.let {
-                if(it.isEmpty()){
+        viewModel.postList.observe(this.requireActivity()) {
+            it?.let {
+                if (it.isEmpty()) {
                     fragmentHomeBinding.rvPosts.visibility = View.GONE
                     fragmentHomeBinding.tempImgView.visibility = View.VISIBLE
                     fragmentHomeBinding.tempTextView.visibility = View.VISIBLE
-                    adapter.updatePostList(it)
-                }
-                else {
+                } else {
                     fragmentHomeBinding.rvPosts.visibility = View.VISIBLE
                     fragmentHomeBinding.tempImgView.visibility = View.GONE
                     fragmentHomeBinding.tempTextView.visibility = View.GONE
-                    adapter.updatePostList(it)
                     Log.i("Inside PostList Observer", it.toString())
-                    Log.i("Inside PostList Observer", adapter.postList.toString())
                 }
+                adapter.setData(it)
             }
-        })
+        }
 
         return fragmentHomeBinding.root
     }

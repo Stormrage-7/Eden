@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eden.database.AppRepository
 import com.example.eden.entities.Post
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch

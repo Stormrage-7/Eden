@@ -5,8 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eden.Eden
 import com.example.eden.database.AppRepository
-import com.example.eden.entities.User
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import com.example.eden.enums.Countries
 import kotlinx.coroutines.launch
 import java.util.Date

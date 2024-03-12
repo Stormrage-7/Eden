@@ -19,8 +19,6 @@ import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityEditProfileBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
-import com.example.eden.entities.Comment
-import com.example.eden.entities.relations.ImageUri
 import com.example.eden.enums.Countries
 import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.ProfileViewModel

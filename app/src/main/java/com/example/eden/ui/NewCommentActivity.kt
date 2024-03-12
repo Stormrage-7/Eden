@@ -21,8 +21,7 @@ import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityNewCommentBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
-import com.example.eden.entities.Community
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import com.example.eden.ui.NewPostActivity.Companion.PICK_IMAGE
 import com.example.eden.ui.viewmodels.CommentsViewModel
 import com.example.eden.ui.viewmodels.CommentsViewModelFactory

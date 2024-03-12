@@ -10,7 +10,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +25,7 @@ import com.example.eden.entities.Post
 import com.example.eden.databinding.ActivityNewPostBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import com.example.eden.util.FileGenerationResponse
 import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator

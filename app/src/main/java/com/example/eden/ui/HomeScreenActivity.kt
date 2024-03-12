@@ -8,13 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import com.example.eden.Eden
 import com.example.eden.database.EdenDao
 import com.example.eden.R
@@ -29,12 +27,11 @@ import timber.log.Timber
 class HomeScreenActivity: AppCompatActivity(){
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var databaseDao: EdenDao
-    private lateinit var current: Fragment
+//    private lateinit var current: Fragment
     private lateinit var viewModel: HomeViewModel
     private lateinit var repository: AppRepository
     private lateinit var factory: HomeViewModelFactory
     private lateinit var navController: NavController
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

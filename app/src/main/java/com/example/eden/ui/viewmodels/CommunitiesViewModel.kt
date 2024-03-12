@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
 import com.example.eden.entities.Community
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import kotlinx.coroutines.launch
 
 @SuppressLint("LogNotTimber")

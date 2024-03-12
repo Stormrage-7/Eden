@@ -1,12 +1,11 @@
 package com.example.eden.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eden.Eden
 import com.example.eden.database.AppRepository
 import com.example.eden.entities.Comment
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import kotlinx.coroutines.launch
 class CommentsViewModel(private val repository: AppRepository,
                         application: Eden

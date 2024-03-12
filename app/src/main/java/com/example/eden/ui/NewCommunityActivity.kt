@@ -23,7 +23,7 @@ import com.example.eden.R
 import com.example.eden.databinding.ActivityNewCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import com.example.eden.util.FileGenerationResponse
 import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator

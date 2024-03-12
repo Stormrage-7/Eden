@@ -13,7 +13,7 @@ import com.example.eden.entities.relations.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.User
 import com.example.eden.entities.convertors.Converters
-import com.example.eden.entities.relations.ImageUri
+import com.example.eden.entities.ImageUri
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.enums.Countries
 import kotlinx.coroutines.GlobalScope

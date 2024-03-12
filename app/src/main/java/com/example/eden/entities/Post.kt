@@ -2,9 +2,7 @@ package com.example.eden.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.util.foreignKeyCheck
 import com.example.eden.enums.VoteStatus
 import java.io.Serializable
 

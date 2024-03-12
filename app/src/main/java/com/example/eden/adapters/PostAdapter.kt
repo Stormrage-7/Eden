@@ -1,15 +1,14 @@
 package com.example.eden.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.R
 import com.example.eden.entities.Post
@@ -19,17 +18,19 @@ import com.example.eden.enums.PostFilter
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.util.PostDiffUtil
 import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidator
 
+@SuppressLint("LogNotTimber")
 class PostAdapter(
     private val context: Context,
     private val postListener: PostListener
 ): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     var joinedCommunitiesList: List<Int> = listOf()
-    var postList: MutableList<Post> = mutableListOf()
-    var communityList: List<Community> = listOf()
+    private var postList: MutableList<Post> = mutableListOf()
+    private var communityList: List<Community> = listOf()
     private var filter = PostFilter.HOT
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root){
@@ -131,6 +132,13 @@ class PostAdapter(
         }
     }
 
+    fun setData(newPostList: List<Post>){
+        val diffUtil = PostDiffUtil(postList, newPostList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        postList = newPostList.toMutableList()
+        diffResults.dispatchUpdatesTo(this)
+    }
+
     fun updatePostList(postList: List<Post>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
@@ -170,18 +178,18 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
+    private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
+        val safeClickListener = SafeClickListener {
+            onSafeCLick(it)
+        }
+        setOnClickListener(safeClickListener)
+    }
+
     interface PostListener{
         fun onPostClick(post: Post)
         fun onCommunityClick(community: Community)
         fun onUpvoteBtnClick(post: Post)
         fun onDownvoteBtnClick(post: Post)
         fun onShareBtnClick(postId: Int, communityId: Int)
-    }
-
-    private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
-        val safeClickListener = SafeClickListener {
-            onSafeCLick(it)
-        }
-        setOnClickListener(safeClickListener)
     }
 }
