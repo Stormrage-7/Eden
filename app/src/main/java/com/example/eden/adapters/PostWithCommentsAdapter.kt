@@ -61,7 +61,7 @@ class PostWithCommentsAdapter(
         fun bind(comment: Comment){
             binding.apply {
                 if (user != null) {
-                    textViewUserName.text = "${user.firstName} ${user.lastName}"
+                    textViewUserName.text = "${user.username}"
                     if (!user.isCustomImage) imageViewUser.setImageResource(user.profileImageUri.toInt())
                     else {
                         if (UriValidator.validate(context, user.profileImageUri)) imageViewUser.setImageURI(

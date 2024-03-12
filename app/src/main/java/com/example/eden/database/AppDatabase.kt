@@ -33,7 +33,7 @@ import java.util.Date
         User :: class,
         ImageUri::class
     ],
-    version = 55)
+    version = 57)
 @TypeConverters(Converters::class)
 
 abstract class AppDatabase : RoomDatabase() {
@@ -161,21 +161,21 @@ abstract class AppDatabase : RoomDatabase() {
                             "\n" +
                             "Quite important in a phone!", postId = 6, communityId = 3))
 
-            it.edenDao().upsertComment(
-                Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
-                        "\n" +
-                        "Quite important in a phone!", postId = 6, communityId = 3))
-
-            it.edenDao().upsertComment(
-                Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
-                        "\n" +
-                        "Quite important in a phone!", postId = 6, communityId = 3))
-
-
-            it.edenDao().upsertComment(
-                Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
-                        "\n" +
-                        "Quite important in a phone!", postId = 6, communityId = 3))
+//            it.edenDao().upsertComment(
+//                Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
+//                        "\n" +
+//                        "Quite important in a phone!", postId = 6, communityId = 3))
+//
+//            it.edenDao().upsertComment(
+//                Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
+//                        "\n" +
+//                        "Quite important in a phone!", postId = 6, communityId = 3))
+//
+//
+//            it.edenDao().upsertComment(
+//                Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
+//                        "\n" +
+//                        "Quite important in a phone!", postId = 6, communityId = 3))
 
             //**** USER ****//
             it.edenDao().upsertUser(User(0, "u/Sharan451", "first", "last", "email@email.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar.toString()))

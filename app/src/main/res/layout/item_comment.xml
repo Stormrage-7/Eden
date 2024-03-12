@@ -56,7 +56,7 @@
         android:text="comment"
         android:layout_marginStart="3sp"
         app:layout_constraintTop_toBottomOf="@id/imageViewComment"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:paddingHorizontal="3sp"/>
 
     <com.google.android.material.button.MaterialButton
