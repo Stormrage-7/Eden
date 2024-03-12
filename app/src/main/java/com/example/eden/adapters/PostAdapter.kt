@@ -18,6 +18,7 @@ import com.example.eden.enums.PostFilter
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.util.CommunityDiffUtil
 import com.example.eden.util.PostDiffUtil
 import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidator
@@ -100,10 +101,16 @@ class PostAdapter(
             textViewTitle.text = post.title
 
             //MEDIA
-            if(post.containsImage and UriValidator.validate(context, post.imageUri)){
+            if(post.containsImage and post.isCustomImage){
+                if (UriValidator.validate(context, post.imageUri)){
+                    imageViewPost.visibility = View.VISIBLE
+                    imageViewPost.setImageURI(Uri.parse(post.imageUri))
+                }
+                else imageViewPost.visibility = View.GONE
+            }
+            else if (post.containsImage and !post.isCustomImage) {
                 imageViewPost.visibility = View.VISIBLE
-                imageViewPost.setImageURI(Uri.parse(post.imageUri))
-//                imageViewPost.scaleType = ImageView.ScaleType.CENTER_CROP
+                imageViewPost.setImageResource(post.imageUri.toInt())
             }
             else imageViewPost.visibility = View.GONE
 
@@ -132,51 +139,54 @@ class PostAdapter(
         }
     }
 
-    fun setData(newPostList: List<Post>){
-
+    private fun setData(newPostList: List<Post>){
         val diffUtil = PostDiffUtil(postList, newPostList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
+        if (newPostList.size > postList.size) postListener.scrollToTop()
         postList = newPostList.toMutableList()
         diffResults.dispatchUpdatesTo(this)
     }
 
-    fun updatePostList(postList: List<Post>) {
+    fun updatePostList(newPostList: List<Post>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
         Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
-        this.postList = when(filter){
-            PostFilter.HOT -> postList.sortedByDescending { it.postId }.toMutableList()
-            PostFilter.TOP -> postList.sortedByDescending { it.voteCounter }.toMutableList()
-            PostFilter.OLDEST -> postList.sortedBy { it.postId }.toMutableList()
+        when(filter){
+            PostFilter.HOT -> newPostList.sortedByDescending { it.postId }.toMutableList()
+            PostFilter.TOP -> newPostList.sortedByDescending { it.voteCounter }.toMutableList()
+            PostFilter.OLDEST -> newPostList.sortedBy { it.postId }.toMutableList()
         }
         Log.i("In Update Method", "Local List: ${this.postList}")
-        notifyDataSetChanged()
+        setData(newPostList)
     }
 
-    fun updateCommunityList(communityList: List<Community>){
-        this.communityList = communityList
-        notifyDataSetChanged()
+    fun updateCommunityList(newCommunityList: List<Community>){
+        val diffUtil = CommunityDiffUtil(communityList, newCommunityList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        communityList = newCommunityList
+        diffResults.dispatchUpdatesTo(this)
     }
 
     fun updateJoinedCommunityList(joinedCommunitiesList: List<Int>?) {
         if (joinedCommunitiesList != null) {
             this.joinedCommunitiesList = joinedCommunitiesList
             Log.i("PostAdapter", "${this.postList}")
-            this.postList =
-                postList.filter { post -> this.joinedCommunitiesList.contains(post.communityId) }.toMutableList()
+            val newPostList = postList.filter { post -> this.joinedCommunitiesList.contains(post.communityId) }.toMutableList()
+            setData(newPostList)
         }
         Log.i("PostAdapter", "${this.postList}")
-        notifyDataSetChanged()
     }
 
     fun updateFilter(filter: PostFilter) {
         this.filter = filter
+        val sortedList = this.postList.toMutableList()
         when(this.filter){
-            PostFilter.HOT -> postList.sortByDescending { it.postId }
-            PostFilter.TOP -> postList.sortByDescending { it.voteCounter }
-            PostFilter.OLDEST -> postList.sortBy { it.postId }
+            PostFilter.HOT -> sortedList.sortByDescending { it.postId }
+            PostFilter.TOP -> sortedList.sortByDescending { it.voteCounter }
+            PostFilter.OLDEST -> sortedList.sortBy { it.postId }
         }
-        notifyDataSetChanged()
+        setData(sortedList)
+        postListener.scrollToTop()
     }
 
     private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
@@ -192,5 +202,6 @@ class PostAdapter(
         fun onUpvoteBtnClick(post: Post)
         fun onDownvoteBtnClick(post: Post)
         fun onShareBtnClick(postId: Int, communityId: Int)
+        fun scrollToTop()
     }
 }

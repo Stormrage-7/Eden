@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.R
 import com.example.eden.entities.Community
 import com.example.eden.databinding.ItemCommunityBinding
 import com.example.eden.ui.SelectCommunityActivity
+import com.example.eden.util.CommunityDiffUtil
 import com.example.eden.util.UriValidator
 
 class CommunityAdapter(private val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
@@ -22,7 +24,7 @@ class CommunityAdapter(private val context: Context, private val clickListener: 
             binding.apply {
                 joinButton.setOnClickListener { clickListener.onJoinClick(bindingAdapterPosition) }
             }
-            itemView.setOnClickListener { clickListener.onClick(communityList[position]) }
+            itemView.setOnClickListener { clickListener.onClick(communityList[bindingAdapterPosition]) }
         }
     }
 
@@ -72,9 +74,11 @@ class CommunityAdapter(private val context: Context, private val clickListener: 
         }
     }
 
-    fun updateAdapter(communityList: List<Community>){
-        this.communityList = communityList
-        notifyDataSetChanged()
+    fun updateAdapter(newCommunityList: List<Community>){
+        val diffUtil = CommunityDiffUtil(communityList, newCommunityList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        communityList = newCommunityList
+        diffResults.dispatchUpdatesTo(this)
     }
 
     interface CommunityClickListener{

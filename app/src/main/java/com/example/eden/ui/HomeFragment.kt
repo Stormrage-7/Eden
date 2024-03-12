@@ -80,6 +80,10 @@ class HomeFragment: Fragment(){
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
+
+            override fun scrollToTop() {
+                fragmentHomeBinding.rvPosts.smoothScrollToPosition(0)
+            }
         })
 
         fragmentHomeBinding.rvPosts.setItemViewCacheSize(10)
@@ -119,7 +123,7 @@ class HomeFragment: Fragment(){
                     fragmentHomeBinding.tempTextView.visibility = View.GONE
                     Log.i("Inside PostList Observer", it.toString())
                 }
-                adapter.setData(it)
+                adapter.updatePostList(it)
             }
         }
 
