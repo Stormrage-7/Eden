@@ -14,6 +14,7 @@ import com.example.eden.entities.Community
 import com.example.eden.databinding.ItemCommunityBinding
 import com.example.eden.ui.SelectCommunityActivity
 import com.example.eden.util.CommunityDiffUtil
+import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidator
 
 class CommunityAdapter(private val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
@@ -24,7 +25,7 @@ class CommunityAdapter(private val context: Context, private val clickListener: 
             binding.apply {
                 joinButton.setOnClickListener { clickListener.onJoinClick(bindingAdapterPosition) }
             }
-            itemView.setOnClickListener { clickListener.onClick(communityList[bindingAdapterPosition]) }
+            itemView.setSafeClickListener { clickListener.onClick(communityList[bindingAdapterPosition]) }
         }
     }
 
@@ -79,6 +80,13 @@ class CommunityAdapter(private val context: Context, private val clickListener: 
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         communityList = newCommunityList
         diffResults.dispatchUpdatesTo(this)
+    }
+
+    private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
+        val safeClickListener = SafeClickListener {
+            onSafeCLick(it)
+        }
+        setOnClickListener(safeClickListener)
     }
 
     interface CommunityClickListener{
