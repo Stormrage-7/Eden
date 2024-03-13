@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.eden"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -41,6 +41,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
@@ -76,4 +77,6 @@ dependencies {
 
     //Timber Logging
     implementation ("com.jakewharton.timber:timber:5.0.1")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }

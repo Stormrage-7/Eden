@@ -48,7 +48,6 @@ class NewPostActivity: AppCompatActivity(),
         private const val PICK_COMMUNITY = 101
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityNewPostBinding = ActivityNewPostBinding.inflate(layoutInflater)
