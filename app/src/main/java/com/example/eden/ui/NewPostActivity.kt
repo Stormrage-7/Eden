@@ -162,7 +162,7 @@ class NewPostActivity: AppCompatActivity(),
                                     return@setOnClickListener
                                 }
                                 is FileGenerationResponse.Success -> {
-                                    newPost = Post(0, titleText, isImageAttached, fileGenerationResponse.uri.toString(),  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
+                                    newPost = Post(0, titleText, isImageAttached, true, fileGenerationResponse.uri.toString(),  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
                                         ZoneOffset.UTC), voteCounter = (0..25).random())
                                     viewModel.upsertPost(newPost, communityId, ImageUri(0, fileGenerationResponse.uri.toString()))
                                     Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
@@ -180,7 +180,7 @@ class NewPostActivity: AppCompatActivity(),
                             return@setOnClickListener
                         }
                     } else {
-                        newPost = Post(0, titleText, isImageAttached, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
+                        newPost = Post(0, titleText, isImageAttached, isCustomImage = false, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
                             ZoneOffset.UTC), voteCounter = (0..25).random())
                         viewModel.upsertPost(newPost, communityId)
                         Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()

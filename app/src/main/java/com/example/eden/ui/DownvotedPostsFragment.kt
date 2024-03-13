@@ -59,6 +59,10 @@ class DownvotedPostsFragment: Fragment() {
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
+
+            override fun scrollToTop() {
+                fragmentPostSearchBinding.rvPosts.smoothScrollToPosition(0)
+            }
         })
 
         fragmentPostSearchBinding.rvPosts.adapter = adapter

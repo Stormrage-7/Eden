@@ -12,6 +12,10 @@ data class Post (
     val postId: Int = 0,
     val title: String,
     val containsImage: Boolean,
+
+    //This attribute is only here to facilitate addition of static data. It won't be a part of the actual app workflow.
+    val isCustomImage: Boolean,
+
     @ColumnInfo(name = "image_uri")
     val imageUri: String,
     val bodyText: String,

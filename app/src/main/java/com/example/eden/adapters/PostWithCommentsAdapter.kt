@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eden.R
@@ -21,6 +20,7 @@ import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.entities.User
+import com.example.eden.util.CommentDiffUtil
 import com.example.eden.util.UriValidator
 
 const val ITEM_POST_HEADER = 0
@@ -61,7 +61,7 @@ class PostWithCommentsAdapter(
         fun bind(comment: Comment){
             binding.apply {
                 if (user != null) {
-                    textViewUserName.text = "${user.firstName} ${user.lastName}"
+                    textViewUserName.text = "${user.username}"
                     if (!user.isCustomImage) imageViewUser.setImageResource(user.profileImageUri.toInt())
                     else {
                         if (UriValidator.validate(context, user.profileImageUri)) imageViewUser.setImageURI(
@@ -125,12 +125,16 @@ class PostWithCommentsAdapter(
                     textViewTitle.text = post.title
 
                     //MEDIA
-                    if(post.containsImage and UriValidator.validate(context, post.imageUri)){
-                        imageViewPost.apply {
-                            visibility = View.VISIBLE
-                            setImageURI(Uri.parse(post.imageUri))
-                            scaleType = ImageView.ScaleType.CENTER_CROP
+                    if(post.containsImage and post.isCustomImage){
+                        if (UriValidator.validate(context, post.imageUri)){
+                            imageViewPost.visibility = View.VISIBLE
+                            imageViewPost.setImageURI(Uri.parse(post.imageUri))
                         }
+                        else imageViewPost.visibility = View.GONE
+                    }
+                    else if (post.containsImage and !post.isCustomImage) {
+                        imageViewPost.visibility = View.VISIBLE
+                        imageViewPost.setImageResource(post.imageUri.toInt())
                     }
                     else imageViewPost.visibility = View.GONE
 
@@ -198,9 +202,14 @@ class PostWithCommentsAdapter(
         else (holder as CommentViewHolder).bind(commentList[position - 1])
     }
 
-    fun updateCommentList(commentList: List<Comment>) {
-        this.commentList = commentList
-        notifyDataSetChanged()
+    fun updateCommentList(newCommentList: List<Comment>) {
+        notifyItemRangeRemoved(1, newCommentList.size+1)
+        val diffUtil = CommentDiffUtil(commentList, newCommentList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        commentList = newCommentList
+        diffResults.dispatchUpdatesTo(this)
+//        commentList = newCommentList
+//        notifyDataSetChanged()
     }
 
     interface PostListener{

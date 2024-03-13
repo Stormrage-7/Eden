@@ -37,7 +37,6 @@ class CustomFeedFragment: Fragment() {
         repository = application.repository
         factory = HomeViewModelFactory(repository, requireActivity())
         viewModel = ViewModelProvider(this.requireActivity(), factory)[HomeViewModel::class.java]
-//        viewModel.refreshDataFromRepository()
 
         fragmentCustomFeedBinding.lifecycleOwner = viewLifecycleOwner
         fragmentCustomFeedBinding.customFeedViewModel = viewModel
@@ -77,6 +76,10 @@ class CustomFeedFragment: Fragment() {
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
+
+            override fun scrollToTop() {
+                fragmentCustomFeedBinding.rvPosts.smoothScrollToPosition(0)
+            }
         })
 
         fragmentCustomFeedBinding.rvPosts.adapter = adapter
@@ -99,7 +102,7 @@ class CustomFeedFragment: Fragment() {
         })
 
         viewModel.postList.observe(this.requireActivity(), Observer {
-            it.let {
+            it?.let {
                 Log.i("CustomFeedFragment", "$it")
                 val filteredList = it.filter { post -> adapter.joinedCommunitiesList.contains(post.communityId) }
                 Log.i("CustomFeedFragment", "$filteredList")
@@ -108,14 +111,13 @@ class CustomFeedFragment: Fragment() {
                     fragmentCustomFeedBinding.tempImgView.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.VISIBLE
                     Log.i("CustomFeedFragment", "Empty")
-                    adapter.updatePostList(filteredList)
                 }
                 else {
                     fragmentCustomFeedBinding.rvPosts.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.GONE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.GONE
-                    adapter.updatePostList(filteredList)
                 }
+                adapter.updatePostList(filteredList)
             }
             Log.i("CustomFeedFragment", "PostList Observer")
         })

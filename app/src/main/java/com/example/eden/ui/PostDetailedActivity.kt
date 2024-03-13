@@ -118,7 +118,7 @@ class PostDetailedActivity: AppCompatActivity(),
         }
 
         viewModel.community.observe(this) {
-            if (it != null) {
+            it?.let{
                 adapter.community = it
                 adapter.notifyItemChanged(0)
             }
@@ -131,7 +131,9 @@ class PostDetailedActivity: AppCompatActivity(),
         }
 
         viewModel.user.observe(this) {
-            if (it != null) adapter.user = it
+            it?.let {
+                adapter.user = it
+            }
             adapter.notifyDataSetChanged()
         }
 

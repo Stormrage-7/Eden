@@ -21,7 +21,7 @@ import com.example.eden.enums.VoteStatus
 @Dao
 interface EdenDao {
 
-    @Query("SELECT * FROM Post_Table")
+    @Query("SELECT * FROM Post_Table ORDER BY postId DESC")
     fun getAllPosts(): LiveData<List<Post>>
 
     @Insert
@@ -95,7 +95,7 @@ interface EdenDao {
 
 
     /*************************** POST OF COMMUNITY *************************/
-    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId")
+    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY postId DESC")
     fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>>
     @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY communityId DESC")
     fun getHotPostsOfCommunity(communityId: Int): LiveData<List<Post>>

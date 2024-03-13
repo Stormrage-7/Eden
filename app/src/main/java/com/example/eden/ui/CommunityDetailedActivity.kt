@@ -118,6 +118,10 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
+
+            override fun scrollToTop() {
+                detailedCommunityViewBinding.rvDetailedCommunity.scrollToPosition(0)
+            }
         })
 
         // INITIALIZING ON-CLICK LISTENERS FOR BUTTONS
