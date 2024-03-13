@@ -142,7 +142,7 @@ class PostAdapter(
     private fun setData(newPostList: List<Post>){
         val diffUtil = PostDiffUtil(postList, newPostList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
-        if (newPostList.size > postList.size) postListener.scrollToTop()
+//        if (newPostList.size > postList.size) postListener.scrollToTop()
         postList = newPostList.toMutableList()
         diffResults.dispatchUpdatesTo(this)
     }
