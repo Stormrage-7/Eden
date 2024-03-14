@@ -13,10 +13,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: AppRepository,
-                    val application: Eden
+                    private val application: Eden
 ): AndroidViewModel(application) {
 
-    val user = repository.getUser()
+    val user = repository.getUser(application.userId)
     val postList = repository.getPostList(application.userId)
     val communityList = repository.communityList
     val postCommunityCrossRefList = repository.postCommunityCrossRefList

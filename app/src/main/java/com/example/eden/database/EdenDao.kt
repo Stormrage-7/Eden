@@ -35,6 +35,9 @@ interface EdenDao {
     @Delete
     suspend fun deletePost(post: Post)
 
+    @Query("DELETE FROM Post_Table WHERE postId = :postId")
+    suspend fun deletePost(postId: Int)
+
     @Query("DELETE FROM Post_Table")
     fun deleteAllPosts(): Int
 
@@ -73,9 +76,6 @@ interface EdenDao {
 
     @Query("SELECT * FROM PostCommunityCrossRef")
     fun getAllPostCommunityCrossRef(): LiveData<List<PostCommunityCrossRef>>
-
-    @Query("SELECT * FROM post_table WHERE postId = :postId")
-    fun getPostWithId(postId: Int): LiveData<Post>
 
     @Query("SELECT * FROM comments_table WHERE postId = :postId")
     fun getCommentListForPost(postId: Int): LiveData<List<Comment>>
@@ -163,4 +163,9 @@ interface EdenDao {
             "WHERE title LIKE '%' || :searchQuery || '%' OR bodyText LIKE '%' || :searchQuery || '%'")
     fun getPostsMatchingQuery(searchQuery: String, userId: Int): LiveData<List<PostModel>>
 
+    @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
+            " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, " +
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
+            "WHERE Post_Table.postId = :postId")
+    fun getPostWithId(postId: Int, userId: Int): LiveData<PostModel>
 }

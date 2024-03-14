@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.adapters.CommunityAdapter
@@ -24,7 +23,7 @@ class CommunitySearchFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentCommunitySearchBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_community_search, container, false
         )
@@ -32,60 +31,57 @@ class CommunitySearchFragment: Fragment() {
 
         fragmentCommunitySearchBinding.lifecycleOwner = this.viewLifecycleOwner
 
-        val adapter = context?.let {
-            CommunityAdapter(context = it, object : CommunityAdapter.CommunityClickListener {
-                override fun onClick(community: Community) {
-                    Intent(activity as SearchableActivity, CommunityDetailedActivity:: class.java).apply {
-                        putExtra("CommunityObject", community)
-                        startActivity(this)
-                    }
+        val adapter = CommunityAdapter(context = requireContext(), object : CommunityAdapter.CommunityClickListener {
+            override fun onClick(community: Community) {
+                Intent(activity as SearchableActivity, CommunityDetailedActivity:: class.java).apply {
+                    putExtra("CommunityObject", community)
+                    startActivity(this)
                 }
+            }
 
-                override fun onJoinClick(position: Int) {
-//                    viewModel.onJoinClick(position)
-                    if (viewModel.communityList.value?.get(position)?.isJoined == true){
-                        val builder: AlertDialog.Builder = AlertDialog.Builder(this@CommunitySearchFragment.requireContext())
-                        builder
-                            .setMessage("Are you sure you want to leave this community?")
-                            .setPositiveButton("Yes") { _, _ ->
-                                viewModel.onJoinClick(position)
-                            }
-                            .setNegativeButton("No") { _, _ ->
-                            }
+            override fun onJoinClick(position: Int) {
+                if (viewModel.communityList.value?.get(position)?.isJoined == true){
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(this@CommunitySearchFragment.requireContext())
+                    builder
+                        .setMessage("Are you sure you want to leave this community?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            viewModel.onJoinClick(position)
+                        }
+                        .setNegativeButton("No") { _, _ ->
+                        }
 
-                        val confirmationDialog: AlertDialog = builder.create()
-                        confirmationDialog.show()
-                    }
-                    else viewModel.onJoinClick(position)
+                    val confirmationDialog: AlertDialog = builder.create()
+                    confirmationDialog.show()
                 }
+                else viewModel.onJoinClick(position)
+            }
 
-            }) }
+        })
 
         fragmentCommunitySearchBinding.rvCommunities.adapter = adapter
-        fragmentCommunitySearchBinding.rvCommunities.layoutManager = LinearLayoutManager(context)
+        fragmentCommunitySearchBinding.rvCommunities.layoutManager = LinearLayoutManager(requireContext())
         fragmentCommunitySearchBinding.rvCommunities.addItemDecoration(
             DividerItemDecoration(
-                context,
+                requireContext(),
                 LinearLayoutManager(context).orientation
             )
         )
 
-        viewModel.communityList.observe(activity as SearchableActivity, Observer {
+        viewModel.communityList.observe(activity as SearchableActivity) {
             it.let {
-                if(it.isEmpty()){
+                if (it.isEmpty()) {
                     fragmentCommunitySearchBinding.rvCommunities.visibility = View.GONE
                     fragmentCommunitySearchBinding.tempImgView.visibility = View.VISIBLE
                     fragmentCommunitySearchBinding.tempTextView.visibility = View.VISIBLE
-                    adapter!!.updateAdapter(it)
-                }
-                else {
+                    adapter.updateAdapter(it)
+                } else {
                     fragmentCommunitySearchBinding.rvCommunities.visibility = View.VISIBLE
                     fragmentCommunitySearchBinding.tempImgView.visibility = View.GONE
                     fragmentCommunitySearchBinding.tempTextView.visibility = View.GONE
-                    adapter!!.updateAdapter(it)
+                    adapter.updateAdapter(it)
                 }
             }
-        })
+        }
 
         return fragmentCommunitySearchBinding.root
     }

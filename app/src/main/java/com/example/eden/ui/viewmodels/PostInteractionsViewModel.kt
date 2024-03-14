@@ -20,28 +20,4 @@ class PostInteractionsViewModel(private val repository: AppRepository,
         Log.i("PostInteractions", "PostInteractionsViewModel Initialized!")
     }
 
-
-//    fun refreshPostList(){
-//        viewModelScope.launch {
-//            postList = repository.getPostsMatchingQuery(searchQuery)
-//            Log.i("Refresh Method", "Posts Refreshed!")
-//        }
-//    }
-//
-//    fun refreshCommunityList(){
-//        viewModelScope.launch {
-//            communityList = repository.getCommunitiesMatchingQuery(searchQuery)
-//            Log.i("Refresh Method", "Communities Refreshed!")
-//
-//        }
-//    }
-//
-//    fun refreshDataSet(){
-//        viewModelScope.launch {
-//            postList = repository.getPostsMatchingQuery(searchQuery)
-//            communityList = repository.getCommunitiesMatchingQuery(searchQuery)
-//            commentList = repository.getCommentsMatchingQuery(searchQuery)
-//        }
-//    }
-
 }

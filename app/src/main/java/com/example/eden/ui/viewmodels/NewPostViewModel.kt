@@ -49,10 +49,6 @@ class NewPostViewModel(private val repository: AppRepository,
         return 1
     }
 
-//    fun insertPostCommunityCrossRef(postCommunityCrossRef: PostCommunityCrossRef){
-//        viewModelScope.launch {
-//            repository.insertPostCommunityCrossRef(postCommunityCrossRef)
-//        }
-//    }
+
 
 }

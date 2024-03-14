@@ -10,11 +10,12 @@ import com.example.eden.entities.Post
 import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
 import com.example.eden.models.PostModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailedCommunityViewModel(private val repository: AppRepository,
                                  communityObj: Community,
-                                 application: Eden
+                                 private val application: Eden
 ): AndroidViewModel(application) {
 
     val community = repository.getCommunity(communityObj.communityId)
@@ -25,24 +26,26 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
     }
 
     fun upvotePost(post: PostModel){
+//        val post = postList.value!![position]
         when(post.voteStatus){
-            VoteStatus.UPVOTED -> viewModelScope.launch { repository.removePostUpvote(post.postId, post.posterId) }
-            VoteStatus.DOWNVOTED -> viewModelScope.launch {
-                repository.removePostDownvote(post.postId, post.posterId)
-                repository.upvotePost(post.postId, post.posterId)
-            }
-            VoteStatus.NONE -> viewModelScope.launch { repository.upvotePost(post.postId, post.posterId) }
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.NONE)
+                repository.removePostUpvote(post.postId, post.posterId)}
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED)
+                repository.downvoteToUpvotePost(post.postId)}
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED)
+                repository.upvotePost(postId = post.postId, application.userId)}
         }
     }
 
     fun downvotePost(post: PostModel){
+//        val post = postList.value!![position]
         when(post.voteStatus){
-            VoteStatus.UPVOTED -> viewModelScope.launch {
-                repository.removePostUpvote(post.postId, post.posterId)
-                repository.downvotePost(post.postId, post.posterId)
-            }
-            VoteStatus.DOWNVOTED -> viewModelScope.launch { repository.removePostDownvote(post.postId, post.posterId) }
-            VoteStatus.NONE -> viewModelScope.launch { repository.downvotePost(post.postId, post.posterId) }
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED)
+                repository.upvoteToDownvotePost(post.postId)}
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.NONE)
+                repository.removePostDownvote(post.postId, post.posterId)}
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED)
+                repository.downvotePost(postId = post.postId, application.userId)}
         }
     }
 

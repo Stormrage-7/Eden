@@ -17,7 +17,7 @@ class ProfileViewModel(
 
     val _counter = repository.getImgFileCounter()
     var counter = -1
-    var user = repository.getUser()
+    var user = repository.getUser(application.userId)
     init {
         Log.i("Profile", "ProfileViewModel Initialized!")
     }

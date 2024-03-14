@@ -18,8 +18,8 @@ import com.example.eden.databinding.ItemDetailedPostBinding
 import com.example.eden.databinding.ItemNoContentBinding
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
-import com.example.eden.entities.Post
 import com.example.eden.entities.User
+import com.example.eden.models.PostModel
 import com.example.eden.util.CommentDiffUtil
 import com.example.eden.util.UriValidator
 
@@ -32,8 +32,9 @@ class PostWithCommentsAdapter(
 ): RecyclerView.Adapter<ViewHolder>() {
 
     private var commentList: List<Comment> = listOf()
+    private var userList: List<User> = listOf()
     lateinit var user: User
-    var post: Post? = null
+    var post: PostModel? = null
     var community: Community? = null
     lateinit var resources: Resources
 
@@ -101,7 +102,7 @@ class PostWithCommentsAdapter(
             }
         }
         @SuppressLint("ResourceAsColor")
-        fun bind(post: Post?, community: Community?){
+        fun bind(post: PostModel?, community: Community?){
             binding.apply {
                 //COMMUNITY DETAILS
                 if (community != null) {

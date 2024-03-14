@@ -118,8 +118,8 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.deleteJoinedCommunity(communityId)
     }
 
-    fun getPostWithId(postId: Int): LiveData<Post> {
-        return databaseDao.getPostWithId(postId)
+    fun getPostWithId(postId: Int, userId: Int): LiveData<PostModel> {
+        return databaseDao.getPostWithId(postId, userId)
     }
 
     suspend fun upsertComment(comment: Comment) {
@@ -151,8 +151,8 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.decreasePostCount(communityId)
     }
 
-    suspend fun deletePost(post: Post) {
-        databaseDao.deletePost(post)
+    suspend fun deletePost(postId: Int) {
+        databaseDao.deletePost(postId)
     }
 
     fun getUpvotedPosts(userId: Int): LiveData<List<PostModel>> {
@@ -169,6 +169,10 @@ class AppRepository(private val databaseDao: EdenDao) {
 
     fun getUser(): LiveData<User> {
         return databaseDao.getUser()
+    }
+
+    fun getUser(userId: Int): LiveData<User>{
+        return databaseDao.getUser(userId)
     }
 
 

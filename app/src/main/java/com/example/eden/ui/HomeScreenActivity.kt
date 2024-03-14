@@ -27,7 +27,6 @@ import timber.log.Timber
 class HomeScreenActivity: AppCompatActivity(){
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var databaseDao: EdenDao
-//    private lateinit var current: Fragment
     private lateinit var viewModel: HomeViewModel
     private lateinit var repository: AppRepository
     private lateinit var factory: HomeViewModelFactory

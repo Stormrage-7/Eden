@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(private val repository: AppRepository,
                       var searchQuery: String,
-                      val application: Eden
+                      private val application: Eden
 ): AndroidViewModel(application) {
 
     var postList = repository.getPostsMatchingQuery(searchQuery, application.userId)

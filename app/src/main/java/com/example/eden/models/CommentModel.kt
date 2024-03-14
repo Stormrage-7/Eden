@@ -3,7 +3,7 @@ package com.example.eden.models
 import com.example.eden.enums.VoteStatus
 import java.io.Serializable
 
-data class Comment (
+data class CommentModel (
     val commentId: Int,
     val text: String,
     val imageUri: String? = null,

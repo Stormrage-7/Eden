@@ -80,7 +80,7 @@ class DownvotedPostsFragment: Fragment() {
         }
 
         viewModel.downvotedPostList.observe(requireActivity()) {
-            it.let {
+            it?.let {
                 if (it.isEmpty()) {
                     fragmentPostSearchBinding.rvPosts.visibility = View.GONE
                     fragmentPostSearchBinding.tempImgView.visibility = View.VISIBLE

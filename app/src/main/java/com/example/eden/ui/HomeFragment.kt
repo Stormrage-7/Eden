@@ -19,7 +19,6 @@ import com.example.eden.adapters.PostAdapter
 import com.example.eden.R
 import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
-import com.example.eden.entities.Post
 import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.google.android.material.divider.MaterialDividerItemDecoration
