@@ -10,10 +10,10 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(private val repository: AppRepository,
                       var searchQuery: String,
-                      application: Eden
+                      val application: Eden
 ): AndroidViewModel(application) {
 
-    var postList = repository.getPostsMatchingQuery(searchQuery)
+    var postList = repository.getPostsMatchingQuery(searchQuery, application.userId)
     var communityList = repository.getCommunitiesMatchingQuery(searchQuery)
     var commentList = repository.getCommentsMatchingQuery(searchQuery)
     val allCommunityList = repository.communityList
@@ -22,13 +22,6 @@ class SearchViewModel(private val repository: AppRepository,
         Log.i("SearchViewModel", "SearchViewModel Initialized!")
     }
 
-
-    fun refreshPostList(){
-        viewModelScope.launch {
-            postList = repository.getPostsMatchingQuery(searchQuery)
-            Log.i("Refresh Method", "Posts Refreshed!")
-        }
-    }
 
     fun refreshCommunityList(){
         viewModelScope.launch {
@@ -40,7 +33,7 @@ class SearchViewModel(private val repository: AppRepository,
 
     fun refreshDataSet(){
         viewModelScope.launch {
-            postList = repository.getPostsMatchingQuery(searchQuery)
+            postList = repository.getPostsMatchingQuery(searchQuery, application.userId)
             communityList = repository.getCommunitiesMatchingQuery(searchQuery)
             commentList = repository.getCommentsMatchingQuery(searchQuery)
         }

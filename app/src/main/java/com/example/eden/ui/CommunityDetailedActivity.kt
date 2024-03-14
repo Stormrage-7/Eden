@@ -27,6 +27,7 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.CollapsingToolBarState
 import com.example.eden.enums.PostFilter
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidator
@@ -91,7 +92,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         // INITIALIZING ADAPTER FOR RECYCLERVIEW
         val adapter = PostAdapter(context = this, object : PostAdapter.PostListener {
 
-            override fun onPostClick(post: Post) {
+            override fun onPostClick(post: PostModel) {
                 Intent(this@CommunityDetailedActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     startActivity(this)
@@ -101,11 +102,11 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             override fun onCommunityClick(community: Community) {
             }
 
-            override fun onUpvoteBtnClick(post: Post) {
+            override fun onUpvoteBtnClick(post: PostModel) {
                 viewModel.upvotePost(post)
             }
 
-            override fun onDownvoteBtnClick(post: Post) {
+            override fun onDownvoteBtnClick(post: PostModel) {
                 viewModel.downvotePost(post)
             }
 

@@ -20,6 +20,7 @@ import com.example.eden.R
 import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.google.android.material.divider.MaterialDividerItemDecoration
 
@@ -58,15 +59,15 @@ class HomeFragment: Fragment(){
                 }
             }
 
-            override fun onPostClick(post: Post) {
+            override fun onPostClick(post: PostModel) {
                 openPost(post)
             }
 
-            override fun onUpvoteBtnClick(post: Post) {
+            override fun onUpvoteBtnClick(post: PostModel) {
                 viewModel.upvotePost(post)
             }
 
-            override fun onDownvoteBtnClick(post: Post) {
+            override fun onDownvoteBtnClick(post: PostModel) {
                 viewModel.downvotePost(post)
             }
 
@@ -130,7 +131,7 @@ class HomeFragment: Fragment(){
         return fragmentHomeBinding.root
     }
 
-    private fun openPost(post: Post){
+    private fun openPost(post: PostModel){
         Intent(requireActivity(), PostDetailedActivity::class.java).apply {
             putExtra("PostObject", post)
             startActivity(this)

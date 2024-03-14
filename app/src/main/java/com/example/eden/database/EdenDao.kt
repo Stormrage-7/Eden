@@ -14,8 +14,10 @@ import com.example.eden.entities.Post
 import com.example.eden.entities.User
 import com.example.eden.entities.ImageUri
 import com.example.eden.entities.relations.PostCommunityCrossRef
+import com.example.eden.entities.relations.PostInteractions
 import com.example.eden.entities.relations.PostWithCommunities
 import com.example.eden.enums.VoteStatus
+import com.example.eden.models.PostModel
 
 
 @Dao
@@ -72,10 +74,6 @@ interface EdenDao {
     @Query("SELECT * FROM PostCommunityCrossRef")
     fun getAllPostCommunityCrossRef(): LiveData<List<PostCommunityCrossRef>>
 
-    @Transaction
-    @Query("SELECT * FROM post_table WHERE postId = :postId")
-    suspend fun getCommunitiesOfPost(postId: Int): List<PostWithCommunities>
-
     @Query("SELECT * FROM post_table WHERE postId = :postId")
     fun getPostWithId(postId: Int): LiveData<Post>
 
@@ -95,8 +93,7 @@ interface EdenDao {
 
 
     /*************************** POST OF COMMUNITY *************************/
-    @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY postId DESC")
-    fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>>
+
     @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY communityId DESC")
     fun getHotPostsOfCommunity(communityId: Int): LiveData<List<Post>>
     @Query("SELECT * FROM Post_Table WHERE communityId = :communityId ORDER BY voteCounter DESC")
@@ -118,6 +115,9 @@ interface EdenDao {
     @Query("SELECT * FROM user_table LIMIT 1")
     fun getUser(): LiveData<User>
 
+    @Query("SELECT * FROM user_table WHERE userId = :userId")
+    fun getUser(userId: Int): LiveData<User>
+
     @Upsert
     suspend fun upsertUser(user: User)
 
@@ -125,5 +125,42 @@ interface EdenDao {
     suspend fun upsertImgUri(imageUri: ImageUri)
     @Query("SELECT COUNT(id) FROM image_uri_table")
     fun getImgFileCounter(): LiveData<Int>
+
+
+    @Upsert
+    suspend fun upsertPostInteractions(postInteractions: PostInteractions)
+    @Query("DELETE FROM Post_Interactions_Table WHERE postId = :postId AND userId = :userId")
+    suspend fun deletePostInteractions(postId: Int, userId: Int)
+    @Query("UPDATE Post_Table SET voteCounter = voteCounter+1 WHERE postId = :postId")
+    suspend fun upvotePost(postId: Int)
+    @Query("UPDATE Post_Table SET voteCounter = voteCounter-1 WHERE postId = :postId")
+    suspend fun downvotePost(postId: Int)
+    @Query("UPDATE Post_Table SET voteCounter = voteCounter-2 WHERE postId = :postId")
+    suspend fun upvoteToDownvotePost(postId: Int)
+    @Query("UPDATE Post_Table SET voteCounter = voteCounter+2 WHERE postId = :postId")
+    suspend fun downvoteToUpvotePost(postId: Int)
+
+    @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
+            " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, " +
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId")
+    fun getPosts(userId: Int) : LiveData<List<PostModel>>
+
+    @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
+            " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, " +
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
+            "WHERE communityId = :communityId")
+    fun getPostsOfCommunity(communityId: Int, userId: Int): LiveData<List<PostModel>>
+
+    @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
+            " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, " +
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
+            "WHERE PostInteractions.voteStatus = :voteStatus")
+    fun getPosts(voteStatus: VoteStatus, userId: Int): LiveData<List<PostModel>>
+
+    @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
+            " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, " +
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
+            "WHERE title LIKE '%' || :searchQuery || '%' OR bodyText LIKE '%' || :searchQuery || '%'")
+    fun getPostsMatchingQuery(searchQuery: String, userId: Int): LiveData<List<PostModel>>
 
 }

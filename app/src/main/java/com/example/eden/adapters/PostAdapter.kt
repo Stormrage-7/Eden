@@ -15,6 +15,7 @@ import com.example.eden.entities.Post
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
 import com.example.eden.enums.PostFilter
+import com.example.eden.models.PostModel
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
@@ -30,18 +31,20 @@ class PostAdapter(
 ): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     var joinedCommunitiesList: List<Int> = listOf()
-    private var postList: MutableList<Post> = mutableListOf()
+    private var postList: MutableList<PostModel> = mutableListOf()
     private var communityList: List<Community> = listOf()
     private var filter = PostFilter.HOT
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root){
         init {
             binding.apply {
-                likeBtn.setOnClickListener {
+                likeBtn.setSafeClickListener {
                     postListener.onUpvoteBtnClick(postList[bindingAdapterPosition])
+                    Log.i("Button Click", "postID - ${postList[bindingAdapterPosition].postId}, userID - ${postList[bindingAdapterPosition].posterId}")
                 }
-                dislikeBtn.setOnClickListener {
+                dislikeBtn.setSafeClickListener {
                     postListener.onDownvoteBtnClick(postList[bindingAdapterPosition])
+                    Log.i("Button Click", "postID - ${postList[bindingAdapterPosition].postId}, userID - ${postList[bindingAdapterPosition].posterId}")
                 }
 
                 shareBtn.setSafeClickListener {
@@ -139,7 +142,7 @@ class PostAdapter(
         }
     }
 
-    private fun setData(newPostList: List<Post>){
+    private fun setData(newPostList: List<PostModel>){
         val diffUtil = PostDiffUtil(postList, newPostList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
 //        if (newPostList.size > postList.size) postListener.scrollToTop()
@@ -147,7 +150,7 @@ class PostAdapter(
         diffResults.dispatchUpdatesTo(this)
     }
 
-    fun updatePostList(newPostList: List<Post>) {
+    fun updatePostList(newPostList: List<PostModel>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
         Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
@@ -197,10 +200,10 @@ class PostAdapter(
     }
 
     interface PostListener{
-        fun onPostClick(post: Post)
+        fun onPostClick(post: PostModel)
         fun onCommunityClick(community: Community)
-        fun onUpvoteBtnClick(post: Post)
-        fun onDownvoteBtnClick(post: Post)
+        fun onUpvoteBtnClick(post: PostModel)
+        fun onDownvoteBtnClick(post: PostModel)
         fun onShareBtnClick(postId: Int, communityId: Int)
         fun scrollToTop()
     }

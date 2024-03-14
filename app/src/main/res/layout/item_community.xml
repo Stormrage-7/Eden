@@ -74,7 +74,7 @@
         android:text="lorem ipsum akjbsdkaj bvjiuhiuq ojfkbdkuhiudf oisjh oduf sodf h s do fhsonnhsf lnlads jskajdn djskaa dasjkdja lkjads alallalaljaljds"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageViewCommunity"
-        android:layout_marginTop="5sp"
+        android:layout_marginTop="8sp"
         android:layout_marginStart="5sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

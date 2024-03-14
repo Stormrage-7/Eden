@@ -3,12 +3,8 @@ package com.example.eden.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
 import com.example.eden.ui.viewmodels.DetailedPostViewModel
@@ -20,6 +16,7 @@ import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.PostUriParser
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -43,7 +40,7 @@ class PostDetailedActivity: AppCompatActivity(),
         repository = application.repository
 
         factory = if (intent.hasExtra("PostObject")){
-            val post = intent.getSerializableExtra("PostObject") as Post
+            val post = intent.getSerializableExtra("PostObject") as PostModel
             DetailedPostViewModelFactory(repository,
                 post.postId,
                 post.communityId,

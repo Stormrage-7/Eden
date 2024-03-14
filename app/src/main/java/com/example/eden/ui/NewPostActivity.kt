@@ -4,14 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
@@ -162,7 +160,7 @@ class NewPostActivity: AppCompatActivity(),
                                 }
                                 is FileGenerationResponse.Success -> {
                                     newPost = Post(0, titleText, isImageAttached, true, fileGenerationResponse.uri.toString(),  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
-                                        ZoneOffset.UTC), voteCounter = (0..25).random())
+                                        ZoneOffset.UTC), voteCounter = (0..25).random(), posterId = 1)
                                     viewModel.upsertPost(newPost, communityId, ImageUri(0, fileGenerationResponse.uri.toString()))
                                     Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                                 }
@@ -180,7 +178,7 @@ class NewPostActivity: AppCompatActivity(),
                         }
                     } else {
                         newPost = Post(0, titleText, isImageAttached, isCustomImage = false, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
-                            ZoneOffset.UTC), voteCounter = (0..25).random())
+                            ZoneOffset.UTC), voteCounter = (0..25).random(), posterId = 1)
                         viewModel.upsertPost(newPost, communityId)
                         Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                     }

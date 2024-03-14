@@ -106,7 +106,7 @@ class NewCommentActivity: AppCompatActivity(),
                         is FileGenerationResponse.Success -> {
                             val community = Comment(0, text = comment,
                                 voteCounter = (0..25).random(), imageUri = fileGenerationResponse.uri.toString(),
-                                postId = postId, communityId = communityId)
+                                postId = postId, communityId = communityId, posterId = 1)
                             viewModel.upsertComment(community, ImageUri(0, fileGenerationResponse.uri.toString()))
                         }
                     }
@@ -118,7 +118,8 @@ class NewCommentActivity: AppCompatActivity(),
                     activityNewCommentBinding.removeImageButton.visibility = View.GONE
                     return@setOnClickListener
                 }
-            } else if (isPageEdited()) viewModel.upsertComment(Comment(0, text = comment, voteCounter = (0..25).random(), postId = postId, communityId = communityId))
+            } else if (isPageEdited()) viewModel.upsertComment(Comment(0, text = comment, voteCounter = (0..25).random(), postId = postId,
+                communityId = communityId, posterId = 1))
             finish()
         }
 

@@ -17,6 +17,7 @@ import com.example.eden.ui.viewmodels.SearchViewModel
 import com.example.eden.databinding.FragmentPostSearchBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 
 class PostSearchFragment: Fragment() {
@@ -42,14 +43,14 @@ class PostSearchFragment: Fragment() {
                     startActivity(this)
                 }
             }
-            override fun onPostClick(post: Post) {
+            override fun onPostClick(post: PostModel) {
                 Intent(activity as SearchableActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     startActivity(this)
                 }
             }
-            override fun onUpvoteBtnClick(post: Post) {}
-            override fun onDownvoteBtnClick(post: Post) {}
+            override fun onUpvoteBtnClick(post: PostModel) {}
+            override fun onDownvoteBtnClick(post: PostModel) {}
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
                 val sendIntent: Intent = Intent().apply {

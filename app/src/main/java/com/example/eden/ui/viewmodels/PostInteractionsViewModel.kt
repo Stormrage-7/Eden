@@ -12,8 +12,8 @@ class PostInteractionsViewModel(private val repository: AppRepository,
                                 application: Eden
 ): AndroidViewModel(application) {
 
-    var upvotedPostList = repository.getUpvotedPosts()
-    var downvotedPostList = repository.getDownvotedPosts()
+    var upvotedPostList = repository.getUpvotedPosts(application.userId)
+    var downvotedPostList = repository.getDownvotedPosts(application.userId)
     val communityList = repository.communityList
 
     init {

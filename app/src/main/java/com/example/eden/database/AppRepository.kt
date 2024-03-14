@@ -10,12 +10,15 @@ import com.example.eden.entities.Post
 import com.example.eden.entities.User
 import com.example.eden.entities.ImageUri
 import com.example.eden.entities.relations.PostCommunityCrossRef
+import com.example.eden.entities.relations.PostInteractions
 import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
+import com.example.eden.models.PostModel
 
 class AppRepository(private val databaseDao: EdenDao) {
 
-    var postList: LiveData<List<Post>> = databaseDao.getAllPosts()
+    var postList: LiveData<List<PostModel>> = databaseDao.getPosts(1)
+    fun getPostList(userId: Int) = databaseDao.getPosts(userId)
     private var _postList: MutableLiveData<List<Post>> = MutableLiveData()
     var postCommunityCrossRefList: LiveData<List<PostCommunityCrossRef>> = databaseDao.getAllPostCommunityCrossRef()
     var communityList: LiveData<List<Community>> = databaseDao.getAllCommunities()
@@ -36,7 +39,7 @@ class AppRepository(private val databaseDao: EdenDao) {
 
     /*****************************************************/
     fun getCommentListForPost(postId: Int): LiveData<List<Comment>> = databaseDao.getCommentListForPost(postId)
-    fun getPostsOfCommunity(communityId: Int): LiveData<List<Post>> = databaseDao.getPostsOfCommunity(communityId)
+    fun getPostsOfCommunity(communityId: Int, userId: Int): LiveData<List<PostModel>> = databaseDao.getPostsOfCommunity(communityId, userId)
 
     fun getPostsOfCommunity(communityId: Int, filter: PostFilter): LiveData<List<Post>> {
         return when(filter){
@@ -47,7 +50,7 @@ class AppRepository(private val databaseDao: EdenDao) {
     }
 
     init {
-        refreshPosts()
+//        refreshPosts()
         refreshCommunities()
         refreshJoinedCommunities()
         Log.i("Repo Creation", "${postList.value.toString()}")
@@ -57,8 +60,35 @@ class AppRepository(private val databaseDao: EdenDao) {
         return databaseDao.upsertPost(post)
     }
 
-    fun refreshPosts(){
-        postList = databaseDao.getAllPosts()
+    //VoteStatus.NONE -> VoteStatues.UPVOTED
+    suspend fun upvotePost(postId: Int, userId: Int){
+        databaseDao.upvotePost(postId)
+    }
+
+    //VoteStatus.NONE -> VoteStatues.DOWNVOTED
+    suspend fun downvotePost(postId: Int, userId: Int){
+        databaseDao.downvotePost(postId)
+    }
+
+    //VoteStatus.UPVOTED -> VoteStatues.NONE
+    suspend fun removePostUpvote(postId: Int, userId: Int){
+        databaseDao.downvotePost(postId)
+    }
+
+    //VoteStatus.DOWNVOTED -> VoteStatues.NONE
+    suspend fun removePostDownvote(postId: Int, userId: Int){
+        databaseDao.upvotePost(postId)
+    }
+
+    suspend fun downvoteToUpvotePost(postId: Int){
+        databaseDao.downvoteToUpvotePost(postId)
+    }
+    suspend fun upvoteToDownvotePost(postId: Int){
+        databaseDao.upvoteToDownvotePost(postId)
+    }
+
+    suspend fun updatePostInteractions(userId: Int, postId: Int, voteStatus: VoteStatus){
+        databaseDao.upsertPostInteractions(PostInteractions(userId, postId, voteStatus))
     }
 
     suspend fun upsertCommunity(community: Community){
@@ -80,14 +110,6 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.upsertPostCommunityCrossRef(postCommunityCrossRef)
     }
 
-    suspend fun getCommunityIdFromPostId(postId: Int): Int {
-        return databaseDao.getCommunityIdFromPostId(postId)
-    }
-
-    suspend fun insertPost(post: Post): Int {
-        return databaseDao.insertPost(post).toInt()
-    }
-
     suspend fun insertIntoJoinedCommunities(communityId: Int) {
         databaseDao.insertJoinedCommunity(JoinedCommunities(0, communityId))
     }
@@ -105,8 +127,8 @@ class AppRepository(private val databaseDao: EdenDao) {
     }
 
     /****************** SEARCH METHODS **********************/
-    fun getPostsMatchingQuery(searchQuery: String): LiveData<List<Post>> {
-        return databaseDao.getPostsMatchingQuery(searchQuery)
+    fun getPostsMatchingQuery(searchQuery: String, userId: Int): LiveData<List<PostModel>> {
+        return databaseDao.getPostsMatchingQuery(searchQuery, userId)
     }
 
     fun getCommunitiesMatchingQuery(searchQuery: String): LiveData<List<Community>> {
@@ -133,12 +155,12 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.deletePost(post)
     }
 
-    fun getUpvotedPosts(): LiveData<List<Post>> {
-        return databaseDao.getPosts(VoteStatus.UPVOTED)
+    fun getUpvotedPosts(userId: Int): LiveData<List<PostModel>> {
+        return databaseDao.getPosts(VoteStatus.UPVOTED, userId)
     }
 
-    fun getDownvotedPosts(): LiveData<List<Post>> {
-        return databaseDao.getPosts(VoteStatus.DOWNVOTED)
+    fun getDownvotedPosts(userId: Int): LiveData<List<PostModel>> {
+        return databaseDao.getPosts(VoteStatus.DOWNVOTED, userId)
     }
 
     suspend fun upsertUser(user: User) {
