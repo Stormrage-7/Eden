@@ -9,53 +9,40 @@ import com.example.eden.entities.relations.JoinedCommunities
 import com.example.eden.entities.Post
 import com.example.eden.entities.User
 import com.example.eden.entities.ImageUri
+import com.example.eden.entities.relations.CommentInteractions
+import com.example.eden.entities.relations.CommunityInteractions
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.entities.relations.PostInteractions
 import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
+import com.example.eden.models.CommentModel
+import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 
 class AppRepository(private val databaseDao: EdenDao) {
 
-    var postList: LiveData<List<PostModel>> = databaseDao.getPosts(1)
     fun getPostList(userId: Int) = databaseDao.getPosts(userId)
-    private var _postList: MutableLiveData<List<Post>> = MutableLiveData()
+
     var postCommunityCrossRefList: LiveData<List<PostCommunityCrossRef>> = databaseDao.getAllPostCommunityCrossRef()
-    var communityList: LiveData<List<Community>> = databaseDao.getAllCommunities()
-    var joinedCommunitiesList: LiveData<List<Int>> = databaseDao.getAllJoinedCommunities()
+    fun getCommunityList(userId: Int) = databaseDao.getCommunities(userId)
+    fun getJoinedCommunityList(userId: Int) = databaseDao.getJoinedCommunities(userId)
+    fun getPostsOfJoinedCommunities(userId: Int) = databaseDao.getPostsOfJoinedCommunities(userId)
+
 
     /********************* TESTING ***********************/
-    fun getTopPostList(communityId: Int): LiveData<List<Post>> {
-        return databaseDao.getTopPostsOfCommunity(communityId)
-    }
-    fun getHotPostList(communityId: Int): LiveData<List<Post>> {
-        return databaseDao.getHotPostsOfCommunity(communityId)
-    }
-    fun getOldPostList(communityId: Int): LiveData<List<Post>> {
-        return databaseDao.getOldPostsOfCommunity(communityId)
-    }
-    fun get_PostList(): LiveData<List<Post>> = _postList
-
 
     /*****************************************************/
     fun getCommentListForPost(postId: Int): LiveData<List<Comment>> = databaseDao.getCommentListForPost(postId)
     fun getPostsOfCommunity(communityId: Int, userId: Int): LiveData<List<PostModel>> = databaseDao.getPostsOfCommunity(communityId, userId)
 
-    fun getPostsOfCommunity(communityId: Int, filter: PostFilter): LiveData<List<Post>> {
-        return when(filter){
-            PostFilter.HOT -> databaseDao.getHotPostsOfCommunity(communityId)
-            PostFilter.TOP -> databaseDao.getTopPostsOfCommunity(communityId)
-            PostFilter.OLDEST -> databaseDao.getOldPostsOfCommunity(communityId)
-        }
-    }
+//    fun getPostsOfCommunity(communityId: Int, filter: PostFilter): LiveData<List<Post>> {
+//        return when(filter){
+//            PostFilter.HOT -> databaseDao.getHotPostsOfCommunity(communityId)
+//            PostFilter.TOP -> databaseDao.getTopPostsOfCommunity(communityId)
+//            PostFilter.OLDEST -> databaseDao.getOldPostsOfCommunity(communityId)
+//        }
+//    }
 
-    init {
-//        refreshPosts()
-        refreshCommunities()
-        refreshJoinedCommunities()
-        Log.i("Repo Creation", "${postList.value.toString()}")
-        Log.i("Repo Creation", "${communityList.value.toString()}")
-    }
     suspend fun upsertPost(post: Post): Long {
         return databaseDao.upsertPost(post)
     }
@@ -94,13 +81,6 @@ class AppRepository(private val databaseDao: EdenDao) {
     suspend fun upsertCommunity(community: Community){
         databaseDao.upsertCommunity(community)
     }
-    fun refreshCommunities() {
-        communityList = databaseDao.getAllCommunities()
-    }
-
-    fun refreshJoinedCommunities(){
-        joinedCommunitiesList = databaseDao.getAllJoinedCommunities()
-    }
 
     fun refreshPostCommunityCrossRef(){
         postCommunityCrossRefList = databaseDao.getAllPostCommunityCrossRef()
@@ -110,9 +90,9 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.upsertPostCommunityCrossRef(postCommunityCrossRef)
     }
 
-    suspend fun insertIntoJoinedCommunities(communityId: Int) {
-        databaseDao.insertJoinedCommunity(JoinedCommunities(0, communityId))
-    }
+//    suspend fun insertIntoJoinedCommunities(communityId: Int) {
+//        databaseDao.insertJoinedCommunity(JoinedCommunities(0, communityId))
+//    }
 
     suspend fun deleteFromJoinedCommunities(communityId: Int) {
         databaseDao.deleteJoinedCommunity(communityId)
@@ -131,17 +111,18 @@ class AppRepository(private val databaseDao: EdenDao) {
         return databaseDao.getPostsMatchingQuery(searchQuery, userId)
     }
 
-    fun getCommunitiesMatchingQuery(searchQuery: String): LiveData<List<Community>> {
-        return databaseDao.getCommunitiesMatchingQuery(searchQuery)
+    fun getCommunitiesMatchingQuery(searchQuery: String, userId: Int): LiveData<List<CommunityModel>> {
+        return databaseDao.getCommunitiesMatchingQuery(searchQuery, userId)
     }
 
-    fun getCommentsMatchingQuery(searchQuery: String): LiveData<List<Comment>> {
-        return databaseDao.getCommentsMatchingQuery(searchQuery)
+    fun getCommentsMatchingQuery(searchQuery: String, userId: Int): LiveData<List<CommentModel>> {
+        return databaseDao.getCommentsMatchingQuery(searchQuery, userId)
     }
 
-    fun getCommunity(communityId: Int): LiveData<Community> {
-        return databaseDao.getCommunityById(communityId)
+    fun getCommunity(communityId: Int, userId: Int): LiveData<CommunityModel> {
+        return databaseDao.getCommunityById(communityId, userId)
     }
+
 
     suspend fun increasePostCount(communityId: Int) {
         databaseDao.increasePostCount(communityId)
@@ -180,6 +161,67 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.upsertImgUri(imgUri)
     }
     fun getImgFileCounter(): LiveData<Int> = databaseDao.getImgFileCounter()
+    fun getUserList(): LiveData<List<User>> = databaseDao.getUserList()
+    fun getCommentsForPost(postId: Int, userId: Int): LiveData<List<CommentModel>> = databaseDao.getCommentsOfPost(postId, userId)
+
+    //VoteStatus.NONE -> VoteStatues.UPVOTED
+    suspend fun upvoteComment(commentId: Int){
+        databaseDao.upvoteComment(commentId)
+    }
+
+    //VoteStatus.NONE -> VoteStatues.DOWNVOTED
+    suspend fun downvoteComment(commentId: Int){
+        databaseDao.downvoteComment(commentId)
+    }
+
+    //VoteStatus.UPVOTED -> VoteStatues.NONE
+    suspend fun removeCommentUpvote(commentId: Int){
+        databaseDao.downvoteComment(commentId)
+    }
+
+    //VoteStatus.DOWNVOTED -> VoteStatues.NONE
+    suspend fun removeCommentDownvote(commentId: Int){
+        databaseDao.upvoteComment(commentId)
+    }
+
+    //VoteStatus.DOWNVOTED -> VoteStatus.UPVOTED
+    suspend fun downvoteToUpvoteComment(commentId: Int){
+        databaseDao.downvoteToUpvoteComment(commentId)
+    }
+
+    //VoteStatus.UPVOTED -> VoteStatus.DOWNVOTED
+    suspend fun upvoteToDownvoteComment(commentId: Int){
+        databaseDao.upvoteToDownvoteComment(commentId)
+    }
+
+    suspend fun updateCommentInteractions(userId: Int, commentId: Int, voteStatus: VoteStatus){
+        databaseDao.upsertCommentInteractions(CommentInteractions(userId, commentId, voteStatus))
+    }
+
+    //***** COMMUNITIES *****/
+    //Not Joined -> Joined
+    suspend fun joinCommunity(communityId: Int){
+        databaseDao.increaseMemberCount(communityId)
+    }
+
+    //Joined -> Not Joined
+    suspend fun unJoinCommunity(communityId: Int){
+        databaseDao.decreaseMemberCount(communityId)
+    }
+
+    suspend fun updateCommunityInteractions(userId: Int, communityId: Int, isJoined: Boolean){
+        databaseDao.upsertCommunityInteractions(CommunityInteractions(userId, communityId, isJoined))
+    }
+
+    suspend fun updatePost(postId: Int, bodyText: String) {
+        databaseDao.updatePost(postId, bodyText)
+    }
+
+    suspend fun updateCommunity(communityId: Int, communityDescription: String) {
+        databaseDao.updateCommunity(communityId, communityDescription)
+    }
+
+    fun getCommentsOfUser(userId: Int) = databaseDao.getCommentsOfUser(userId)
 
 
 }

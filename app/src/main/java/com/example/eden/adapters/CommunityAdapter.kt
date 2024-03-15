@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.eden.R
 import com.example.eden.entities.Community
 import com.example.eden.databinding.ItemCommunityBinding
+import com.example.eden.models.CommunityModel
 import com.example.eden.ui.SelectCommunityActivity
 import com.example.eden.util.CommunityDiffUtil
 import com.example.eden.util.SafeClickListener
@@ -19,7 +20,7 @@ import com.example.eden.util.UriValidator
 
 class CommunityAdapter(private val context: Context, private val clickListener: CommunityClickListener): RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
-    private var communityList = listOf<Community>()
+    private var communityList = listOf<CommunityModel>()
     inner class CommunityViewHolder(val binding: ItemCommunityBinding): RecyclerView.ViewHolder(binding.root){
         init {
             binding.apply {
@@ -75,7 +76,7 @@ class CommunityAdapter(private val context: Context, private val clickListener: 
         }
     }
 
-    fun updateAdapter(newCommunityList: List<Community>){
+    fun updateAdapter(newCommunityList: List<CommunityModel>){
         val diffUtil = CommunityDiffUtil(communityList, newCommunityList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         communityList = newCommunityList
@@ -90,7 +91,7 @@ class CommunityAdapter(private val context: Context, private val clickListener: 
     }
 
     interface CommunityClickListener{
-        fun onClick(community: Community)
+        fun onClick(community: CommunityModel)
         fun onJoinClick(position: Int)
     }
 }

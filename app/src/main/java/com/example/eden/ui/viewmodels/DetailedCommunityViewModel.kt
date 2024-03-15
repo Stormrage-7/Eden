@@ -9,17 +9,19 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.PostFilter
 import com.example.eden.enums.VoteStatus
+import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailedCommunityViewModel(private val repository: AppRepository,
-                                 communityObj: Community,
+                                 private val communityId: Int,
                                  private val application: Eden
 ): AndroidViewModel(application) {
 
-    val community = repository.getCommunity(communityObj.communityId)
-    var postList = repository.getPostsOfCommunity(communityObj.communityId, application.userId)
+    val community = repository.getCommunity(communityId, application.userId)
+    var postList = repository.getPostsOfCommunity(communityId, application.userId)
+    val userList = repository.getUserList()
     var filter: PostFilter = PostFilter.HOT
     init {
         Log.i("Testing", "DetailedCommunityViewModel Initialized")
@@ -50,23 +52,12 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
     }
 
     fun onJoinClick() {
-        val copy: Community = when(community.value!!.isJoined){
-            true -> {
-                viewModelScope.launch{
-                    repository.deleteFromJoinedCommunities(community.value!!.communityId)
-                }
-                community.value!!.copy(noOfMembers = community.value!!.noOfMembers-1, isJoined = false)
-            }
-
-            false -> {
-                viewModelScope.launch {
-                    repository.insertIntoJoinedCommunities(community.value!!.communityId)
-                }
-                community.value!!.copy(noOfMembers = community.value!!.noOfMembers+1, isJoined = true)
-            }
-        }
-        viewModelScope.launch{
-            repository.upsertCommunity(copy)
+        when(community.value?.isJoined){
+            true -> viewModelScope.launch{ repository.updateCommunityInteractions(application.userId, communityId, false)
+                repository.unJoinCommunity(communityId) }
+            false -> viewModelScope.launch { repository.updateCommunityInteractions(application.userId, communityId, true)
+                repository.joinCommunity(communityId) }
+            else -> {}
         }
     }
 

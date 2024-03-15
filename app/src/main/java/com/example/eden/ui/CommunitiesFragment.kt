@@ -17,6 +17,7 @@ import com.example.eden.R
 import com.example.eden.adapters.CommunityAdapter
 import com.example.eden.databinding.FragmentCommunitiesBinding
 import com.example.eden.entities.Community
+import com.example.eden.models.CommunityModel
 import com.example.eden.ui.viewmodels.CommunitiesViewModel
 import com.example.eden.ui.viewmodels.CommunityViewModelFactory
 
@@ -41,7 +42,7 @@ class CommunitiesFragment: Fragment() {
         fragmentCommunitiesBinding.lifecycleOwner = this.requireActivity() //Very Important line of code that allowed LiveData to update the layout
 
         val adapter = CommunityAdapter(context = this.requireActivity(), object : CommunityAdapter.CommunityClickListener {
-            override fun onClick(community: Community) {
+            override fun onClick(community: CommunityModel) {
                 Intent(requireActivity(), CommunityDetailedActivity:: class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)

@@ -11,7 +11,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     android:theme="@style/Theme.Material3.Light">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/community_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,8 +23,8 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageViewCommunity"
             app:shapeAppearanceOverlay="@style/roundedProfileImageView"
-            android:layout_width="20sp"
-            android:layout_height="20sp"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
             style="@style/roundedImageView"
             android:src="@drawable/icon_logo"
             android:scaleType="centerCrop"
@@ -37,8 +37,21 @@
             android:layout_height="wrap_content"
             android:paddingLeft="5sp"
             android:text="Community Name"
-            android:textSize="12sp" />
-    </LinearLayout>
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/imageViewCommunity"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/textViewUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="Community Name"
+            android:textSize="11sp"
+            app:layout_constraintStart_toEndOf="@id/imageViewCommunity"
+            app:layout_constraintTop_toBottomOf="@id/textViewCommunityName"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/textViewTitle"

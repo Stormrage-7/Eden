@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.R
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.FragmentPostSearchBinding
-import com.example.eden.entities.Community
-import com.example.eden.entities.Post
+import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 import com.example.eden.ui.viewmodels.PostInteractionsViewModel
 import com.example.eden.util.PostUriGenerator
@@ -35,7 +34,7 @@ class DownvotedPostsFragment: Fragment() {
 
         val adapter = PostAdapter(activity as PostInteractionsActivity, object : PostAdapter.PostListener {
 
-            override fun onCommunityClick(community: Community) {
+            override fun onCommunityClick(community: CommunityModel) {
                 Intent(requireActivity() as SearchableActivity, CommunityDetailedActivity::class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)
@@ -76,7 +75,11 @@ class DownvotedPostsFragment: Fragment() {
         )
 
         viewModel.communityList.observe(requireActivity()) {
-            adapter.updateCommunityList(it)
+            it?.let { adapter.updateCommunityList(it) }
+        }
+
+        viewModel.userList.observe(requireActivity()){
+            it?.let { adapter.updateUserList(it) }
         }
 
         viewModel.downvotedPostList.observe(requireActivity()) {

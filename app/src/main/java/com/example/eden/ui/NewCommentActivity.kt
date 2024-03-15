@@ -104,7 +104,7 @@ class NewCommentActivity: AppCompatActivity(),
                             return@setOnClickListener
                         }
                         is FileGenerationResponse.Success -> {
-                            val community = Comment(0, text = comment,
+                            val community = Comment(0, commentText = comment,
                                 voteCounter = (0..25).random(), imageUri = fileGenerationResponse.uri.toString(),
                                 postId = postId, communityId = communityId, posterId = (application as Eden).userId)
                             viewModel.upsertComment(community, ImageUri(0, fileGenerationResponse.uri.toString()))
@@ -118,7 +118,7 @@ class NewCommentActivity: AppCompatActivity(),
                     activityNewCommentBinding.removeImageButton.visibility = View.GONE
                     return@setOnClickListener
                 }
-            } else if (isPageEdited()) viewModel.upsertComment(Comment(0, text = comment, voteCounter = (0..25).random(), postId = postId,
+            } else if (isPageEdited()) viewModel.upsertComment(Comment(0, commentText = comment, voteCounter = (0..25).random(), postId = postId,
                 communityId = communityId, posterId = (application as Eden).userId))
             finish()
         }

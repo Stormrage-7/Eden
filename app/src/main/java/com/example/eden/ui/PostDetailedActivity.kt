@@ -16,6 +16,7 @@ import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.models.CommentModel
 import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.PostUriParser
@@ -46,7 +47,7 @@ class PostDetailedActivity: AppCompatActivity(),
                 post.communityId,
                 application)
         } else if (intent.hasExtra("CommentObject")) {
-            val comment = intent.getSerializableExtra("CommentObject") as Comment
+            val comment = intent.getSerializableExtra("CommentObject") as CommentModel
             DetailedPostViewModelFactory(repository,
                 comment.postId,
                 comment.communityId,
@@ -75,11 +76,11 @@ class PostDetailedActivity: AppCompatActivity(),
                 viewModel.downvotePost()
             }
 
-            override fun commentUpvoteButtonClick(comment: Comment) {
+            override fun commentUpvoteButtonClick(comment: CommentModel) {
                 viewModel.upvoteComment(comment)
             }
 
-            override fun commentDownvoteButtonClick(comment: Comment) {
+            override fun commentDownvoteButtonClick(comment: CommentModel) {
                 viewModel.downvoteComment(comment)
             }
 
@@ -127,9 +128,9 @@ class PostDetailedActivity: AppCompatActivity(),
             }
         }
 
-        viewModel.user.observe(this) {
+        viewModel.userList.observe(this) {
             it?.let {
-                adapter.user = it
+                adapter.updateUserList(it)
             }
             adapter.notifyDataSetChanged()
         }

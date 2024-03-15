@@ -13,6 +13,7 @@ import com.example.eden.R
 import com.example.eden.adapters.CommentAdapter
 import com.example.eden.databinding.FragmentCommentSearchBinding
 import com.example.eden.entities.Comment
+import com.example.eden.models.CommentModel
 import com.example.eden.ui.viewmodels.SearchViewModel
 
 class CommentSearchFragment: Fragment() {
@@ -31,7 +32,7 @@ class CommentSearchFragment: Fragment() {
         fragmentCommentSearchBinding.lifecycleOwner = this
 
         val adapter = CommentAdapter(activity as SearchableActivity, object: CommentAdapter.CommentClickListener {
-            override fun onCommentClick(comment: Comment) {
+            override fun onCommentClick(comment: CommentModel) {
                 Intent(activity as SearchableActivity, PostDetailedActivity:: class.java).apply {
                     putExtra("CommentObject", comment)
                     startActivity(this)
@@ -60,6 +61,12 @@ class CommentSearchFragment: Fragment() {
                     fragmentCommentSearchBinding.tempTextView.visibility = View.GONE
                 }
                 adapter.updateCommentList(it)
+            }
+        }
+
+        viewModel.userList.observe(requireActivity()) {
+            it?.let {
+                adapter.updateUserList(it)
             }
         }
 

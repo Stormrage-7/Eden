@@ -2,10 +2,11 @@ package com.example.eden.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.eden.entities.Community
+import com.example.eden.models.CommunityModel
 
 class CommunityDiffUtil(
-    private val oldList: List<Community>,
-    private val newList: List<Community>
+    private val oldList: List<CommunityModel>,
+    private val newList: List<CommunityModel>
 ): DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size
     override fun getNewListSize(): Int = newList.size

@@ -7,6 +7,7 @@ import com.example.eden.Eden
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
+import com.example.eden.models.CommentModel
 import com.example.eden.models.PostModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,9 +20,9 @@ class DetailedPostViewModel(private val repository: AppRepository,
 ): AndroidViewModel(application) {
 
     val post = repository.getPostWithId(postId, application.userId)
-    val commentList = repository.getCommentListForPost(postId)
-    val community = repository.getCommunity(communityId)
-    val user = repository.getUser(application.userId)
+    val commentList = repository.getCommentsForPost(postId, application.userId)
+    val community = repository.getCommunity(communityId, application.userId)
+    val userList = repository.getUserList()
 
     init {
         Timber.tag("Testing").i("DetailedPostViewModel Initialized")
@@ -60,24 +61,24 @@ class DetailedPostViewModel(private val repository: AppRepository,
         }
     }
 
-    fun upvoteComment(comment: Comment){
-        val temp: Comment = when(comment.voteStatus){
-            VoteStatus.UPVOTED -> comment.copy(voteCounter = comment.voteCounter-1, voteStatus = VoteStatus.NONE)
-            VoteStatus.DOWNVOTED -> comment.copy(voteCounter = comment.voteCounter+2, voteStatus = VoteStatus.UPVOTED)
-            VoteStatus.NONE -> comment.copy(voteCounter = comment.voteCounter+1, voteStatus = VoteStatus.UPVOTED)
-        }
-        viewModelScope.launch {
-            repository.upsertComment(temp)
+    fun upvoteComment(comment: CommentModel){
+        when(comment.voteStatus){
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updateCommentInteractions(commentId = comment.commentId, userId = application.userId, voteStatus = VoteStatus.NONE)
+                repository.removeCommentUpvote(comment.commentId)}
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updateCommentInteractions(commentId = comment.commentId, userId = application.userId, voteStatus = VoteStatus.UPVOTED)
+                repository.downvoteToUpvoteComment(comment.commentId)}
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updateCommentInteractions(commentId = comment.commentId, userId = application.userId, voteStatus = VoteStatus.UPVOTED)
+                repository.upvoteComment(comment.commentId)}
         }
     }
-    fun downvoteComment(comment: Comment){
-        val temp: Comment = when(comment.voteStatus){
-            VoteStatus.UPVOTED -> comment.copy(voteCounter = comment.voteCounter-2, voteStatus = VoteStatus.DOWNVOTED)
-            VoteStatus.DOWNVOTED -> comment.copy(voteCounter = comment.voteCounter+1, voteStatus = VoteStatus.NONE)
-            VoteStatus.NONE -> comment.copy(voteCounter = comment.voteCounter-1, voteStatus = VoteStatus.DOWNVOTED)
-        }
-        viewModelScope.launch {
-            repository.upsertComment(temp)
+    fun downvoteComment(comment: CommentModel){
+        when(comment.voteStatus){
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updateCommentInteractions(application.userId, comment.commentId, VoteStatus.DOWNVOTED)
+                repository.upvoteToDownvoteComment(comment.commentId)}
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updateCommentInteractions(application.userId, comment.commentId, VoteStatus.NONE)
+                repository.removeCommentDownvote(comment.commentId)}
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updateCommentInteractions(application.userId, comment.commentId, VoteStatus.DOWNVOTED)
+                repository.downvoteComment(comment.commentId)}
         }
     }
 

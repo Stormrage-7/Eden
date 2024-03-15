@@ -24,6 +24,7 @@ import com.example.eden.databinding.ActivityNewCommunityBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.ImageUri
+import com.example.eden.models.CommunityModel
 import com.example.eden.util.FileGenerationResponse
 import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator
@@ -58,8 +59,10 @@ class NewCommunityActivity: AppCompatActivity(),
         }
 
         viewModel.communityList.observe(this) {
-            viewModel.updateCommunityNameList(it)
-            setContentView(activityNewCommunityBinding.root)
+            it?.let {
+                viewModel.updateCommunityNameList(it)
+                setContentView(activityNewCommunityBinding.root)
+            }
         }
 
         Log.i("NEW COMMUNITY out function", viewModel.communityNameList.toString())
@@ -115,7 +118,7 @@ class NewCommunityActivity: AppCompatActivity(),
         })
 
         if(intent.hasExtra("Context")){
-            val community = intent.getSerializableExtra("CommunityObject") as Community
+            val community = intent.getSerializableExtra("CommunityObject") as CommunityModel
             activityNewCommunityBinding.apply {
                 pageTitle.text = "Edit Community"
                 imageViewCommunity.visibility = View.GONE
@@ -139,8 +142,8 @@ class NewCommunityActivity: AppCompatActivity(),
             else{
                 Log.i("Inside Create Button!", "HELLO!")
                 if (intent.hasExtra("Context")) {
-                    val community = intent.getSerializableExtra("CommunityObject") as Community
-                    viewModel.upsertCommunity(community.copy(description = communityDescription))
+                    val community = intent.getSerializableExtra("CommunityObject") as CommunityModel
+                    viewModel.updateCommunity(community.communityId, communityDescription)
                     Toast.makeText(this, "Community has been edited!", Toast.LENGTH_LONG).show()
                 }
                 else {
@@ -248,7 +251,7 @@ class NewCommunityActivity: AppCompatActivity(),
     private fun isPageEdited(): Boolean{
 
         return if (intent.hasExtra("Context")){
-            val community = intent.getSerializableExtra("CommunityObject") as Community
+            val community = intent.getSerializableExtra("CommunityObject") as CommunityModel
             (activityNewCommunityBinding.communityDescriptionEditText.text.toString().trim() != community.description)
 
         } else {

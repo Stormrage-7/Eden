@@ -14,6 +14,8 @@ import com.example.eden.entities.Post
 import com.example.eden.entities.User
 import com.example.eden.entities.convertors.Converters
 import com.example.eden.entities.ImageUri
+import com.example.eden.entities.relations.CommentInteractions
+import com.example.eden.entities.relations.CommunityInteractions
 import com.example.eden.entities.relations.PostCommunityCrossRef
 import com.example.eden.entities.relations.PostInteractions
 import com.example.eden.enums.Countries
@@ -33,9 +35,11 @@ import java.util.Date
         Comment :: class,
         User :: class,
         ImageUri::class,
-        PostInteractions::class
+        PostInteractions::class,
+        CommentInteractions::class,
+        CommunityInteractions::class
     ],
-    version = 66)
+    version = 69)
 @TypeConverters(Converters::class)
 
 abstract class AppDatabase : RoomDatabase() {
@@ -198,36 +202,36 @@ abstract class AppDatabase : RoomDatabase() {
             //**** COMMENTS ****//
 
             it.edenDao().upsertComment(
-                Comment(0, text = "Don't forget the negative of missing 4G and 5G bands.\n" +
+                Comment(0, commentText = "Don't forget the negative of missing 4G and 5G bands.\n" +
                             "\n" +
                             "Quite important in a phone!", postId = 6, communityId = 3, posterId = 1))
 
             it.edenDao().upsertComment(
-                Comment(0, text = "\n" +
+                Comment(0, commentText = "\n" +
                         "More like one new monitor and one older and smaller monitor from your previous build.",
                     postId = 13, communityId = 6, posterId = 1))
 
             it.edenDao().upsertComment(
-                Comment(0, text = "I'm actually kinda the opposite. One monitor is high refresh rate, but not the best color accuracy. The other one is a standard 60hz, but best image quality I could buy at the price.",
+                Comment(0, commentText = "I'm actually kinda the opposite. One monitor is high refresh rate, but not the best color accuracy. The other one is a standard 60hz, but best image quality I could buy at the price.",
                     postId = 13, communityId = 6, posterId = 1))
 
             it.edenDao().upsertComment(
-                Comment(0, text = "My 2nd is a TV", postId = 13, communityId = 6, posterId = 1))
+                Comment(0, commentText = "My 2nd is a TV", postId = 13, communityId = 6, posterId = 1))
 
             it.edenDao().upsertComment(
-                Comment(0, text = "Mount fuji has truly inspired a million photographs",
+                Comment(0, commentText = "Mount fuji has truly inspired a million photographs",
+                    postId = 3, communityId = 1, posterId = 3))
+
+            it.edenDao().upsertComment(
+                Comment(0, commentText = "One day I’ll be able to stand for a minute under the most perfect Sakura. I imagine it’ll look just like this.",
                     postId = 3, communityId = 1, posterId = 1))
 
             it.edenDao().upsertComment(
-                Comment(0, text = "One day I’ll be able to stand for a minute under the most perfect Sakura. I imagine it’ll look just like this.",
-                    postId = 3, communityId = 1, posterId = 1))
+                Comment(0, commentText = "When does cherry tree blossom? If i want to visit Japan? I wanna coordinate my visit.",
+                    postId = 3, communityId = 1, posterId = 2))
 
             it.edenDao().upsertComment(
-                Comment(0, text = "When does cherry tree blossom? If i want to visit Japan? I wanna coordinate my visit.",
-                    postId = 3, communityId = 1, posterId = 1))
-
-            it.edenDao().upsertComment(
-                Comment(0, text = "I'm currently living in the suburbs of Tokyo and there are some spots where they have already started blooming, but most don't start to bloom until mid-March to early April.\n" +
+                Comment(0, commentText = "I'm currently living in the suburbs of Tokyo and there are some spots where they have already started blooming, but most don't start to bloom until mid-March to early April.\n" +
                         "\n" +
                         "You can check this site for when you plan your trip. They give good estimates on when they start to bloom in most places around Japan :)\n" +
                         "\n" +
@@ -235,7 +239,7 @@ abstract class AppDatabase : RoomDatabase() {
                     postId = 3, communityId = 1, posterId = 1))
 
             it.edenDao().upsertComment(
-                Comment(0, text = "This is the coolest picture of a cub I have ever seen.", postId = 1, communityId = 1, posterId = 1))
+                Comment(0, commentText = "This is the coolest picture of a cub I have ever seen.", postId = 1, communityId = 1, posterId = 1))
 
             //**** USER ****//
             it.edenDao().upsertUser(User(0, "u/Sharan451", "first", "last", "email@email.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar.toString()))

@@ -17,6 +17,7 @@ import com.example.eden.ui.viewmodels.SearchViewModel
 import com.example.eden.databinding.FragmentPostSearchBinding
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 
@@ -37,7 +38,7 @@ class PostSearchFragment: Fragment() {
 
         val adapter = PostAdapter(activity as SearchableActivity, object : PostAdapter.PostListener {
 
-            override fun onCommunityClick(community: Community) {
+            override fun onCommunityClick(community: CommunityModel) {
                 Intent(requireActivity() as SearchableActivity, CommunityDetailedActivity::class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)
@@ -77,27 +78,30 @@ class PostSearchFragment: Fragment() {
             )
         )
 
-        viewModel.allCommunityList.observe(this.requireActivity(), Observer {
+        viewModel.allCommunityList.observe(requireActivity()) {
             Log.i("HomeFragment", "${it.toString()}")
-            adapter.updateCommunityList(it)
-        })
+            it?.let { adapter.updateCommunityList(it) }
+        }
 
-        viewModel.postList.observe(activity as SearchableActivity, Observer {
+        viewModel.userList.observe(requireActivity()){
+            it?.let { adapter.updateUserList(it) }
+        }
+
+        viewModel.postList.observe(activity as SearchableActivity) {
             Log.i("Post Fragment", viewModel.postList.value.toString())
             it.let {
-                if(it.isEmpty()){
+                if (it.isEmpty()) {
                     fragmentPostSearchBinding.rvPosts.visibility = View.GONE
                     fragmentPostSearchBinding.tempImgView.visibility = View.VISIBLE
                     fragmentPostSearchBinding.tempTextView.visibility = View.VISIBLE
-                }
-                else {
+                } else {
                     fragmentPostSearchBinding.rvPosts.visibility = View.VISIBLE
                     fragmentPostSearchBinding.tempImgView.visibility = View.GONE
                     fragmentPostSearchBinding.tempTextView.visibility = View.GONE
                 }
                 adapter.updatePostList(it)
             }
-        })
+        }
 
         return fragmentPostSearchBinding.root
     }

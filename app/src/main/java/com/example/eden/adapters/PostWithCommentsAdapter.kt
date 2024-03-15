@@ -16,9 +16,10 @@ import com.example.eden.R
 import com.example.eden.databinding.ItemCommentBinding
 import com.example.eden.databinding.ItemDetailedPostBinding
 import com.example.eden.databinding.ItemNoContentBinding
-import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.User
+import com.example.eden.models.CommentModel
+import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 import com.example.eden.util.CommentDiffUtil
 import com.example.eden.util.UriValidator
@@ -31,11 +32,10 @@ class PostWithCommentsAdapter(
     private val postListener: PostListener
 ): RecyclerView.Adapter<ViewHolder>() {
 
-    private var commentList: List<Comment> = listOf()
+    private var commentList: List<CommentModel> = listOf()
     private var userList: List<User> = listOf()
-    lateinit var user: User
     var post: PostModel? = null
-    var community: Community? = null
+    var community: CommunityModel? = null
     lateinit var resources: Resources
 
     inner class NoContentViewHolder(val binding: ItemNoContentBinding): ViewHolder(binding.root){
@@ -51,18 +51,21 @@ class PostWithCommentsAdapter(
             binding.apply {
                 likeBtn.setOnClickListener {
                     postListener.commentUpvoteButtonClick( commentList[bindingAdapterPosition-1] )
+//                    notifyItemRangeChanged(bindingAdapterPosition, bindingAdapterPosition+1)
 //                    notifyItemChanged(bindingAdapterPosition)
                 }
                 dislikeBtn.setOnClickListener {
                     postListener.commentDownvoteButtonClick( commentList[bindingAdapterPosition-1])
+//                    notifyItemRangeChanged(bindingAdapterPosition, bindingAdapterPosition+1)
 //                    notifyItemChanged(bindingAdapterPosition)
                 }
             }
         }
-        fun bind(comment: Comment){
+        fun bind(comment: CommentModel){
+            val user = userList.find { comment.posterId == it.userId }
             binding.apply {
                 if (user != null) {
-                    textViewUserName.text = "${user.username}"
+                    textViewUserName.text = user.username
                     if (!user.isCustomImage) imageViewUser.setImageResource(user.profileImageUri.toInt())
                     else {
                         if (UriValidator.validate(context, user.profileImageUri)) imageViewUser.setImageURI(
@@ -70,10 +73,10 @@ class PostWithCommentsAdapter(
                         else imageViewUser.setImageResource(user.profileImageUri.toInt())
                     }
                 }
-                if (comment.text.isEmpty()) commentTextView.visibility = View.GONE
+                if (comment.commentText.isEmpty()) commentTextView.visibility = View.GONE
                 else {
                     commentTextView.visibility = View.VISIBLE
-                    commentTextView.text = comment.text
+                    commentTextView.text = comment.commentText
                 }
                 if (UriValidator.validate(context, comment.imageUri)){
                     imageViewComment.visibility = View.VISIBLE
@@ -102,7 +105,8 @@ class PostWithCommentsAdapter(
             }
         }
         @SuppressLint("ResourceAsColor")
-        fun bind(post: PostModel?, community: Community?){
+        fun bind(post: PostModel?, community: CommunityModel?){
+
             binding.apply {
                 //COMMUNITY DETAILS
                 if (community != null) {
@@ -123,6 +127,9 @@ class PostWithCommentsAdapter(
                 }
                 //POST DETAILS
                 if (post != null) {
+                    val user = userList.find { it.userId == post.posterId }
+                    user?.let { textViewUserName.text = user.username }
+
                     textViewTitle.text = post.title
 
                     //MEDIA
@@ -203,22 +210,25 @@ class PostWithCommentsAdapter(
         else (holder as CommentViewHolder).bind(commentList[position - 1])
     }
 
-    fun updateCommentList(newCommentList: List<Comment>) {
-        notifyItemRangeRemoved(1, newCommentList.size+1)
+    fun updateCommentList(newCommentList: List<CommentModel>) {
         val diffUtil = CommentDiffUtil(commentList, newCommentList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         commentList = newCommentList
-        diffResults.dispatchUpdatesTo(this)
+        notifyDataSetChanged()
 //        commentList = newCommentList
 //        notifyDataSetChanged()
+    }
+
+    fun updateUserList(newUserList: List<User>) {
+        userList = newUserList
     }
 
     interface PostListener{
         fun onCommunityClick(community: Community)
         fun onUpvoteBtnClick()
         fun onDownvoteBtnClick()
-        fun commentUpvoteButtonClick(comment: Comment)
-        fun commentDownvoteButtonClick(comment: Comment)
+        fun commentUpvoteButtonClick(comment: CommentModel)
+        fun commentDownvoteButtonClick(comment: CommentModel)
         fun onShareClick(postId: Int, communityId: Int)
     }
 

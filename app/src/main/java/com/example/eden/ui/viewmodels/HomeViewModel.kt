@@ -18,24 +18,21 @@ class HomeViewModel(private val repository: AppRepository,
 
     val user = repository.getUser(application.userId)
     val postList = repository.getPostList(application.userId)
-    val communityList = repository.communityList
+    val communityList = repository.getCommunityList(application.userId)
+    val joinedCommunityList = repository.getJoinedCommunityList(application.userId)
+    val joinedCommunityPostList = repository.getPostsOfJoinedCommunities(application.userId)
     val postCommunityCrossRefList = repository.postCommunityCrossRefList
-    val joinedCommunitiesList = repository.joinedCommunitiesList
-    lateinit var detailedPost: LiveData<Post>
-//    var localCommunityList = listOf<Community>()
-//    var communityId: Int = -1
+    val userList = repository.getUserList()
+
 
     init {
         Log.i("Testing", "HomeViewModel Initialized - ${postList.toString()}")
-        refreshCommunityListFromRepository()
         refreshPostListFromRepository()
         refreshPostCommunityCrossRefListFromRepository()
-        refreshJoinedCommunitiesListFromRepository()
     }
 
 
     fun upvotePost(post: PostModel){
-//        val post = postList.value!![position]
         when(post.voteStatus){
             VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.NONE)
                 repository.removePostUpvote(post.postId, post.posterId)}
@@ -47,7 +44,6 @@ class HomeViewModel(private val repository: AppRepository,
     }
 
     fun downvotePost(post: PostModel){
-//        val post = postList.value!![position]
         when(post.voteStatus){
             VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED)
                 repository.upvoteToDownvotePost(post.postId)}
@@ -64,13 +60,6 @@ class HomeViewModel(private val repository: AppRepository,
         }
     }
 
-    fun refreshCommunityListFromRepository(){
-        viewModelScope.launch {
-            repository.refreshCommunities()
-            Log.i("Refresh Method", "Communities Refreshed! ${communityList.value.toString()}")
-
-        }
-    }
 
     private fun refreshPostCommunityCrossRefListFromRepository() {
         viewModelScope.launch {
@@ -78,10 +67,5 @@ class HomeViewModel(private val repository: AppRepository,
         }
     }
 
-    private fun refreshJoinedCommunitiesListFromRepository() {
-        viewModelScope.launch{
-            repository.refreshJoinedCommunities()
-        }
-    }
 
 }

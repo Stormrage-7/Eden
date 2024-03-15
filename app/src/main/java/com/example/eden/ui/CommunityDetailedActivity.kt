@@ -27,6 +27,7 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.CollapsingToolBarState
 import com.example.eden.enums.PostFilter
+import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.SafeClickListener
@@ -55,7 +56,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         val application = application as Eden
         repository = application.repository
         factory = DetailedCommunityViewModelFactory(repository,
-            intent.getSerializableExtra("CommunityObject") as Community,
+            intent.getSerializableExtra("CommunityObject") as CommunityModel,
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedCommunityViewModel::class.java]
 
@@ -99,7 +100,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 }
             }
 
-            override fun onCommunityClick(community: Community) {
+            override fun onCommunityClick(community: CommunityModel) {
             }
 
             override fun onUpvoteBtnClick(post: PostModel) {
@@ -207,6 +208,10 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 textViewCommunityDescription.text = it.description
                 updateJoinStatus(it.isJoined)
             }
+        }
+
+        viewModel.userList.observe(this){
+            it?.let{ adapter.updateUserList(it) }
         }
 
         viewModel.postList.observe(this) {

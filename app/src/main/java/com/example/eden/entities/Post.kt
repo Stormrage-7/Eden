@@ -24,7 +24,7 @@ data class Post (
     val dateTime: Long,
     val communityId: Int,
     val posterId: Int  // UserID
-    ) : Serializable
+    )
 //    val isPinned: Boolean = false,
 //    val flairs: MutableList<String>,
 //    val awardList: MutableList<Award> = mutableListOf(),

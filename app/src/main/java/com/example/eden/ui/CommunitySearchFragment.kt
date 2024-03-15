@@ -15,6 +15,7 @@ import com.example.eden.R
 import com.example.eden.ui.viewmodels.SearchViewModel
 import com.example.eden.databinding.FragmentCommunitySearchBinding
 import com.example.eden.entities.Community
+import com.example.eden.models.CommunityModel
 
 class CommunitySearchFragment: Fragment() {
     private lateinit var fragmentCommunitySearchBinding: FragmentCommunitySearchBinding
@@ -32,7 +33,7 @@ class CommunitySearchFragment: Fragment() {
         fragmentCommunitySearchBinding.lifecycleOwner = this.viewLifecycleOwner
 
         val adapter = CommunityAdapter(context = requireContext(), object : CommunityAdapter.CommunityClickListener {
-            override fun onClick(community: Community) {
+            override fun onClick(community: CommunityModel) {
                 Intent(activity as SearchableActivity, CommunityDetailedActivity:: class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)

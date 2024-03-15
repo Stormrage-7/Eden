@@ -49,6 +49,11 @@ class NewPostViewModel(private val repository: AppRepository,
         return 1
     }
 
+    fun updatePost(postId: Int, bodyText: String) {
+        viewModelScope.launch {
+            repository.updatePost(postId, bodyText)
+        }
+    }
 
 
 }

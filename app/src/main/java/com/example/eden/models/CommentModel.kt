@@ -5,7 +5,7 @@ import java.io.Serializable
 
 data class CommentModel (
     val commentId: Int,
-    val text: String,
+    val commentText: String,
     val imageUri: String? = null,
     var voteCounter: Int = 0,
     var voteStatus: VoteStatus = VoteStatus.NONE,

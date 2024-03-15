@@ -14,7 +14,9 @@ import com.example.eden.R
 import com.example.eden.entities.Post
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
+import com.example.eden.entities.User
 import com.example.eden.enums.PostFilter
+import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.PostInteractionsActivity
@@ -30,9 +32,9 @@ class PostAdapter(
     private val postListener: PostListener
 ): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
-    var joinedCommunitiesList: List<Int> = listOf()
     private var postList: MutableList<PostModel> = mutableListOf()
-    private var communityList: List<Community> = listOf()
+    private var communityList: List<CommunityModel> = listOf()
+    private var userList: List<User> = listOf()
     private var filter = PostFilter.HOT
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root){
@@ -71,7 +73,8 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = postList[position]
         val communityId = post.communityId
-        val community: Community? = communityList.find { it.communityId == communityId }
+        val community: CommunityModel? = communityList.find { it.communityId == communityId }
+        val user = userList.find { it.userId == post.posterId}
 
         holder.binding.apply {
 
@@ -100,6 +103,11 @@ class PostAdapter(
                     imageViewCommunity.setImageResource(R.color.white)
                 }
             }
+
+            if (user != null){
+                textViewUserName.text = user.username
+            }
+
             //TITLE
             textViewTitle.text = post.title
 
@@ -153,7 +161,6 @@ class PostAdapter(
     fun updatePostList(newPostList: List<PostModel>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
-        Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
         when(filter){
             PostFilter.HOT -> newPostList.sortedByDescending { it.postId }.toMutableList()
             PostFilter.TOP -> newPostList.sortedByDescending { it.voteCounter }.toMutableList()
@@ -163,20 +170,15 @@ class PostAdapter(
         setData(newPostList)
     }
 
-    fun updateCommunityList(newCommunityList: List<Community>){
+    fun updateCommunityList(newCommunityList: List<CommunityModel>){
         val diffUtil = CommunityDiffUtil(communityList, newCommunityList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         communityList = newCommunityList
         diffResults.dispatchUpdatesTo(this)
     }
 
-    fun updateJoinedCommunityList(joinedCommunitiesList: List<Int>?) {
-        if (joinedCommunitiesList != null) {
-            this.joinedCommunitiesList = joinedCommunitiesList
-            Log.i("PostAdapter", "${this.postList}")
-            val newPostList = postList.filter { post -> this.joinedCommunitiesList.contains(post.communityId) }.toMutableList()
-            setData(newPostList)
-        }
+    fun updateJoinedCommunityList(joinedCommunitiesList: List<CommunityModel>) {
+        this.communityList = joinedCommunitiesList
         Log.i("PostAdapter", "${this.postList}")
     }
 
@@ -192,6 +194,10 @@ class PostAdapter(
         postListener.scrollToTop()
     }
 
+    fun updateUserList(newUserList: List<User>) {
+        userList = newUserList
+    }
+
     private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
         val safeClickListener = SafeClickListener {
             onSafeCLick(it)
@@ -201,7 +207,7 @@ class PostAdapter(
 
     interface PostListener{
         fun onPostClick(post: PostModel)
-        fun onCommunityClick(community: Community)
+        fun onCommunityClick(community: CommunityModel)
         fun onUpvoteBtnClick(post: PostModel)
         fun onDownvoteBtnClick(post: PostModel)
         fun onShareBtnClick(postId: Int, communityId: Int)
