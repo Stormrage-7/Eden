@@ -20,7 +20,7 @@ import com.example.eden.util.UriValidator
 
 class UserProfileActivity: AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
-    private lateinit var viewModel: ProfileViewModel
+    lateinit var viewModel: ProfileViewModel
     private lateinit var database: AppDatabase
     private lateinit var repository: AppRepository
     private lateinit var factory: ProfileViewModelFactory

@@ -7,6 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.eden.ui.DownvotedPostsFragment
 import com.example.eden.ui.MyCommentsFragment
 import com.example.eden.ui.UpvotedPostsFragment
+import com.example.eden.ui.UserProfileAboutFragment
+import com.example.eden.ui.UserProfileCommentsFragment
+import com.example.eden.ui.UserProfilePostsFragment
 
 class UserProfileViewPagerAdapter (fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
@@ -15,9 +18,9 @@ class UserProfileViewPagerAdapter (fragmentManager: FragmentManager, lifecycle: 
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            0 -> UpvotedPostsFragment()
-            1 -> DownvotedPostsFragment()
-            2 -> MyCommentsFragment()
+            0 -> UserProfilePostsFragment()
+            1 -> UserProfileCommentsFragment()
+            2 -> UserProfileAboutFragment()
             else -> Fragment()
         }
     }

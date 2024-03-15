@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 import java.util.Date
 
 class ProfileViewModel(
-    val repository: AppRepository,
+    private val repository: AppRepository,
+
     application: Eden
 ): AndroidViewModel(application) {
 

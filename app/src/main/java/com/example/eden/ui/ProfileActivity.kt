@@ -10,16 +10,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.eden.Eden
 import com.example.eden.R
+import com.example.eden.adapters.PostInteractionsViewPagerAdapter
+import com.example.eden.adapters.UserProfileViewPagerAdapter
 import com.example.eden.database.AppDatabase
 import com.example.eden.database.AppRepository
 import com.example.eden.databinding.ActivityProfileBinding
+import com.example.eden.databinding.ActivityUserProfileBinding
 import com.example.eden.ui.viewmodels.ProfileViewModel
 import com.example.eden.ui.viewmodels.ProfileViewModelFactory
 import com.example.eden.util.DateUtils
 import com.example.eden.util.UriValidator
+import com.google.android.material.tabs.TabLayoutMediator
 
 class ProfileActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProfileBinding
+    private lateinit var binding: ActivityUserProfileBinding
     private lateinit var viewModel: ProfileViewModel
     private lateinit var database: AppDatabase
     private lateinit var repository: AppRepository
@@ -27,7 +31,7 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProfileBinding.inflate(layoutInflater)
+        binding = ActivityUserProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         database = AppDatabase.getDatabase(applicationContext as Eden)
@@ -35,11 +39,8 @@ class ProfileActivity : AppCompatActivity() {
         factory = ProfileViewModelFactory(repository, application as Eden)
         viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
 
-        binding.toolbar.title = ""
         setSupportActionBar(binding.toolbar)
-        binding.backToHomeTextView.setOnClickListener {
-            finish()
-        }
+
         binding.imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
 
         viewModel.user.observe(this) {user ->
@@ -53,31 +54,42 @@ class ProfileActivity : AppCompatActivity() {
 
                 textViewUserNameProfileHeader.text = user.username
                 textViewEmailProfileHeader.text = user.email
-                includedLayout.nameTextViewProfile.text = "${user.firstName} ${user.lastName}"
-                includedLayout.emailTextViewProfile.text = user.email
-                includedLayout.mobileTextViewProfile.text = user.mobileNo
-                includedLayout.dobTextViewProfile.text = DateUtils.toSimpleString(user.dob)
-                includedLayout.countryTextViewProfile.text = user.country.text
+
+                val viewPagerAdapter = UserProfileViewPagerAdapter(supportFragmentManager, lifecycle)
+                binding.viewPager2.adapter = viewPagerAdapter
+
+                TabLayoutMediator(binding.tabLayout, binding.viewPager2){ tab, position ->
+                    when(position){
+                        0 -> tab.text = "Posts"
+                        1 -> tab.text = "Comments"
+                        2 -> tab.text = "About"
+                    }
+                }.attach()
+//                includedLayout.nameTextViewProfile.text = "${user.firstName} ${user.lastName}"
+//                includedLayout.emailTextViewProfile.text = user.email
+//                includedLayout.mobileTextViewProfile.text = user.mobileNo
+//                includedLayout.dobTextViewProfile.text = DateUtils.toSimpleString(user.dob)
+//                includedLayout.countryTextViewProfile.text = user.country.text
             }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.profile_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId){
-            R.id.profileEditButton -> {
-                Intent(this@ProfileActivity, EditProfileActivity::class.java).apply {
-                    startActivity(this)
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.profile_menu, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId){
+//            R.id.profileEditButton -> {
+//                Intent(this@ProfileActivity, EditProfileActivity::class.java).apply {
+//                    startActivity(this)
+//                }
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
