@@ -75,6 +75,10 @@ class HomeFragment: Fragment(){
                 viewModel.downvotePost(post)
             }
 
+            override fun onBookmarkClick(post: PostModel) {
+                viewModel.bookmarkPost(post)
+            }
+
             override fun onShareBtnClick(postId: Int, communityId: Int) {
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND

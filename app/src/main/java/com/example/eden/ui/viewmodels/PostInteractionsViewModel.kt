@@ -1,13 +1,16 @@
 package com.example.eden.ui.viewmodels
 
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.eden.Eden
 import com.example.eden.database.AppRepository
+import com.example.eden.models.PostModel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class PostInteractionsViewModel(
-    repository: AppRepository,
-    application: Eden
+    private val repository: AppRepository,
+    private val application: Eden
 ): AndroidViewModel(application) {
 
     var upvotedPostList = repository.getUpvotedPosts(application.userId)
@@ -18,6 +21,16 @@ class PostInteractionsViewModel(
 
     init {
         Timber.tag("PostInteractions").i("PostInteractionsViewModel Initialized!")
+    }
+
+    fun bookmarkPost(post: PostModel){
+        viewModelScope.launch {
+            repository.updatePostInteractions(application.userId, post.postId, post.voteStatus,
+                when(post.isBookmarked) {
+                    true -> false
+                    false -> true
+                })
+        }
     }
 
 }

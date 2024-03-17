@@ -65,6 +65,8 @@ class CommentAdapter(
                 }
             }
             else{
+                postTitleTextView.visibility = View.VISIBLE
+                postTitleTextView.text = comment.postTitle
                 imageViewUser.visibility = View.GONE
                 textViewUserName.visibility = View.GONE
             }

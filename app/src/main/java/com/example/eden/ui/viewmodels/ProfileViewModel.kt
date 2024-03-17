@@ -7,13 +7,14 @@ import com.example.eden.Eden
 import com.example.eden.database.AppRepository
 import com.example.eden.entities.ImageUri
 import com.example.eden.enums.Countries
+import com.example.eden.models.PostModel
 import kotlinx.coroutines.launch
 import java.util.Date
 
 class ProfileViewModel(
     private val repository: AppRepository,
     userId: Int,
-    application: Eden
+    private val application: Eden
 ): AndroidViewModel(application) {
 
     val _counter = repository.getImgFileCounter()
@@ -24,6 +25,16 @@ class ProfileViewModel(
     val commentList = repository.getCommentsOfUser(userId)
     init {
         Log.i("Profile", "ProfileViewModel Initialized!")
+    }
+
+    fun bookmarkPost(post: PostModel){
+        viewModelScope.launch {
+            repository.updatePostInteractions(application.userId, post.postId, post.voteStatus,
+                when(post.isBookmarked) {
+                    true -> false
+                    false -> true
+                })
+        }
     }
 
     fun updateProfile(firstName: String, lastName: String, country: Countries, contactNo: String, email: String, dob: Date,

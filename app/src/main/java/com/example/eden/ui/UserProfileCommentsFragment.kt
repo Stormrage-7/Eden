@@ -51,7 +51,7 @@ class UserProfileCommentsFragment: Fragment() {
             )
         )
 
-        viewModel.commentList.observe(activity as PostInteractionsActivity) {
+        viewModel.commentList.observe(activity as UserProfileActivity) {
             if (it != null) {
                 if (it.isEmpty()) {
                     binding.rvComments.visibility = View.GONE

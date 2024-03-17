@@ -90,7 +90,7 @@ class NewCommentActivity: AppCompatActivity(),
 
         })
 
-        val postTitle = intent.getStringExtra("PostTitle")
+        val postTitle = intent.getStringExtra("PostTitle")!!
         val postId = intent.getIntExtra("PostId",-1)
         val communityId = intent.getIntExtra("CommunityId", -1)
         activityNewCommentBinding.postTitleTextView.text = postTitle
@@ -106,7 +106,7 @@ class NewCommentActivity: AppCompatActivity(),
                         is FileGenerationResponse.Success -> {
                             val community = Comment(0, commentText = comment,
                                 voteCounter = (0..25).random(), imageUri = fileGenerationResponse.uri.toString(),
-                                postId = postId, communityId = communityId, posterId = (application as Eden).userId)
+                                postId = postId, postTitle = postTitle, communityId = communityId, posterId = (application as Eden).userId)
                             viewModel.upsertComment(community, ImageUri(0, fileGenerationResponse.uri.toString()))
                         }
                     }
@@ -118,7 +118,7 @@ class NewCommentActivity: AppCompatActivity(),
                     activityNewCommentBinding.removeImageButton.visibility = View.GONE
                     return@setOnClickListener
                 }
-            } else if (isPageEdited()) viewModel.upsertComment(Comment(0, commentText = comment, voteCounter = (0..25).random(), postId = postId,
+            } else if (isPageEdited()) viewModel.upsertComment(Comment(0, commentText = comment, voteCounter = (0..25).random(), postId = postId, postTitle = postTitle,
                 communityId = communityId, posterId = (application as Eden).userId))
             finish()
         }

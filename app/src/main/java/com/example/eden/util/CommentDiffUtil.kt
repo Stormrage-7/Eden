@@ -23,6 +23,7 @@ class CommentDiffUtil(
             oldList[oldItemPosition].postId != newList[newItemPosition].postId -> false
             oldList[oldItemPosition].communityId != newList[newItemPosition].communityId -> false
             oldList[oldItemPosition].posterId != newList[newItemPosition].posterId -> false
+            oldList[oldItemPosition].postTitle != newList[newItemPosition].postTitle -> false
             else -> true
         }
     }

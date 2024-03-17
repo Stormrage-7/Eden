@@ -2,61 +2,53 @@ package com.example.eden.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.eden.R
+import com.example.eden.Eden
 import com.example.eden.adapters.PostAdapter
-import com.example.eden.databinding.FragmentPostSearchBinding
+import com.example.eden.databinding.ActivityUserBookmarksBinding
 import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
-import com.example.eden.ui.viewmodels.PostInteractionsViewModel
-import com.example.eden.ui.viewmodels.ProfileViewModel
+import com.example.eden.ui.viewmodels.BookmarksViewModel
+import com.example.eden.ui.viewmodels.BookmarksViewModelFactory
 import com.example.eden.util.PostUriGenerator
 
-class UserProfilePostsFragment: Fragment() {
-    private lateinit var binding: FragmentPostSearchBinding
-    private lateinit var viewModel: ProfileViewModel
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_post_search, container, false
-        )
-        viewModel = (activity as UserProfileActivity).viewModel
+class BookmarksActivity: AppCompatActivity() {
+    private lateinit var binding: ActivityUserBookmarksBinding
+    lateinit var viewModel: BookmarksViewModel
+    override fun onCreate(savedInstanceState: Bundle?) {
 
-        binding.lifecycleOwner = this
+        super.onCreate(savedInstanceState)
+        binding = ActivityUserBookmarksBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val application = application as Eden
+        val factory = BookmarksViewModelFactory(application.repository, application)
+        viewModel = ViewModelProvider(this, factory)[BookmarksViewModel::class.java]
 
-        val adapter = PostAdapter(activity as UserProfileActivity, object : PostAdapter.PostListener {
+        setSupportActionBar(binding.toolbar)
+
+        val adapter = PostAdapter(this, object : PostAdapter.PostListener {
 
             override fun onCommunityClick(community: CommunityModel) {
-                Intent(requireActivity() as UserProfileActivity, CommunityDetailedActivity::class.java).apply {
+                Intent(this@BookmarksActivity, CommunityDetailedActivity::class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
             override fun onPostClick(post: PostModel) {
-                Intent(requireActivity(), PostDetailedActivity::class.java).apply {
+                Intent(this@BookmarksActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     startActivity(this)
                 }
             }
 
-            override fun onUserClick(userId: Int) {
-                openProfile(userId)
-            }
-
-            override fun onUpvoteBtnClick(post: PostModel) {}
-            override fun onDownvoteBtnClick(post: PostModel) {}
-            override fun onBookmarkClick(post: PostModel) {
-                viewModel.bookmarkPost(post)
-            }
+            override fun onUserClick(userId: Int) { openProfile(userId) }
+            override fun onUpvoteBtnClick(post: PostModel) { viewModel.upvotePost(post) }
+            override fun onDownvoteBtnClick(post: PostModel) { viewModel.downvotePost(post) }
+            override fun onBookmarkClick(post: PostModel) { viewModel.bookmarkPost(post) }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
                 val sendIntent: Intent = Intent().apply {
@@ -75,21 +67,25 @@ class UserProfilePostsFragment: Fragment() {
         })
 
         binding.rvPosts.adapter = adapter
-        binding.rvPosts.layoutManager = LinearLayoutManager(context)
+        binding.rvPosts.layoutManager = LinearLayoutManager(this)
         binding.rvPosts.addItemDecoration(
             DividerItemDecoration(
-                context,
-                LinearLayoutManager(context).orientation
+                this,
+                LinearLayoutManager(this).orientation
             )
         )
 
-        viewModel.communityList.observe(requireActivity()) {
+        viewModel.communityList.observe(this) {
             it?.let {
                 adapter.updateCommunityList(it)
             }
         }
 
-        viewModel.postList.observe(activity as UserProfileActivity) {
+        viewModel.userList.observe(this){
+            it?.let { adapter.updateUserList(it) }
+        }
+
+        viewModel.postList.observe(this){
             it?.let {
                 if(it.isEmpty()){
                     binding.rvPosts.visibility = View.GONE
@@ -105,13 +101,14 @@ class UserProfilePostsFragment: Fragment() {
             }
         }
 
-        return binding.root
+        binding.toolbar.setNavigationOnClickListener{ finish() }
     }
 
     private fun openProfile(userId: Int){
-        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+        Intent(this, UserProfileActivity::class.java).apply {
             putExtra("UserId", userId)
             startActivity(this)
         }
     }
+
 }

@@ -60,6 +60,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/home_screen_bottom_nav_menu" />
 
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/extended_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="Create"
+            android:text="Create"
+            app:icon="@drawable/ic_add_no_circle_24"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

@@ -50,8 +50,16 @@ class PostSearchFragment: Fragment() {
                     startActivity(this)
                 }
             }
+
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
             override fun onUpvoteBtnClick(post: PostModel) {}
             override fun onDownvoteBtnClick(post: PostModel) {}
+            override fun onBookmarkClick(post: PostModel) {
+                viewModel.bookmarkPost(post)
+            }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
                 val sendIntent: Intent = Intent().apply {
@@ -104,5 +112,12 @@ class PostSearchFragment: Fragment() {
         }
 
         return fragmentPostSearchBinding.root
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

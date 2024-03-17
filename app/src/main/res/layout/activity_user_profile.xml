@@ -18,10 +18,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar"
+            app:contentScrim="@color/purple"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:expandedTitleTextColor="@color/transparent"
             app:expandedTitleMarginEnd="64dp"
+            android:theme="@style/Theme.Material3.Dark"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleTextAppearance="@style/TransparentText">
 
@@ -33,8 +34,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:paddingTop="20sp"
-                android:id="@+id/linearLayout"
-                android:background="?attr/colorPrimaryContainer">
+                android:id="@+id/linearLayout">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imageViewProfileHeader"
@@ -47,6 +47,7 @@
                     android:id="@+id/textViewUserNameProfileHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text="\@Sharan Kumar"
                     android:textSize="28dp"
                     android:textStyle="bold"/>
@@ -55,6 +56,7 @@
                     android:id="@+id/textViewEmailProfileHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text="developer@email.com"
                     android:textSize="12dp"
                     android:textStyle="bold"/>
@@ -65,23 +67,29 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="top"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/Theme.Material3.Light" />
+                app:titleTextColor="@color/white"
+                app:title=""
+                app:navigationIcon="@drawable/arrow_back_white_24"
+                android:theme="@style/Theme.Material3.Light"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom">
+        app:layout_anchorGravity="bottom"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50sp">
+            >
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -99,15 +107,12 @@
                 android:text="About"/>
 
         </com.google.android.material.tabs.TabLayout>
-    </LinearLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/userProfileViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50sp"
-        app:layout_anchor="@id/tabLayout"
-        app:layout_anchorGravity="bottom"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/userProfileViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

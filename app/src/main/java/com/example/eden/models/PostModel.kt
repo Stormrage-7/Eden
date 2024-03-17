@@ -12,6 +12,7 @@ data class PostModel (
     val bodyText: String,
     var voteCounter: Int = 0,
     var voteStatus: VoteStatus = VoteStatus.NONE,
+    val isBookmarked: Boolean = false,
     val communityId: Int,
     val posterId: Int  // UserID
 ) : Serializable

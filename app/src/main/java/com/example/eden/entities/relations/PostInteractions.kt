@@ -8,5 +8,6 @@ import com.example.eden.enums.VoteStatus
 data class PostInteractions (
     val userId: Int,
     val postId: Int,
-    val voteStatus: VoteStatus
+    val voteStatus: VoteStatus,
+    val isBookmarked: Boolean
 )

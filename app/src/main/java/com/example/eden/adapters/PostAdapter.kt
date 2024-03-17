@@ -50,6 +50,7 @@ class PostAdapter(
                     Log.i("Button Click", "postID - ${postList[bindingAdapterPosition].postId}, userID - ${postList[bindingAdapterPosition].posterId}")
                 }
 
+                bookmarkBtn.setOnClickListener { postListener.onBookmarkClick(postList[bindingAdapterPosition]) }
                 shareBtn.setSafeClickListener { postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId) }
                 textViewUserName.setSafeClickListener { postListener.onUserClick(postList[bindingAdapterPosition].posterId) }
             }
@@ -76,7 +77,9 @@ class PostAdapter(
 
             //COMMUNITY DETAILS
             if (context is CommunityDetailedActivity){
-                communityBar.visibility = View.GONE
+                imageViewCommunity.visibility = View.GONE
+                textViewCommunityName.visibility = View.GONE
+//                communityBar.visibility = View.INVISIBLE
             }
             else {
                 if (community != null) {
@@ -133,6 +136,11 @@ class PostAdapter(
 
             //UPVOTE AND DOWNVOTE
             textViewVoteCounter.text = post.voteCounter.toString()
+
+            when(post.isBookmarked){
+                true -> bookmarkBtn.setIconResource(R.drawable.ic_bookmark_filled)
+                false -> bookmarkBtn.setIconResource(R.drawable.ic_bookmark)
+            }
 
             likeBtn.setIconResource(post.voteStatus.upvoteIconDrawable)
             dislikeBtn.setIconResource(post.voteStatus.downvoteIconDrawable)
@@ -208,6 +216,7 @@ class PostAdapter(
         fun onCommunityClick(community: CommunityModel)
         fun onUpvoteBtnClick(post: PostModel)
         fun onDownvoteBtnClick(post: PostModel)
+        fun onBookmarkClick(post: PostModel)
         fun onShareBtnClick(postId: Int, communityId: Int)
         fun scrollToTop()
     }

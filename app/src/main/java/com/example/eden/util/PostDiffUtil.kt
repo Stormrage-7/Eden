@@ -23,6 +23,7 @@ class PostDiffUtil(
             oldList[oldItemPosition].imageUri != newList[newItemPosition].imageUri -> false
             oldList[oldItemPosition].voteCounter != newList[newItemPosition].voteCounter -> false
             oldList[oldItemPosition].voteStatus != newList[newItemPosition].voteStatus -> false
+            oldList[oldItemPosition].isBookmarked != newList[newItemPosition].isBookmarked -> false
             else -> true
         }
     }

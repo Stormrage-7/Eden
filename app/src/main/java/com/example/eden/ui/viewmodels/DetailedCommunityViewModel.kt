@@ -30,11 +30,11 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
     fun upvotePost(post: PostModel){
 //        val post = postList.value!![position]
         when(post.voteStatus){
-            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.NONE)
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.NONE, isBookMarked = post.isBookmarked)
                 repository.removePostUpvote(post.postId, post.posterId)}
-            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED)
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED, isBookMarked = post.isBookmarked)
                 repository.downvoteToUpvotePost(post.postId)}
-            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED)
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED, isBookMarked = post.isBookmarked)
                 repository.upvotePost(postId = post.postId, application.userId)}
         }
     }
@@ -42,13 +42,21 @@ class DetailedCommunityViewModel(private val repository: AppRepository,
     fun downvotePost(post: PostModel){
 //        val post = postList.value!![position]
         when(post.voteStatus){
-            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED)
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED, isBookMarked = post.isBookmarked)
                 repository.upvoteToDownvotePost(post.postId)}
-            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.NONE)
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.NONE, isBookMarked = post.isBookmarked)
                 repository.removePostDownvote(post.postId, post.posterId)}
-            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED)
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED, isBookMarked = post.isBookmarked)
                 repository.downvotePost(postId = post.postId, application.userId)}
         }
+    }
+
+    fun bookmarkPost(post: PostModel){
+        viewModelScope.launch { repository.updatePostInteractions(application.userId, post.postId, post.voteStatus,
+            when(post.isBookmarked){
+                true -> false
+                false -> true
+            }) }
     }
 
     fun onJoinClick() {

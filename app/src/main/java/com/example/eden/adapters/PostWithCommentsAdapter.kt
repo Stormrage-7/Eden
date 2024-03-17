@@ -104,6 +104,7 @@ class PostWithCommentsAdapter(
                 shareBtn.setOnClickListener {
                     if (post != null) postListener.onShareClick(post!!.postId, post!!.communityId)
                 }
+                bookmarkBtn.setOnClickListener { postListener.onBookmarkClick() }
                 textViewUserName.setOnClickListener { postListener.onUserClick(post!!.posterId) }
             }
         }
@@ -160,6 +161,10 @@ class PostWithCommentsAdapter(
                     //VOTE SYSTEM
                     textViewVoteCounter.text = post.voteCounter.toString()
 
+                    when(post.isBookmarked){
+                        true -> bookmarkBtn.setIconResource(R.drawable.ic_bookmark_filled)
+                        false -> bookmarkBtn.setIconResource(R.drawable.ic_bookmark)
+                    }
                     likeBtn.setIconResource(post.voteStatus.upvoteIconDrawable)
                     dislikeBtn.setIconResource(post.voteStatus.downvoteIconDrawable)
                     textViewVoteCounter.setTextColor(ContextCompat.getColor(context, post.voteStatus.textViewColor))
@@ -231,6 +236,7 @@ class PostWithCommentsAdapter(
         fun onUserClick(userId: Int)
         fun onUpvoteBtnClick()
         fun onDownvoteBtnClick()
+        fun onBookmarkClick()
         fun commentUpvoteButtonClick(comment: CommentModel)
         fun commentDownvoteButtonClick(comment: CommentModel)
         fun onShareClick(postId: Int, communityId: Int)

@@ -53,6 +53,9 @@ class DownvotedPostsFragment: Fragment() {
 
             override fun onUpvoteBtnClick(post: PostModel) {}
             override fun onDownvoteBtnClick(post: PostModel) {}
+            override fun onBookmarkClick(post: PostModel) {
+                viewModel.bookmarkPost(post)
+            }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
                 val sendIntent: Intent = Intent().apply {

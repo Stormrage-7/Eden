@@ -52,12 +52,10 @@
 
     <com.google.android.material.button.MaterialButton
         style="?attr/materialIconButtonStyle"
-        android:id="@+id/moreBtn"
+        android:id="@+id/bookmarkBtn"
         android:layout_width="wrap_content"
         android:layout_height="30sp"
         app:icon="@drawable/ic_bookmark"
-        app:iconTintMode="multiply"
-        app:iconTint="@color/green"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/textViewTitle"/>

@@ -40,6 +40,7 @@ class PostDetailedActivity: AppCompatActivity(),
         val application = application as Eden
         repository = application.repository
 
+
         factory = if (intent.hasExtra("PostObject")){
             val post = intent.getSerializableExtra("PostObject") as PostModel
             DetailedPostViewModelFactory(repository,
@@ -68,12 +69,20 @@ class PostDetailedActivity: AppCompatActivity(),
             override fun onCommunityClick(community: Community) {
             }
 
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
             override fun onUpvoteBtnClick() {
                 viewModel.upvotePost()
             }
 
             override fun onDownvoteBtnClick() {
                 viewModel.downvotePost()
+            }
+
+            override fun onBookmarkClick() {
+                viewModel.bookmarkPost()
             }
 
             override fun commentUpvoteButtonClick(comment: CommentModel) {
@@ -96,11 +105,18 @@ class PostDetailedActivity: AppCompatActivity(),
         })
 
         viewModel.post.observe(this) {
+
             if (it != null) {
                 postFound = true
                 activityDetailedPostViewBinding.rvComments.visibility = View.VISIBLE
                 adapter.post = it
                 adapter.notifyItemChanged(0)
+                if (it.posterId != application.userId){
+                    activityDetailedPostViewBinding.apply {
+                        editButton.visibility = View.GONE
+                        deleteButton.visibility = View.GONE
+                    }
+                }
             }
             else {
                 postFound = false
@@ -184,5 +200,12 @@ class PostDetailedActivity: AppCompatActivity(),
     }
 
     override fun onDialogNegativeClick() {}
+
+    private fun openProfile(userId: Int){
+        Intent(this, UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
+    }
 
 }

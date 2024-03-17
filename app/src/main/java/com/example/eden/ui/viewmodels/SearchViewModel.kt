@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.eden.database.AppRepository
 import com.example.eden.Eden
 import com.example.eden.entities.Community
+import com.example.eden.models.PostModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("LogNotTimber")
@@ -39,6 +40,16 @@ class SearchViewModel(private val repository: AppRepository,
             postList = repository.getPostsMatchingQuery(searchQuery, application.userId)
             communityList = repository.getCommunitiesMatchingQuery(searchQuery, application.userId)
             commentList = repository.getCommentsMatchingQuery(searchQuery, application.userId)
+        }
+    }
+
+    fun bookmarkPost(post: PostModel){
+        viewModelScope.launch {
+            repository.updatePostInteractions(application.userId, post.postId, post.voteStatus,
+                when(post.isBookmarked) {
+                    true -> false
+                    false -> true
+                })
         }
     }
 

@@ -20,17 +20,14 @@ class UserProfileAboutFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_user_about, container, false
+        binding = FragmentUserAboutBinding.inflate(
+            inflater, container, false
         )
         viewModel = (activity as UserProfileActivity).viewModel
-        binding.lifecycleOwner = this
-
-
 
         viewModel.user.observe(requireActivity()){ user ->
             user?.let {
-                binding.includedLayout.apply {
+                binding.apply {
                     nameTextViewProfile.text = "${user.firstName} ${user.lastName}"
                     emailTextViewProfile.text = user.email
                     mobileTextViewProfile.text = user.mobileNo

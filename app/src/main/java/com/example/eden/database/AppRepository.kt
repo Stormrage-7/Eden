@@ -74,8 +74,8 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.upvoteToDownvotePost(postId)
     }
 
-    suspend fun updatePostInteractions(userId: Int, postId: Int, voteStatus: VoteStatus){
-        databaseDao.upsertPostInteractions(PostInteractions(userId, postId, voteStatus))
+    suspend fun updatePostInteractions(userId: Int, postId: Int, voteStatus: VoteStatus, isBookMarked: Boolean){
+        databaseDao.upsertPostInteractions(PostInteractions(userId, postId, voteStatus, isBookMarked))
     }
 
     suspend fun upsertCommunity(community: Community){
@@ -226,4 +226,6 @@ class AppRepository(private val databaseDao: EdenDao) {
     fun getPostsOfUser(userId: Int) = databaseDao.getPostsOfUser(userId)
 
     fun getCommunityListForPostsOfUser(userId: Int) = databaseDao.getCommunityListForPostsOfUser(userId)
+    fun getBookmarkedPostList(userId: Int) = databaseDao.getBookmarkedPostList(userId)
+
 }

@@ -12,6 +12,7 @@ data class Comment (
     val imageUri: String? = null,
     var voteCounter: Int = 0,
     val postId: Int,
+    val postTitle: String,
     val communityId: Int,
     val posterId: Int
 )

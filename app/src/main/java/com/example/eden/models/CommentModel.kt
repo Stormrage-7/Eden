@@ -10,6 +10,7 @@ data class CommentModel (
     var voteCounter: Int = 0,
     var voteStatus: VoteStatus = VoteStatus.NONE,
     val postId: Int,
+    val postTitle: String,
     val communityId: Int,
     val posterId: Int
 ): Serializable
