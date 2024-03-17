@@ -21,6 +21,7 @@ import com.example.eden.models.PostModel
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.ui.UserProfileActivity
 import com.example.eden.util.CommunityDiffUtil
 import com.example.eden.util.PostDiffUtil
 import com.example.eden.util.SafeClickListener
@@ -49,15 +50,10 @@ class PostAdapter(
                     Log.i("Button Click", "postID - ${postList[bindingAdapterPosition].postId}, userID - ${postList[bindingAdapterPosition].posterId}")
                 }
 
-                shareBtn.setSafeClickListener {
-                    postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId)
-                }
+                shareBtn.setSafeClickListener { postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId) }
+                textViewUserName.setSafeClickListener { postListener.onUserClick(postList[bindingAdapterPosition].posterId) }
             }
             itemView.setSafeClickListener {
-//                val community = communityList.find { it.communityId == postList[bindingAdapterPosition].communityId }
-//                if (community != null) {
-//                    postListener.onPostClick(postList[bindingAdapterPosition], community)
-//                }
                 postListener.onPostClick(postList[bindingAdapterPosition])
             }
         }
@@ -104,9 +100,10 @@ class PostAdapter(
                 }
             }
 
-            if (user != null){
+            if (context !is UserProfileActivity && user != null){
                 textViewUserName.text = user.username
             }
+            else textViewUserName.visibility = View.GONE
 
             //TITLE
             textViewTitle.text = post.title
@@ -207,6 +204,7 @@ class PostAdapter(
 
     interface PostListener{
         fun onPostClick(post: PostModel)
+        fun onUserClick(userId: Int)
         fun onCommunityClick(community: CommunityModel)
         fun onUpvoteBtnClick(post: PostModel)
         fun onDownvoteBtnClick(post: PostModel)

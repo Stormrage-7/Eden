@@ -223,5 +223,7 @@ class AppRepository(private val databaseDao: EdenDao) {
 
     fun getCommentsOfUser(userId: Int) = databaseDao.getCommentsOfUser(userId)
 
+    fun getPostsOfUser(userId: Int) = databaseDao.getPostsOfUser(userId)
 
+    fun getCommunityListForPostsOfUser(userId: Int) = databaseDao.getCommunityListForPostsOfUser(userId)
 }

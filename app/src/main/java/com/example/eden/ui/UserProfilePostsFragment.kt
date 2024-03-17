@@ -33,7 +33,7 @@ class UserProfilePostsFragment: Fragment() {
 
         binding.lifecycleOwner = this
 
-        val adapter = PostAdapter(activity as PostInteractionsActivity, object : PostAdapter.PostListener {
+        val adapter = PostAdapter(activity as UserProfileActivity, object : PostAdapter.PostListener {
 
             override fun onCommunityClick(community: CommunityModel) {
                 Intent(requireActivity() as UserProfileActivity, CommunityDetailedActivity::class.java).apply {
@@ -75,19 +75,14 @@ class UserProfilePostsFragment: Fragment() {
             )
         )
 
-        viewModel.repository
         viewModel.communityList.observe(requireActivity()) {
             it?.let {
                 adapter.updateCommunityList(it)
             }
         }
 
-        viewModel.userList.observe(requireActivity()){
-            it?.let { adapter.updateUserList(it) }
-        }
-
-        viewModel.upvotedPostList.observe(activity as PostInteractionsActivity, Observer {
-            it.let {
+        viewModel.postList.observe(activity as UserProfileActivity) {
+            it?.let {
                 if(it.isEmpty()){
                     binding.rvPosts.visibility = View.GONE
                     binding.tempImgView.visibility = View.VISIBLE
@@ -100,7 +95,7 @@ class UserProfilePostsFragment: Fragment() {
                 }
                 adapter.updatePostList(it)
             }
-        })
+        }
 
         return binding.root
     }

@@ -12,13 +12,16 @@ import java.util.Date
 
 class ProfileViewModel(
     private val repository: AppRepository,
-
+    userId: Int,
     application: Eden
 ): AndroidViewModel(application) {
 
     val _counter = repository.getImgFileCounter()
     var counter = -1
-    var user = repository.getUser(application.userId)
+    var user = repository.getUser(userId)
+    val postList = repository.getPostsOfUser(userId)
+    val communityList = repository.getCommunityListForPostsOfUser(userId)
+    val commentList = repository.getCommentsOfUser(userId)
     init {
         Log.i("Profile", "ProfileViewModel Initialized!")
     }

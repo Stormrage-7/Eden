@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.adapters.CommentAdapter
 import com.example.eden.databinding.FragmentCommentSearchBinding
@@ -37,6 +38,10 @@ class CommentSearchFragment: Fragment() {
                     putExtra("CommentObject", comment)
                     startActivity(this)
                 }
+            }
+
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
             }
         })
 
@@ -71,5 +76,12 @@ class CommentSearchFragment: Fragment() {
         }
 
         return fragmentCommentSearchBinding.root
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

@@ -258,5 +258,26 @@ interface EdenDao {
             "postId, communityId, posterId from Comments_Table left join (select * from Comment_Interactions_Table where userId = :userId) as CommentInteractions on Comments_Table.commentId == CommentInteractions.commentId " +
             "WHERE posterId = :userId")
     fun getCommentsOfUser(userId: Int): LiveData<List<CommentModel>>
+
+    @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
+            " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, " +
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
+            "where posterId = :userId")
+    fun getPostsOfUser(userId: Int): LiveData<List<PostModel>>
+
+    @Query("select Communities.communityId, Communities.communityName, Communities.description, Communities.noOfMembers, Communities.noOfPosts, " +
+            "Communities.isCustomImage, Communities.imageUri, Communities.isJoined " +
+            "from " +
+            "(select Community_Table.communityId, communityName, description, noOfMembers, noOfPosts, " +
+            "contains_image as isCustomImage, image_uri as imageUri, " +
+            "COALESCE(CommunityInteractions.isJoined, 0) as isJoined " +
+            "from Community_Table left join (select * from Community_Interactions_Table where userId = :userId) as CommunityInteractions on Community_Table.communityId == CommunityInteractions.communityId) as Communities " +
+            "" +
+            "inner join" +
+            "" +
+            "(select Post_Table.communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions " +
+            "on Post_Table.postId == PostInteractions.postId where posterId = :userId) as PostsOfUser " +
+            "on Communities.communityId = PostsOfUser.communityId")
+    fun getCommunityListForPostsOfUser(userId: Int): LiveData<List<CommunityModel>>
 }
 

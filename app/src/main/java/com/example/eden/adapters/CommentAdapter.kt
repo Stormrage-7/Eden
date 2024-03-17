@@ -17,6 +17,7 @@ import com.example.eden.entities.User
 import com.example.eden.models.CommentModel
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.ui.UserProfileActivity
 import com.example.eden.util.CommentDiffUtil
 import com.example.eden.util.UriValidator
 import kotlin.math.abs
@@ -26,7 +27,13 @@ class CommentAdapter(
 
     private var commentList: List<CommentModel> = listOf()
     private var userList: List<User> = listOf()
-    inner class CommentViewHolder(val binding: ItemCommentBinding): RecyclerView.ViewHolder(binding.root)
+    inner class CommentViewHolder(val binding: ItemCommentBinding): RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.imageViewUser.setOnClickListener { commentClickListener.onUserClick(commentList[bindingAdapterPosition].posterId) }
+            binding.imageViewUser.setOnClickListener { commentClickListener.onUserClick(commentList[bindingAdapterPosition].posterId) }
+            itemView.setOnClickListener { commentClickListener.onCommentClick(commentList[bindingAdapterPosition]) }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val binding = ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -43,14 +50,23 @@ class CommentAdapter(
         val user = userList.find { comment.posterId == it.userId }
 
         holder.binding.apply {
-            if (user != null) {
+            if (context !is UserProfileActivity && user != null) {
                 textViewUserName.text = user.username
                 if (!user.isCustomImage) imageViewUser.setImageResource(user.profileImageUri.toInt())
                 else {
-                    if (UriValidator.validate(context, user.profileImageUri)) imageViewUser.setImageURI(
-                        Uri.parse(user.profileImageUri))
+                    if (UriValidator.validate(
+                            context,
+                            user.profileImageUri
+                        )
+                    ) imageViewUser.setImageURI(
+                        Uri.parse(user.profileImageUri)
+                    )
                     else imageViewUser.setImageResource(user.profileImageUri.toInt())
                 }
+            }
+            else{
+                imageViewUser.visibility = View.GONE
+                textViewUserName.visibility = View.GONE
             }
 
             commentTextView.text = comment.commentText
@@ -76,9 +92,6 @@ class CommentAdapter(
                 }
             }
         }
-        holder.itemView.setOnClickListener {
-            commentClickListener.onCommentClick(commentList[position])
-        }
     }
 
     fun updateCommentList(newCommentList: List<CommentModel>) {
@@ -94,5 +107,6 @@ class CommentAdapter(
 
     interface CommentClickListener{
         fun onCommentClick(comment: CommentModel)
+        fun onUserClick(userId: Int)
     }
 }

@@ -100,6 +100,10 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
                 }
             }
 
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
             override fun onCommunityClick(community: CommunityModel) {
             }
 
@@ -310,5 +314,12 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             onSafeCLick(it)
         }
         setOnClickListener(safeClickListener)
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(this, UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

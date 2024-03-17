@@ -36,6 +36,10 @@ class MyCommentsFragment: Fragment() {
                     startActivity(this)
                 }
             }
+
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
         })
 
         binding.rvComments.adapter = adapter
@@ -46,6 +50,12 @@ class MyCommentsFragment: Fragment() {
                 LinearLayoutManager(requireContext()).orientation
             )
         )
+
+        viewModel.userList.observe(requireActivity()) {
+            it?.let {
+                adapter.updateUserList(it)
+            }
+        }
 
         viewModel.commentList.observe(activity as PostInteractionsActivity) {
             if (it != null) {
@@ -62,12 +72,12 @@ class MyCommentsFragment: Fragment() {
             }
         }
 
-        viewModel.userList.observe(requireActivity()) {
-            it?.let {
-                adapter.updateUserList(it)
-            }
-        }
-
         return binding.root
+    }
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

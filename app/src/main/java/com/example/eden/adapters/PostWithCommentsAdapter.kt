@@ -59,6 +59,8 @@ class PostWithCommentsAdapter(
 //                    notifyItemRangeChanged(bindingAdapterPosition, bindingAdapterPosition+1)
 //                    notifyItemChanged(bindingAdapterPosition)
                 }
+                imageViewUser.setOnClickListener { postListener.onUserClick(commentList[bindingAdapterPosition-1].posterId) }
+                textViewUserName.setOnClickListener { postListener.onUserClick(commentList[bindingAdapterPosition-1].posterId) }
             }
         }
         fun bind(comment: CommentModel){
@@ -102,6 +104,7 @@ class PostWithCommentsAdapter(
                 shareBtn.setOnClickListener {
                     if (post != null) postListener.onShareClick(post!!.postId, post!!.communityId)
                 }
+                textViewUserName.setOnClickListener { postListener.onUserClick(post!!.posterId) }
             }
         }
         @SuppressLint("ResourceAsColor")
@@ -225,6 +228,7 @@ class PostWithCommentsAdapter(
 
     interface PostListener{
         fun onCommunityClick(community: Community)
+        fun onUserClick(userId: Int)
         fun onUpvoteBtnClick()
         fun onDownvoteBtnClick()
         fun commentUpvoteButtonClick(comment: CommentModel)

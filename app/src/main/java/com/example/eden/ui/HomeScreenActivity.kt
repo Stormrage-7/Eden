@@ -227,7 +227,8 @@ class HomeScreenActivity: AppCompatActivity(){
     }
 
     private fun openProfile(){
-        Intent(this, ProfileActivity::class.java).apply {
+        Intent(this, UserProfileActivity::class.java).apply {
+            putExtra("UserId", (application as Eden).userId)
             startActivity(this)
         }
     }

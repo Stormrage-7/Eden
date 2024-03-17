@@ -63,6 +63,10 @@ class HomeFragment: Fragment(){
                 openPost(post)
             }
 
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
             override fun onUpvoteBtnClick(post: PostModel) {
                 viewModel.upvotePost(post)
             }
@@ -135,6 +139,13 @@ class HomeFragment: Fragment(){
     private fun openPost(post: PostModel){
         Intent(requireActivity(), PostDetailedActivity::class.java).apply {
             putExtra("PostObject", post)
+            startActivity(this)
+        }
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
             startActivity(this)
         }
     }

@@ -61,7 +61,7 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
 
         database = AppDatabase.getDatabase(applicationContext as Eden)
         repository = AppRepository(database.edenDao())
-        factory = ProfileViewModelFactory(repository, application as Eden)
+        factory = ProfileViewModelFactory(repository, (application as Eden).userId ,application as Eden)
         viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
 
         viewModel._counter.observe(this) {

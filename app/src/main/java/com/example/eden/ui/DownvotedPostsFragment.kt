@@ -46,6 +46,11 @@ class DownvotedPostsFragment: Fragment() {
                     startActivity(this)
                 }
             }
+
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
             override fun onUpvoteBtnClick(post: PostModel) {}
             override fun onDownvoteBtnClick(post: PostModel) {}
 
@@ -98,5 +103,12 @@ class DownvotedPostsFragment: Fragment() {
         }
 
         return fragmentPostSearchBinding.root
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }
