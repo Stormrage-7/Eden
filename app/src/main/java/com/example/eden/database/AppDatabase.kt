@@ -39,7 +39,7 @@ import java.util.Date
         CommentInteractions::class,
         CommunityInteractions::class
     ],
-    version = 74)
+    version = 75)
 @TypeConverters(Converters::class)
 
 abstract class AppDatabase : RoomDatabase() {
@@ -212,10 +212,10 @@ abstract class AppDatabase : RoomDatabase() {
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "I'm actually kinda the opposite. One monitor is high refresh rate, but not the best color accuracy. The other one is a standard 60hz, but best image quality I could buy at the price.",
-                    postId = 13, communityId = 6, posterId = 1, postTitle = "Dual monitor setups be like"))
+                    postId = 13, communityId = 6, posterId = 3, postTitle = "Dual monitor setups be like"))
 
             it.edenDao().upsertComment(
-                Comment(0, commentText = "My 2nd is a TV", postId = 13, communityId = 6, posterId = 1, postTitle = "Dual monitor setups be like"))
+                Comment(0, commentText = "My 2nd is a TV", postId = 13, communityId = 6, posterId = 2, postTitle = "Dual monitor setups be like"))
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "Mount fuji has truly inspired a million photographs",
