@@ -96,8 +96,16 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
                     }
                 }
                 else {
-                    if (user.userId in 1..3) imageViewProfile.setImageResource(user.profileImageUri.toInt())
-                    else imageViewProfile.setImageResource(R.drawable.ic_avatar)
+                    if (user.userId in 1..3) {
+                        imageViewProfile.setImageResource(user.profileImageUri.toInt())
+                        isImageAttached = true
+                        imageUri = user.profileImageUri
+                    }
+                    else {
+                        imageViewProfile.setImageResource(R.drawable.ic_avatar)
+                        isImageAttached = false
+                        imageUri = R.drawable.ic_avatar.toString()
+                    }
                 }
 
 
