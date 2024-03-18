@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         android:text="Community Name"
         app:layout_constraintStart_toEndOf="@id/imageViewCommunity"
         app:layout_constraintTop_toTopOf="parent"

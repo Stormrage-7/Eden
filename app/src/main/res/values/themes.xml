@@ -3,12 +3,12 @@
     <style name="Base.Theme.Eden" parent="Theme.Material3.Light.NoActionBar">
 
     </style>
-    <style name="multi_touch" parent="Base.Theme.Eden">
+    <style name="multi_touch" parent="Theme.Eden.HomeScreen">
         <item name="android:splitMotionEvents">false</item>
     </style>
 
     <style name="Theme.Eden.HomeScreen" parent="Theme.Material3.Light.NoActionBar">
-
+        <item name="android:splitMotionEvents">false</item>
     </style>
 
     <style name="Theme.Eden.CreatePostScreen" parent="Theme.Material3.Light.NoActionBar">

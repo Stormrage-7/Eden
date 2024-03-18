@@ -170,6 +170,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDetailedCommunity"
         android:layout_marginTop="48sp"
+        android:theme="@style/multi_touch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="5sp"
