@@ -80,19 +80,26 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
 
         viewModel.user.observe(this) { user ->
             binding.apply {
-                if (user.isCustomImage and UriValidator.validate(this@EditProfileActivity, user.profileImageUri)){
-                    imageViewProfile.setImageURI(
-                        Uri.parse(user.profileImageUri))
-                    deleteImageBtn.visibility = View.VISIBLE
-                    isImageAttached = true
-                    imageUri = user.profileImageUri
+                if (user.isCustomImage){
+                    if(UriValidator.validate(this@EditProfileActivity, user.profileImageUri)){
+                        imageViewProfile.setImageURI(
+                            Uri.parse(user.profileImageUri))
+                        deleteImageBtn.visibility = View.VISIBLE
+                        isImageAttached = true
+                        imageUri = user.profileImageUri
+                    }
+                    else{
+                        imageViewProfile.setImageResource(R.drawable.ic_avatar)
+                        deleteImageBtn.visibility = View.INVISIBLE
+                        isImageAttached = false
+                        imageUri = R.drawable.ic_avatar.toString()
+                    }
                 }
-                else{
-                    imageViewProfile.setImageResource(R.drawable.ic_avatar)
-                    deleteImageBtn.visibility = View.INVISIBLE
-                    isImageAttached = false
-                    imageUri = R.drawable.ic_avatar.toString()
+                else {
+                    if (user.userId in 1..3) imageViewProfile.setImageResource(user.profileImageUri.toInt())
+                    else imageViewProfile.setImageResource(R.drawable.ic_avatar)
                 }
+
 
                 firstName = user.firstName
                 lastName = user.lastName

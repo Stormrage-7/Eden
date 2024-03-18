@@ -39,7 +39,7 @@ import java.util.Date
         CommentInteractions::class,
         CommunityInteractions::class
     ],
-    version = 72)
+    version = 74)
 @TypeConverters(Converters::class)
 
 abstract class AppDatabase : RoomDatabase() {
@@ -207,8 +207,7 @@ abstract class AppDatabase : RoomDatabase() {
                             "Quite important in a phone!", postId = 6, communityId = 3, posterId = 1, postTitle = "Xiaomi 14 Pro is an extremely underrated phone."))
 
             it.edenDao().upsertComment(
-                Comment(0, commentText = "\n" +
-                        "More like one new monitor and one older and smaller monitor from your previous build.",
+                Comment(0, commentText = "More like one new monitor and one older and smaller monitor from your previous build.",
                     postId = 13, communityId = 6, posterId = 1, postTitle = "Dual monitor setups be like"))
 
             it.edenDao().upsertComment(

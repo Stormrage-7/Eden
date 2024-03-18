@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -44,9 +45,52 @@ class UserProfileActivity: AppCompatActivity() {
         factory = ProfileViewModelFactory(repository, intent.getIntExtra("UserId", -1), application as Eden)
         viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
 
+        Log.i("UserTitle outside 1", supportActionBar?.title.toString())
+        binding.toolbar.title = ""
         setSupportActionBar(binding.toolbar)
+        Log.i("UserTitle outside 2", supportActionBar?.title.toString())
 
         binding.toolbar.setNavigationOnClickListener { finish() }
+
+        binding.imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
+
+        val viewPagerAdapter = UserProfileViewPagerAdapter(supportFragmentManager, lifecycle)
+        binding.userProfileViewPager.adapter = viewPagerAdapter
+
+        TabLayoutMediator(binding.tabLayout, binding.userProfileViewPager){ tab, position ->
+            when(position){
+                0 -> tab.text = "Posts"
+                1 -> tab.text = "Comments"
+                2 -> tab.text = "About"
+            }
+        }.attach()
+
+        viewModel.user.observe(this) { user ->
+            user?.let {
+                Log.i("UserTitle inside let", supportActionBar?.title.toString())
+                binding.apply {
+                    Log.i("UserTitle inside apply 1", supportActionBar?.title.toString())
+                    binding.toolbar.title = user.username
+                    Log.i("UserTitle inside apply 2", supportActionBar?.title.toString())
+                    if (user.isCustomImage and UriValidator.validate(
+                            this@UserProfileActivity,
+                            user.profileImageUri
+                        )
+                    ) {
+                        imageViewProfileHeader.setImageURI(
+                            Uri.parse(user.profileImageUri)
+                        )
+//                    imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
+                    } else {
+                        if (user.userId in 1..3) imageViewProfileHeader.setImageResource(user.profileImageUri.toInt())
+                        else imageViewProfileHeader.setImageResource(R.drawable.ic_avatar)
+                    }
+
+                    textViewUserNameProfileHeader.text = user.username
+                    textViewEmailProfileHeader.text = user.email
+                }
+            }
+        }
 
         binding.appBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (abs(verticalOffset) == appBarLayout.totalScrollRange){
@@ -71,42 +115,6 @@ class UserProfileActivity: AppCompatActivity() {
                 }
             }
             invalidateOptionsMenu()
-        }
-
-        binding.imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
-
-        val viewPagerAdapter = UserProfileViewPagerAdapter(supportFragmentManager, lifecycle)
-        binding.userProfileViewPager.adapter = viewPagerAdapter
-
-        TabLayoutMediator(binding.tabLayout, binding.userProfileViewPager){ tab, position ->
-            when(position){
-                0 -> tab.text = "Posts"
-                1 -> tab.text = "Comments"
-                2 -> tab.text = "About"
-            }
-        }.attach()
-
-        viewModel.user.observe(this) {user ->
-            binding.apply {
-                if (user.isCustomImage and UriValidator.validate(this@UserProfileActivity, user.profileImageUri)){
-                    imageViewProfileHeader.setImageURI(
-                        Uri.parse(user.profileImageUri))
-//                    imageViewProfileHeader.scaleType = ImageView.ScaleType.CENTER_CROP
-                }
-                else {
-                    if (user.userId in 1..3) imageViewProfileHeader.setImageResource(user.profileImageUri.toInt())
-                    else imageViewProfileHeader.setImageResource(R.drawable.ic_avatar)
-                }
-
-                textViewUserNameProfileHeader.text = user.username
-                binding.toolbar.title = user.username
-                textViewEmailProfileHeader.text = user.email
-//                includedLayout.nameTextViewProfile.text = "${user.firstName} ${user.lastName}"
-//                includedLayout.emailTextViewProfile.text = user.email
-//                includedLayout.mobileTextViewProfile.text = user.mobileNo
-//                includedLayout.dobTextViewProfile.text = DateUtils.toSimpleString(user.dob)
-//                includedLayout.countryTextViewProfile.text = user.country.text
-            }
         }
     }
 
