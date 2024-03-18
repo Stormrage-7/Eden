@@ -10,6 +10,7 @@ import kotlin.properties.Delegates
 class Eden: Application() {
     lateinit var edenDao: EdenDao
     lateinit var repository: AppRepository
+    var userId = 2
     override fun onCreate() {
         super.onCreate()
 //        Timber.plant(Timber.DebugTree())

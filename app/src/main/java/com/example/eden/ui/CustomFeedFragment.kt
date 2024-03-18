@@ -17,8 +17,8 @@ import com.example.eden.ui.viewmodels.HomeViewModel
 import com.example.eden.ui.viewmodels.HomeViewModelFactory
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.FragmentCustomFeedBinding
-import com.example.eden.entities.Community
-import com.example.eden.entities.Post
+import com.example.eden.models.CommunityModel
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 
 class CustomFeedFragment: Fragment() {
@@ -44,26 +44,34 @@ class CustomFeedFragment: Fragment() {
 
         val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener{
 
-            override fun onCommunityClick(community: Community) {
+            override fun onCommunityClick(community: CommunityModel) {
                 Intent(requireActivity() as HomeScreenActivity, CommunityDetailedActivity:: class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
 
-            override fun onPostClick(post: Post) {
+            override fun onPostClick(post: PostModel) {
                 Intent(requireActivity(), PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     startActivity(this)
                 }
             }
 
-            override fun onUpvoteBtnClick(post: Post) {
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
+            override fun onUpvoteBtnClick(post: PostModel) {
                 viewModel.upvotePost(post)
             }
 
-            override fun onDownvoteBtnClick(post: Post) {
+            override fun onDownvoteBtnClick(post: PostModel) {
                 viewModel.downvotePost(post)
+            }
+
+            override fun onBookmarkClick(post: PostModel) {
+                viewModel.bookmarkPost(post)
             }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
@@ -91,36 +99,39 @@ class CustomFeedFragment: Fragment() {
             )
         )
 
-        viewModel.communityList.observe(this.requireActivity(), Observer {
-            Log.i("CustomFeedFragment", "community list = $it")
-            adapter.updateCommunityList(it)
-        })
-
-        viewModel.joinedCommunitiesList.observe(this.requireActivity(), Observer {
-            Log.i("CustomFeedFragment", "Joined Communities = $it")
+        viewModel.joinedCommunityList.observe(requireActivity()) {
             adapter.updateJoinedCommunityList(it)
-        })
+        }
 
-        viewModel.postList.observe(this.requireActivity(), Observer {
+        viewModel.userList.observe(requireActivity()){
+            it?.let { adapter.updateUserList(it) }
+        }
+
+        viewModel.joinedCommunityPostList.observe(requireActivity()) {
             it?.let {
-                Log.i("CustomFeedFragment", "$it")
-                val filteredList = it.filter { post -> adapter.joinedCommunitiesList.contains(post.communityId) }
-                Log.i("CustomFeedFragment", "$filteredList")
-                if(filteredList.isEmpty()){
+                if (it.isEmpty()) {
                     fragmentCustomFeedBinding.rvPosts.visibility = View.GONE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.VISIBLE
                     Log.i("CustomFeedFragment", "Empty")
-                }
-                else {
+                } else {
                     fragmentCustomFeedBinding.rvPosts.visibility = View.VISIBLE
                     fragmentCustomFeedBinding.tempImgView.visibility = View.GONE
                     fragmentCustomFeedBinding.tempTextView.visibility = View.GONE
                 }
-                adapter.updatePostList(filteredList)
+                adapter.updatePostList(it)
             }
             Log.i("CustomFeedFragment", "PostList Observer")
-        })
+        }
+
+
         return fragmentCustomFeedBinding.root
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

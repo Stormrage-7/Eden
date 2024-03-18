@@ -8,43 +8,32 @@ import com.example.eden.database.AppRepository
 import com.example.eden.Eden
 import com.example.eden.entities.Community
 import com.example.eden.entities.ImageUri
+import com.example.eden.models.CommunityModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("LogNotTimber")
 class CommunitiesViewModel(private val repository: AppRepository,
-                           application: Eden
+                           private val application: Eden
 ): AndroidViewModel(application) {
 
     val _counter = repository.getImgFileCounter()
     var counter = -1
-    val communityList = repository.communityList
+    val communityList = repository.getCommunityList(userId = application.userId)
     var communityNameList = mutableListOf<String>()
 
     init {
         Log.i("Community List", communityList.value.toString())
         Log.i("Testing", "CommunitiesViewModel Initialized!")
         refreshCommunityListFromRepository()
-        Log.i("Community List", repository.communityList.value.toString())
     }
 
     fun onJoinClick(position: Int) {
         val community = communityList.value!![position]
-        val temp: Community = when(community.isJoined){
-                true -> {
-                    viewModelScope.launch{
-                        repository.deleteFromJoinedCommunities(community.communityId)
-                    }
-                    community.copy(noOfMembers = community.noOfMembers-1, isJoined = false)
-                }
-                false -> {
-                    viewModelScope.launch {
-                        repository.insertIntoJoinedCommunities(community.communityId)
-                    }
-                    community.copy(noOfMembers = community.noOfMembers+1, isJoined = true)
-                }
-            }
-        viewModelScope.launch{
-            repository.upsertCommunity(temp)
+        when(community.isJoined){
+                true -> viewModelScope.launch{ repository.updateCommunityInteractions(application.userId, community.communityId, false)
+                    repository.unJoinCommunity(community.communityId) }
+                false -> viewModelScope.launch { repository.updateCommunityInteractions(application.userId, community.communityId, true)
+                    repository.joinCommunity(community.communityId) }
         }
     }
 
@@ -63,13 +52,16 @@ class CommunitiesViewModel(private val repository: AppRepository,
 
     private fun refreshCommunityListFromRepository(){
         Log.i("Inside Refresh Community", "Community viewmodel")
-        repository.refreshCommunities()
     }
 
-    fun updateCommunityNameList(communityList: List<Community>){
+    fun updateCommunityNameList(communityList: List<CommunityModel>){
         communityNameList = mutableListOf()
         communityList.forEach { community -> communityNameList.add(community.communityName) }
         Log.i("NEW COMMUNITY in function", communityNameList.toString())
+    }
+
+    fun updateCommunity(communityId: Int, communityDescription: String) {
+        viewModelScope.launch { repository.updateCommunity(communityId, communityDescription) }
     }
 
 }

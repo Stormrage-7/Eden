@@ -12,6 +12,11 @@
         android:title="Post Interactions"
         android:checkable="true"/>
     <item
+        android:id="@+id/bookmarks_Btn"
+        android:icon="@drawable/ic_my_bookmarks"
+        android:title="BookMarks"
+        android:checkable="true"/>
+    <item
         android:id="@+id/profile_btn"
         android:icon="@drawable/ic_profile_24"
         android:title="Profile"

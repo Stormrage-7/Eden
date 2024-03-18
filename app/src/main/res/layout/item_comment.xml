@@ -35,6 +35,18 @@
             android:textSize="12sp" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/postTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:visibility="gone"
+        android:layout_marginStart="3sp"
+        app:layout_constraintTop_toBottomOf="@id/user_bar"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="3sp"/>
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageViewComment"
         android:layout_width="match_parent"
@@ -46,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_bar"
+        app:layout_constraintTop_toBottomOf="@+id/postTitleTextView"
         app:shapeAppearanceOverlay="@style/roundedImageView" />
 
     <TextView

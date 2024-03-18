@@ -15,6 +15,7 @@ class PostInteractionsActivity: AppCompatActivity() {
     private lateinit var activityPostInteractionBinding: ActivityPostInteractionBinding
     lateinit var viewModel: PostInteractionsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         activityPostInteractionBinding = ActivityPostInteractionBinding.inflate(layoutInflater)
         setContentView(activityPostInteractionBinding.root)
@@ -29,6 +30,7 @@ class PostInteractionsActivity: AppCompatActivity() {
             when(position){
                 0 -> tab.text = "Upvoted"
                 1 -> tab.text = "Downvoted"
+                2 -> tab.text = "Comments"
             }
         }.attach()
 

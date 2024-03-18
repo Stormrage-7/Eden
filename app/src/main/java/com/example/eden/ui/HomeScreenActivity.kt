@@ -4,8 +4,13 @@ import android.app.SearchManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +32,6 @@ import timber.log.Timber
 class HomeScreenActivity: AppCompatActivity(){
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var databaseDao: EdenDao
-//    private lateinit var current: Fragment
     private lateinit var viewModel: HomeViewModel
     private lateinit var repository: AppRepository
     private lateinit var factory: HomeViewModelFactory
@@ -47,8 +51,13 @@ class HomeScreenActivity: AppCompatActivity(){
         val headerView = activityHomeScreenBinding.navigationView.getHeaderView(0)
         val imageViewProfile = headerView.findViewById<ImageView>(R.id.imageViewNavDrawer)
         val textViewProfile = headerView.findViewById<TextView>(R.id.textViewNavDrawer)
+        val btnChangeProfile = headerView.findViewById<Button>(R.id.changeProfileBtn)
         imageViewProfile.setOnClickListener { openProfile() }
         textViewProfile.setOnClickListener { openProfile() }
+        btnChangeProfile.setOnClickListener { v: View ->
+            showMenu(v, R.menu.popup_menu)
+        }
+
 
         viewModel.user.observe(this) { user ->
             if (user!=null) {
@@ -96,6 +105,11 @@ class HomeScreenActivity: AppCompatActivity(){
                         startActivity(this)
                     }
                 }
+                R.id.bookmarks_Btn -> {
+                    Intent(this, BookmarksActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                }
                 R.id.profile_btn -> {
                     openProfile()
                 }
@@ -121,33 +135,6 @@ class HomeScreenActivity: AppCompatActivity(){
             activityHomeScreenBinding.homeScreenSearchView.hide()
             true
         }
-
-//        activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener { item ->
-//            when(item.itemId) {
-//                R.id.miHome -> {
-//                    setCurrentFragment(homeFragment)
-//                    current = homeFragment
-//                    true
-//                }
-//                R.id.miCreatePost -> {
-//                    Intent(this, NewPostActivity::class.java).apply {
-//                        startActivity(this)
-//                    }
-//                    false
-//                }
-//                R.id.miCustomFeed -> {
-//                    setCurrentFragment(yourFeedFragment)
-//                    current = yourFeedFragment
-//                    true
-//                }
-//                R.id.miCommunities -> {
-//                    setCurrentFragment(communitiesFragment)
-//                    current = communitiesFragment
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
 
         activityHomeScreenBinding.bottomNavigationView.setOnItemSelectedListener{
             activityHomeScreenBinding.topAppBar.requestFocus()
@@ -228,8 +215,50 @@ class HomeScreenActivity: AppCompatActivity(){
     }
 
     private fun openProfile(){
-        Intent(this, ProfileActivity::class.java).apply {
+        Intent(this, UserProfileActivity::class.java).apply {
+            putExtra("UserId", (application as Eden).userId)
             startActivity(this)
         }
+    }
+
+    private fun showMenu(v: View, @MenuRes menuRes: Int) {
+        val popup = PopupMenu(this, v)
+        popup.menuInflater.inflate(menuRes, popup.menu)
+
+        val currentUser = (application as Eden).userId
+        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
+            when(menuItem.itemId){
+                R.id.user_1 -> {
+                    if (currentUser != 1){
+                        (application as Eden).userId = 1
+                        restart()
+                    }
+                }
+                R.id.user_2 -> {
+                    if (currentUser != 2){
+                        (application as Eden).userId = 2
+                        restart()
+                    }
+                }
+                R.id.user_3 -> {
+                    if (currentUser != 3){
+                        (application as Eden).userId = 3
+                        restart()
+                    }
+                }
+            }
+            false
+        }
+        popup.setOnDismissListener {
+            // Respond to popup being dismissed.
+        }
+        // Show the popup menu.
+        popup.show()
+    }
+
+    private fun restart(){
+        finish()
+        startActivity(intent)
+        overridePendingTransition(0, 1)
     }
 }

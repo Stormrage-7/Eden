@@ -8,7 +8,6 @@
         android:id="@+id/TopBarConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,7 +18,7 @@
             android:layout_width="48sp"
             android:layout_height="48sp"
             android:src="@drawable/ic_close_24"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="?attr/colorSurface"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -56,6 +55,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Downvoted"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comments"/>
 
     </com.google.android.material.tabs.TabLayout>
 

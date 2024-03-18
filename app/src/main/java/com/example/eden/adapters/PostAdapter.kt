@@ -14,10 +14,14 @@ import com.example.eden.R
 import com.example.eden.entities.Post
 import com.example.eden.databinding.ItemPostBinding
 import com.example.eden.entities.Community
+import com.example.eden.entities.User
 import com.example.eden.enums.PostFilter
+import com.example.eden.models.CommunityModel
+import com.example.eden.models.PostModel
 import com.example.eden.ui.CommunityDetailedActivity
 import com.example.eden.ui.PostInteractionsActivity
 import com.example.eden.ui.SearchableActivity
+import com.example.eden.ui.UserProfileActivity
 import com.example.eden.util.CommunityDiffUtil
 import com.example.eden.util.PostDiffUtil
 import com.example.eden.util.SafeClickListener
@@ -29,30 +33,28 @@ class PostAdapter(
     private val postListener: PostListener
 ): RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
-    var joinedCommunitiesList: List<Int> = listOf()
-    private var postList: MutableList<Post> = mutableListOf()
-    private var communityList: List<Community> = listOf()
+    private var postList: MutableList<PostModel> = mutableListOf()
+    private var communityList: List<CommunityModel> = listOf()
+    private var userList: List<User> = listOf()
     private var filter = PostFilter.HOT
 
     inner class PostViewHolder(val binding: ItemPostBinding): RecyclerView.ViewHolder(binding.root){
         init {
             binding.apply {
-                likeBtn.setOnClickListener {
+                likeBtn.setSafeClickListener {
                     postListener.onUpvoteBtnClick(postList[bindingAdapterPosition])
+                    Log.i("Button Click", "postID - ${postList[bindingAdapterPosition].postId}, userID - ${postList[bindingAdapterPosition].posterId}")
                 }
-                dislikeBtn.setOnClickListener {
+                dislikeBtn.setSafeClickListener {
                     postListener.onDownvoteBtnClick(postList[bindingAdapterPosition])
+                    Log.i("Button Click", "postID - ${postList[bindingAdapterPosition].postId}, userID - ${postList[bindingAdapterPosition].posterId}")
                 }
 
-                shareBtn.setSafeClickListener {
-                    postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId)
-                }
+                bookmarkBtn.setOnClickListener { postListener.onBookmarkClick(postList[bindingAdapterPosition]) }
+                shareBtn.setSafeClickListener { postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId) }
+                textViewUserName.setSafeClickListener { postListener.onUserClick(postList[bindingAdapterPosition].posterId) }
             }
             itemView.setSafeClickListener {
-//                val community = communityList.find { it.communityId == postList[bindingAdapterPosition].communityId }
-//                if (community != null) {
-//                    postListener.onPostClick(postList[bindingAdapterPosition], community)
-//                }
                 postListener.onPostClick(postList[bindingAdapterPosition])
             }
         }
@@ -68,13 +70,16 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = postList[position]
         val communityId = post.communityId
-        val community: Community? = communityList.find { it.communityId == communityId }
+        val community: CommunityModel? = communityList.find { it.communityId == communityId }
+        val user = userList.find { it.userId == post.posterId}
 
         holder.binding.apply {
 
             //COMMUNITY DETAILS
             if (context is CommunityDetailedActivity){
-                communityBar.visibility = View.GONE
+                imageViewCommunity.visibility = View.GONE
+                textViewCommunityName.visibility = View.GONE
+//                communityBar.visibility = View.INVISIBLE
             }
             else {
                 if (community != null) {
@@ -97,6 +102,12 @@ class PostAdapter(
                     imageViewCommunity.setImageResource(R.color.white)
                 }
             }
+
+            if (context !is UserProfileActivity && user != null){
+                textViewUserName.text = user.username
+            }
+            else textViewUserName.visibility = View.GONE
+
             //TITLE
             textViewTitle.text = post.title
 
@@ -126,6 +137,11 @@ class PostAdapter(
             //UPVOTE AND DOWNVOTE
             textViewVoteCounter.text = post.voteCounter.toString()
 
+            when(post.isBookmarked){
+                true -> bookmarkBtn.setIconResource(R.drawable.ic_bookmark_filled)
+                false -> bookmarkBtn.setIconResource(R.drawable.ic_bookmark)
+            }
+
             likeBtn.setIconResource(post.voteStatus.upvoteIconDrawable)
             dislikeBtn.setIconResource(post.voteStatus.downvoteIconDrawable)
             textViewVoteCounter.setTextColor(ContextCompat.getColor(context, post.voteStatus.textViewColor))
@@ -139,7 +155,7 @@ class PostAdapter(
         }
     }
 
-    private fun setData(newPostList: List<Post>){
+    private fun setData(newPostList: List<PostModel>){
         val diffUtil = PostDiffUtil(postList, newPostList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
 //        if (newPostList.size > postList.size) postListener.scrollToTop()
@@ -147,10 +163,9 @@ class PostAdapter(
         diffResults.dispatchUpdatesTo(this)
     }
 
-    fun updatePostList(newPostList: List<Post>) {
+    fun updatePostList(newPostList: List<PostModel>) {
         Log.i("In Update Method", "Local List: ${this.postList}")
         Log.i("In Update Method", "Live List: $postList")
-        Log.i("In Update Method", "Joined List: $joinedCommunitiesList")
         when(filter){
             PostFilter.HOT -> newPostList.sortedByDescending { it.postId }.toMutableList()
             PostFilter.TOP -> newPostList.sortedByDescending { it.voteCounter }.toMutableList()
@@ -160,20 +175,15 @@ class PostAdapter(
         setData(newPostList)
     }
 
-    fun updateCommunityList(newCommunityList: List<Community>){
+    fun updateCommunityList(newCommunityList: List<CommunityModel>){
         val diffUtil = CommunityDiffUtil(communityList, newCommunityList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         communityList = newCommunityList
         diffResults.dispatchUpdatesTo(this)
     }
 
-    fun updateJoinedCommunityList(joinedCommunitiesList: List<Int>?) {
-        if (joinedCommunitiesList != null) {
-            this.joinedCommunitiesList = joinedCommunitiesList
-            Log.i("PostAdapter", "${this.postList}")
-            val newPostList = postList.filter { post -> this.joinedCommunitiesList.contains(post.communityId) }.toMutableList()
-            setData(newPostList)
-        }
+    fun updateJoinedCommunityList(joinedCommunitiesList: List<CommunityModel>) {
+        this.communityList = joinedCommunitiesList
         Log.i("PostAdapter", "${this.postList}")
     }
 
@@ -189,6 +199,10 @@ class PostAdapter(
         postListener.scrollToTop()
     }
 
+    fun updateUserList(newUserList: List<User>) {
+        userList = newUserList
+    }
+
     private fun View.setSafeClickListener(onSafeCLick: (View) -> Unit) {
         val safeClickListener = SafeClickListener {
             onSafeCLick(it)
@@ -197,10 +211,12 @@ class PostAdapter(
     }
 
     interface PostListener{
-        fun onPostClick(post: Post)
-        fun onCommunityClick(community: Community)
-        fun onUpvoteBtnClick(post: Post)
-        fun onDownvoteBtnClick(post: Post)
+        fun onPostClick(post: PostModel)
+        fun onUserClick(userId: Int)
+        fun onCommunityClick(community: CommunityModel)
+        fun onUpvoteBtnClick(post: PostModel)
+        fun onDownvoteBtnClick(post: PostModel)
+        fun onBookmarkClick(post: PostModel)
         fun onShareBtnClick(postId: Int, communityId: Int)
         fun scrollToTop()
     }

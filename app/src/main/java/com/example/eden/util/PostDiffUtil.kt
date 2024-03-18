@@ -2,10 +2,11 @@ package com.example.eden.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.eden.entities.Post
+import com.example.eden.models.PostModel
 
 class PostDiffUtil(
-    private val oldList: List<Post>,
-    private val newList: List<Post>
+    private val oldList: List<PostModel>,
+    private val newList: List<PostModel>
 ): DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size
     override fun getNewListSize(): Int = newList.size
@@ -22,7 +23,7 @@ class PostDiffUtil(
             oldList[oldItemPosition].imageUri != newList[newItemPosition].imageUri -> false
             oldList[oldItemPosition].voteCounter != newList[newItemPosition].voteCounter -> false
             oldList[oldItemPosition].voteStatus != newList[newItemPosition].voteStatus -> false
-            oldList[oldItemPosition].dateTime != newList[newItemPosition].dateTime -> false
+            oldList[oldItemPosition].isBookmarked != newList[newItemPosition].isBookmarked -> false
             else -> true
         }
     }

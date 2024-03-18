@@ -3,12 +3,8 @@ package com.example.eden.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.database.AppRepository
 import com.example.eden.ui.viewmodels.DetailedPostViewModel
@@ -20,6 +16,8 @@ import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Comment
 import com.example.eden.entities.Community
 import com.example.eden.entities.Post
+import com.example.eden.models.CommentModel
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.PostUriParser
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -42,14 +40,15 @@ class PostDetailedActivity: AppCompatActivity(),
         val application = application as Eden
         repository = application.repository
 
+
         factory = if (intent.hasExtra("PostObject")){
-            val post = intent.getSerializableExtra("PostObject") as Post
+            val post = intent.getSerializableExtra("PostObject") as PostModel
             DetailedPostViewModelFactory(repository,
                 post.postId,
                 post.communityId,
                 application)
         } else if (intent.hasExtra("CommentObject")) {
-            val comment = intent.getSerializableExtra("CommentObject") as Comment
+            val comment = intent.getSerializableExtra("CommentObject") as CommentModel
             DetailedPostViewModelFactory(repository,
                 comment.postId,
                 comment.communityId,
@@ -70,6 +69,10 @@ class PostDetailedActivity: AppCompatActivity(),
             override fun onCommunityClick(community: Community) {
             }
 
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
             override fun onUpvoteBtnClick() {
                 viewModel.upvotePost()
             }
@@ -78,11 +81,15 @@ class PostDetailedActivity: AppCompatActivity(),
                 viewModel.downvotePost()
             }
 
-            override fun commentUpvoteButtonClick(comment: Comment) {
+            override fun onBookmarkClick() {
+                viewModel.bookmarkPost()
+            }
+
+            override fun commentUpvoteButtonClick(comment: CommentModel) {
                 viewModel.upvoteComment(comment)
             }
 
-            override fun commentDownvoteButtonClick(comment: Comment) {
+            override fun commentDownvoteButtonClick(comment: CommentModel) {
                 viewModel.downvoteComment(comment)
             }
 
@@ -98,11 +105,18 @@ class PostDetailedActivity: AppCompatActivity(),
         })
 
         viewModel.post.observe(this) {
+
             if (it != null) {
                 postFound = true
                 activityDetailedPostViewBinding.rvComments.visibility = View.VISIBLE
                 adapter.post = it
                 adapter.notifyItemChanged(0)
+                if (it.posterId != application.userId){
+                    activityDetailedPostViewBinding.apply {
+                        editButton.visibility = View.GONE
+                        deleteButton.visibility = View.GONE
+                    }
+                }
             }
             else {
                 postFound = false
@@ -130,9 +144,9 @@ class PostDetailedActivity: AppCompatActivity(),
             }
         }
 
-        viewModel.user.observe(this) {
+        viewModel.userList.observe(this) {
             it?.let {
-                adapter.user = it
+                adapter.updateUserList(it)
             }
             adapter.notifyDataSetChanged()
         }
@@ -186,5 +200,12 @@ class PostDetailedActivity: AppCompatActivity(),
     }
 
     override fun onDialogNegativeClick() {}
+
+    private fun openProfile(userId: Int){
+        Intent(this, UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
+    }
 
 }

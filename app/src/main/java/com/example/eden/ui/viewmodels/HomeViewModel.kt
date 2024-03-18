@@ -8,73 +8,66 @@ import com.example.eden.database.AppRepository
 import com.example.eden.Eden
 import com.example.eden.entities.Post
 import com.example.eden.enums.VoteStatus
-import kotlinx.coroutines.async
+import com.example.eden.models.PostModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: AppRepository,
-                    application: Eden
+                    private val application: Eden
 ): AndroidViewModel(application) {
 
-    val user = repository.getUser()
-    val postList = repository.postList
-    val communityList = repository.communityList
+    val user = repository.getUser(application.userId)
+    val postList = repository.getPostList(application.userId)
+    val communityList = repository.getCommunityList(application.userId)
+    val joinedCommunityList = repository.getJoinedCommunityList(application.userId)
+    val joinedCommunityPostList = repository.getPostsOfJoinedCommunities(application.userId)
     val postCommunityCrossRefList = repository.postCommunityCrossRefList
-    val joinedCommunitiesList = repository.joinedCommunitiesList
-    lateinit var detailedPost: LiveData<Post>
-//    var localCommunityList = listOf<Community>()
-//    var communityId: Int = -1
+    val userList = repository.getUserList()
+
 
     init {
         Log.i("Testing", "HomeViewModel Initialized - ${postList.toString()}")
-        refreshCommunityListFromRepository()
         refreshPostListFromRepository()
         refreshPostCommunityCrossRefListFromRepository()
-        refreshJoinedCommunitiesListFromRepository()
     }
 
 
-    fun upvotePost(post: Post){
-//        val post = postList.value!![position]
-
-        val temp : Post = when(post.voteStatus){
-            VoteStatus.UPVOTED -> post.copy(voteCounter = post.voteCounter-1, voteStatus = VoteStatus.NONE)
-            VoteStatus.DOWNVOTED -> post.copy(voteCounter = post.voteCounter+2, voteStatus = VoteStatus.UPVOTED)
-            VoteStatus.NONE -> post.copy(voteCounter = post.voteCounter+1, voteStatus = VoteStatus.UPVOTED)
-        }
-
-        viewModelScope.launch {
-            repository.upsertPost(temp)
+    fun upvotePost(post: PostModel){
+        when(post.voteStatus){
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.NONE, isBookMarked = post.isBookmarked)
+                repository.removePostUpvote(post.postId, post.posterId)}
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED, isBookMarked = post.isBookmarked)
+                repository.downvoteToUpvotePost(post.postId)}
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(postId = post.postId, userId = application.userId, voteStatus = VoteStatus.UPVOTED, isBookMarked = post.isBookmarked)
+                repository.upvotePost(post.postId, post.posterId)}
         }
     }
 
-    fun downvotePost(post: Post){
-//        val post = postList.value!![position]
-
-        val temp : Post = when(post.voteStatus){
-            VoteStatus.UPVOTED -> post.copy(voteCounter = post.voteCounter-2, voteStatus = VoteStatus.DOWNVOTED)
-            VoteStatus.DOWNVOTED -> post.copy(voteCounter = post.voteCounter+1, voteStatus = VoteStatus.NONE)
-            VoteStatus.NONE -> post.copy(voteCounter = post.voteCounter-1, voteStatus = VoteStatus.DOWNVOTED)
+    fun downvotePost(post: PostModel){
+        when(post.voteStatus){
+            VoteStatus.UPVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED, post.isBookmarked)
+                repository.upvoteToDownvotePost(post.postId)}
+            VoteStatus.DOWNVOTED -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.NONE, post.isBookmarked)
+                repository.removePostDownvote(post.postId, post.posterId)}
+            VoteStatus.NONE -> viewModelScope.launch(Dispatchers.IO) { repository.updatePostInteractions(application.userId, post.postId, VoteStatus.DOWNVOTED, post.isBookmarked)
+                repository.downvotePost(post.postId, post.posterId)}
         }
+    }
 
-        viewModelScope.launch{
-            repository.upsertPost(temp)
-        }
+    fun bookmarkPost(post: PostModel){
+        viewModelScope.launch { repository.updatePostInteractions(application.userId, post.postId, post.voteStatus,
+            when(post.isBookmarked){
+                true -> false
+                false -> true
+            }) }
     }
 
     private fun refreshPostListFromRepository(){
         viewModelScope.launch {
-            repository.refreshPosts()
             Log.i("Refresh Method", "Refreshed!")
         }
     }
 
-    fun refreshCommunityListFromRepository(){
-        viewModelScope.launch {
-            repository.refreshCommunities()
-            Log.i("Refresh Method", "Communities Refreshed! ${communityList.value.toString()}")
-
-        }
-    }
 
     private fun refreshPostCommunityCrossRefListFromRepository() {
         viewModelScope.launch {
@@ -82,10 +75,5 @@ class HomeViewModel(private val repository: AppRepository,
         }
     }
 
-    private fun refreshJoinedCommunitiesListFromRepository() {
-        viewModelScope.launch{
-            repository.refreshJoinedCommunities()
-        }
-    }
 
 }

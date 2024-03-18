@@ -70,14 +70,19 @@
         </activity>
 
         <activity
-            android:name=".ui.ProfileActivity"
+            android:name=".ui.EditProfileActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+
+        <activity
+            android:name=".ui.UserProfileActivity"
             android:theme="@style/Theme.Material3.Light.NoActionBar">
         </activity>
 
         <activity
-            android:name=".ui.EditProfileActivity"
-            android:theme="@style/Theme.Material3.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
+            android:name=".ui.BookmarksActivity"
+            android:theme="@style/Theme.Material3.Light.NoActionBar">
         </activity>
 
         <activity android:name=".ui.SearchableActivity"

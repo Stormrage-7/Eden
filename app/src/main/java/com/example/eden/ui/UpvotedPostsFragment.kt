@@ -2,7 +2,6 @@ package com.example.eden.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,43 +13,50 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.R
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.FragmentPostSearchBinding
-import com.example.eden.entities.Community
-import com.example.eden.entities.Post
+import com.example.eden.models.CommunityModel
+import com.example.eden.models.PostModel
 import com.example.eden.ui.viewmodels.PostInteractionsViewModel
-import com.example.eden.ui.viewmodels.SearchViewModel
 import com.example.eden.util.PostUriGenerator
 
 class UpvotedPostsFragment: Fragment() {
-    private lateinit var fragmentPostSearchBinding: FragmentPostSearchBinding
+    private lateinit var binding: FragmentPostSearchBinding
     private lateinit var viewModel: PostInteractionsViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fragmentPostSearchBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_post_search, container, false
         )
         viewModel = (activity as PostInteractionsActivity).viewModel
 
-        fragmentPostSearchBinding.lifecycleOwner = this
+        binding.lifecycleOwner = this
 
         val adapter = PostAdapter(activity as PostInteractionsActivity, object : PostAdapter.PostListener {
 
-            override fun onCommunityClick(community: Community) {
+            override fun onCommunityClick(community: CommunityModel) {
                 Intent(requireActivity() as SearchableActivity, CommunityDetailedActivity::class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
-            override fun onPostClick(post: Post) {
+            override fun onPostClick(post: PostModel) {
                 Intent(requireActivity(), PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     startActivity(this)
                 }
             }
-            override fun onUpvoteBtnClick(post: Post) {}
-            override fun onDownvoteBtnClick(post: Post) {}
+
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
+            override fun onUpvoteBtnClick(post: PostModel) {}
+            override fun onDownvoteBtnClick(post: PostModel) {}
+            override fun onBookmarkClick(post: PostModel) {
+                viewModel.bookmarkPost(post)
+            }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
                 val sendIntent: Intent = Intent().apply {
@@ -64,39 +70,52 @@ class UpvotedPostsFragment: Fragment() {
             }
 
             override fun scrollToTop() {
-                fragmentPostSearchBinding.rvPosts.smoothScrollToPosition(0)
+                binding.rvPosts.smoothScrollToPosition(0)
             }
         })
 
-        fragmentPostSearchBinding.rvPosts.adapter = adapter
-        fragmentPostSearchBinding.rvPosts.layoutManager = LinearLayoutManager(context)
-        fragmentPostSearchBinding.rvPosts.addItemDecoration(
+        binding.rvPosts.adapter = adapter
+        binding.rvPosts.layoutManager = LinearLayoutManager(context)
+        binding.rvPosts.addItemDecoration(
             DividerItemDecoration(
                 context,
                 LinearLayoutManager(context).orientation
             )
         )
 
-        viewModel.communityList.observe(this.requireActivity(), Observer {
-            adapter.updateCommunityList(it)
-        })
+        viewModel.communityList.observe(requireActivity()) {
+            it?.let {
+                adapter.updateCommunityList(it)
+            }
+        }
+
+        viewModel.userList.observe(requireActivity()){
+            it?.let { adapter.updateUserList(it) }
+        }
 
         viewModel.upvotedPostList.observe(activity as PostInteractionsActivity, Observer {
             it.let {
                 if(it.isEmpty()){
-                    fragmentPostSearchBinding.rvPosts.visibility = View.GONE
-                    fragmentPostSearchBinding.tempImgView.visibility = View.VISIBLE
-                    fragmentPostSearchBinding.tempTextView.visibility = View.VISIBLE
+                    binding.rvPosts.visibility = View.GONE
+                    binding.tempImgView.visibility = View.VISIBLE
+                    binding.tempTextView.visibility = View.VISIBLE
                 }
                 else {
-                    fragmentPostSearchBinding.rvPosts.visibility = View.VISIBLE
-                    fragmentPostSearchBinding.tempImgView.visibility = View.GONE
-                    fragmentPostSearchBinding.tempTextView.visibility = View.GONE
+                    binding.rvPosts.visibility = View.VISIBLE
+                    binding.tempImgView.visibility = View.GONE
+                    binding.tempTextView.visibility = View.GONE
                 }
                 adapter.updatePostList(it)
             }
         })
 
-        return fragmentPostSearchBinding.root
+        return binding.root
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

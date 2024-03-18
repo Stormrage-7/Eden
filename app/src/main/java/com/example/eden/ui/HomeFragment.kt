@@ -19,7 +19,8 @@ import com.example.eden.adapters.PostAdapter
 import com.example.eden.R
 import com.example.eden.databinding.FragmentHomeBinding
 import com.example.eden.entities.Community
-import com.example.eden.entities.Post
+import com.example.eden.models.CommunityModel
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.google.android.material.divider.MaterialDividerItemDecoration
 
@@ -51,23 +52,31 @@ class HomeFragment: Fragment(){
 
         val adapter = PostAdapter(context = requireContext(), object : PostAdapter.PostListener {
 
-            override fun onCommunityClick(community: Community) {
+            override fun onCommunityClick(community: CommunityModel) {
                 Intent(requireActivity(), CommunityDetailedActivity:: class.java).apply {
                     putExtra("CommunityObject", community)
                     startActivity(this)
                 }
             }
 
-            override fun onPostClick(post: Post) {
+            override fun onPostClick(post: PostModel) {
                 openPost(post)
             }
 
-            override fun onUpvoteBtnClick(post: Post) {
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
+            }
+
+            override fun onUpvoteBtnClick(post: PostModel) {
                 viewModel.upvotePost(post)
             }
 
-            override fun onDownvoteBtnClick(post: Post) {
+            override fun onDownvoteBtnClick(post: PostModel) {
                 viewModel.downvotePost(post)
+            }
+
+            override fun onBookmarkClick(post: PostModel) {
+                viewModel.bookmarkPost(post)
             }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
@@ -98,20 +107,21 @@ class HomeFragment: Fragment(){
         )
 
         /******** TESTING ***********/
-        viewModel.postCommunityCrossRefList.observe(this.requireActivity()) {
+        viewModel.postCommunityCrossRefList.observe(requireActivity()) {
             if (it!=null){
                 Log.i("PostCommunityCrossRef", it.toString())
             } else Log.i("PostCommunityCrossRef", "null")
         }
 
-        viewModel.joinedCommunitiesList.observe(this.requireActivity()) {
-            adapter.joinedCommunitiesList = it
-        }
-        viewModel.communityList.observe(this.requireActivity()) {
-            adapter.updateCommunityList(it)
+        viewModel.communityList.observe(requireActivity()) {
+            it?.let{ adapter.updateCommunityList(it) }
         }
 
-        viewModel.postList.observe(this.requireActivity()) {
+        viewModel.userList.observe(requireActivity()){
+            it?.let { adapter.updateUserList(it) }
+        }
+
+        viewModel.postList.observe(requireActivity()) {
             it?.let {
                 if (it.isEmpty()) {
                     fragmentHomeBinding.rvPosts.visibility = View.GONE
@@ -130,9 +140,16 @@ class HomeFragment: Fragment(){
         return fragmentHomeBinding.root
     }
 
-    private fun openPost(post: Post){
+    private fun openPost(post: PostModel){
         Intent(requireActivity(), PostDetailedActivity::class.java).apply {
             putExtra("PostObject", post)
+            startActivity(this)
+        }
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
             startActivity(this)
         }
     }

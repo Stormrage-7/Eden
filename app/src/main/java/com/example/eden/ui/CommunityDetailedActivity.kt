@@ -27,6 +27,8 @@ import com.example.eden.entities.Community
 import com.example.eden.entities.Post
 import com.example.eden.enums.CollapsingToolBarState
 import com.example.eden.enums.PostFilter
+import com.example.eden.models.CommunityModel
+import com.example.eden.models.PostModel
 import com.example.eden.util.PostUriGenerator
 import com.example.eden.util.SafeClickListener
 import com.example.eden.util.UriValidator
@@ -54,7 +56,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         val application = application as Eden
         repository = application.repository
         factory = DetailedCommunityViewModelFactory(repository,
-            intent.getSerializableExtra("CommunityObject") as Community,
+            intent.getSerializableExtra("CommunityObject") as CommunityModel,
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedCommunityViewModel::class.java]
 
@@ -91,22 +93,30 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         // INITIALIZING ADAPTER FOR RECYCLERVIEW
         val adapter = PostAdapter(context = this, object : PostAdapter.PostListener {
 
-            override fun onPostClick(post: Post) {
+            override fun onPostClick(post: PostModel) {
                 Intent(this@CommunityDetailedActivity, PostDetailedActivity::class.java).apply {
                     putExtra("PostObject", post)
                     startActivity(this)
                 }
             }
 
-            override fun onCommunityClick(community: Community) {
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
             }
 
-            override fun onUpvoteBtnClick(post: Post) {
+            override fun onCommunityClick(community: CommunityModel) {
+            }
+
+            override fun onUpvoteBtnClick(post: PostModel) {
                 viewModel.upvotePost(post)
             }
 
-            override fun onDownvoteBtnClick(post: Post) {
+            override fun onDownvoteBtnClick(post: PostModel) {
                 viewModel.downvotePost(post)
+            }
+
+            override fun onBookmarkClick(post: PostModel) {
+                viewModel.bookmarkPost(post)
             }
 
             override fun onShareBtnClick(postId: Int, communityId: Int) {
@@ -208,6 +218,10 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             }
         }
 
+        viewModel.userList.observe(this){
+            it?.let{ adapter.updateUserList(it) }
+        }
+
         viewModel.postList.observe(this) {
             it.let {
                 if (it.isEmpty()) {
@@ -304,5 +318,12 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             onSafeCLick(it)
         }
         setOnClickListener(safeClickListener)
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(this, UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

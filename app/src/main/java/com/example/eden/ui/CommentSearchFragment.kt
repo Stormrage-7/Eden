@@ -9,10 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.eden.Eden
 import com.example.eden.R
 import com.example.eden.adapters.CommentAdapter
 import com.example.eden.databinding.FragmentCommentSearchBinding
 import com.example.eden.entities.Comment
+import com.example.eden.models.CommentModel
 import com.example.eden.ui.viewmodels.SearchViewModel
 
 class CommentSearchFragment: Fragment() {
@@ -31,11 +33,18 @@ class CommentSearchFragment: Fragment() {
         fragmentCommentSearchBinding.lifecycleOwner = this
 
         val adapter = CommentAdapter(activity as SearchableActivity, object: CommentAdapter.CommentClickListener {
-            override fun onCommentClick(comment: Comment) {
+            override fun onCommentClick(comment: CommentModel) {
                 Intent(activity as SearchableActivity, PostDetailedActivity:: class.java).apply {
                     putExtra("CommentObject", comment)
                     startActivity(this)
                 }
+            }
+
+            override fun onUpvoteClick(comment: CommentModel) {}
+            override fun onDownvoteClick(comment: CommentModel) {}
+
+            override fun onUserClick(userId: Int) {
+                openProfile(userId)
             }
         })
 
@@ -63,6 +72,19 @@ class CommentSearchFragment: Fragment() {
             }
         }
 
+        viewModel.userList.observe(requireActivity()) {
+            it?.let {
+                adapter.updateUserList(it)
+            }
+        }
+
         return fragmentCommentSearchBinding.root
+    }
+
+    private fun openProfile(userId: Int){
+        Intent(requireActivity(), UserProfileActivity::class.java).apply {
+            putExtra("UserId", userId)
+            startActivity(this)
+        }
     }
 }

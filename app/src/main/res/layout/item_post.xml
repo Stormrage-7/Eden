@@ -7,7 +7,7 @@
     android:theme="@style/Theme.Eden.CreatePostScreen"
     android:padding="5sp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/community_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,8 +20,8 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageViewCommunity"
             app:shapeAppearanceOverlay="@style/roundedProfileImageView"
-            android:layout_width="20sp"
-            android:layout_height="20sp"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
             android:scaleType="centerCrop"
             style="@style/roundedImageView"
             android:src="@drawable/icon_logo"
@@ -34,10 +34,31 @@
             android:layout_height="wrap_content"
             android:paddingLeft="5sp"
             android:text="Community Name"
-            android:textSize="12sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/imageViewCommunity"
+            app:layout_constraintTop_toTopOf="@id/imageViewCommunity"/>
 
+        <TextView
+            android:id="@+id/textViewUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="Community Name"
+            android:textSize="11sp"
+            app:layout_constraintStart_toEndOf="@id/imageViewCommunity"
+            app:layout_constraintTop_toBottomOf="@id/textViewCommunityName"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.button.MaterialButton
+        style="?attr/materialIconButtonStyle"
+        android:id="@+id/bookmarkBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="30sp"
+        app:icon="@drawable/ic_bookmark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textViewTitle"/>
 
     <TextView
         android:id="@+id/textViewTitle"

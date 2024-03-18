@@ -4,14 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +24,8 @@ import com.example.eden.databinding.ActivityNewPostBinding
 import com.example.eden.dialogs.ConfirmationDialogFragment
 import com.example.eden.entities.Community
 import com.example.eden.entities.ImageUri
+import com.example.eden.models.CommunityModel
+import com.example.eden.models.PostModel
 import com.example.eden.util.FileGenerationResponse
 import com.example.eden.util.ImageGenerator
 import com.example.eden.util.UriValidator
@@ -103,7 +103,7 @@ class NewPostActivity: AppCompatActivity(),
             if (intent.getStringExtra("Context") == "CommunityDetailedActivity"){
                 activityNewPostBinding.apply {
                     communityBar.visibility = View.VISIBLE
-                    val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as Community
+                    val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as CommunityModel
                     communityId = community.communityId
                     Log.d("NewPostActivity", communityId.toString())
                     if (community.isCustomImage) imageViewCommunity.setImageURI(Uri.parse(community.imageUri))
@@ -116,8 +116,8 @@ class NewPostActivity: AppCompatActivity(),
             if (intent.getStringExtra("Context") == "PostDetailedActivity"){
                 activityNewPostBinding.apply {
                     pageTitle.text = "Edit Post"
-                    val post = this@NewPostActivity.intent.getSerializableExtra("PostObject") as Post
-                    val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as Community
+                    val post = this@NewPostActivity.intent.getSerializableExtra("PostObject") as PostModel
+                    val community = this@NewPostActivity.intent.getSerializableExtra("CommunityObject") as CommunityModel
                     communityId = community.communityId
                     TitleEditTV.setText(post.title)
 //                    TitleEditTV.visibility = View.GONE
@@ -148,8 +148,8 @@ class NewPostActivity: AppCompatActivity(),
                 val bodyText = activityNewPostBinding.bodyTextEditTV.text.toString()
                 val newPost: Post
                 if (intent.hasExtra("Context") and (intent.getStringExtra("Context") == "PostDetailedActivity")) {
-                    val post = intent.getSerializableExtra("PostObject") as Post
-                    viewModel.upsertPost(post.copy(bodyText = bodyText))
+                    val post = intent.getSerializableExtra("PostObject") as PostModel
+                    viewModel.updatePost(post.postId, bodyText)
                     Toast.makeText(this, "Post has been Updated!", Toast.LENGTH_LONG).show()
                 }
                 else{
@@ -162,7 +162,7 @@ class NewPostActivity: AppCompatActivity(),
                                 }
                                 is FileGenerationResponse.Success -> {
                                     newPost = Post(0, titleText, isImageAttached, true, fileGenerationResponse.uri.toString(),  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
-                                        ZoneOffset.UTC), voteCounter = (0..25).random())
+                                        ZoneOffset.UTC), voteCounter = (0..25).random(), posterId = (application as Eden).userId)
                                     viewModel.upsertPost(newPost, communityId, ImageUri(0, fileGenerationResponse.uri.toString()))
                                     Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                                 }
@@ -180,7 +180,7 @@ class NewPostActivity: AppCompatActivity(),
                         }
                     } else {
                         newPost = Post(0, titleText, isImageAttached, isCustomImage = false, imageUri,  bodyText, communityId = communityId, dateTime = LocalDateTime.now().toEpochSecond(
-                            ZoneOffset.UTC), voteCounter = (0..25).random())
+                            ZoneOffset.UTC), voteCounter = (0..25).random(), posterId = (application as Eden).userId)
                         viewModel.upsertPost(newPost, communityId)
                         Toast.makeText(this, "Post has been Uploaded!", Toast.LENGTH_LONG).show()
                     }
@@ -259,7 +259,7 @@ class NewPostActivity: AppCompatActivity(),
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_COMMUNITY && data!=null){
             activityNewPostBinding.apply {
                 communityBar.visibility = View.VISIBLE
-                val community = data.getSerializableExtra("CommunityObject") as Community
+                val community = data.getSerializableExtra("CommunityObject") as CommunityModel
                 communityId = community.communityId
                 if (community.isCustomImage) {
                     if (UriValidator.validate(this@NewPostActivity, community.imageUri))
@@ -296,7 +296,7 @@ class NewPostActivity: AppCompatActivity(),
 
     private fun isPageEdited(): Boolean{
         return if (intent.hasExtra("Context") && intent.getStringExtra("Context") == "PostDetailedActivity"){
-            val post = intent.getSerializableExtra("PostObject") as Post
+            val post = intent.getSerializableExtra("PostObject") as PostModel
             (activityNewPostBinding.bodyTextEditTV.text.toString().trim() != post.bodyText)
 
         } else {

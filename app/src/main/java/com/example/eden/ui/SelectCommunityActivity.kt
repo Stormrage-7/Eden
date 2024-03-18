@@ -15,6 +15,7 @@ import com.example.eden.Eden
 import com.example.eden.database.EdenDao
 import com.example.eden.databinding.ActivitySelectCommunityBinding
 import com.example.eden.entities.Community
+import com.example.eden.models.CommunityModel
 
 class SelectCommunityActivity: AppCompatActivity() {
     private lateinit var activitySelectCommunityBinding: ActivitySelectCommunityBinding
@@ -35,7 +36,7 @@ class SelectCommunityActivity: AppCompatActivity() {
         activitySelectCommunityBinding.lifecycleOwner = this
 
         val adapter = CommunityAdapter(context = this, object : CommunityAdapter.CommunityClickListener {
-        override fun onClick(community: Community) {
+        override fun onClick(community: CommunityModel) {
             val output = Intent().apply {
                 putExtra("CommunityObject", community)
             }
