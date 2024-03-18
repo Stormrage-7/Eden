@@ -80,19 +80,33 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
 
         viewModel.user.observe(this) { user ->
             binding.apply {
-                if (user.isCustomImage and UriValidator.validate(this@EditProfileActivity, user.profileImageUri)){
-                    imageViewProfile.setImageURI(
-                        Uri.parse(user.profileImageUri))
-                    deleteImageBtn.visibility = View.VISIBLE
-                    isImageAttached = true
-                    imageUri = user.profileImageUri
+                if (user.isCustomImage){
+                    if(UriValidator.validate(this@EditProfileActivity, user.profileImageUri)){
+                        imageViewProfile.setImageURI(
+                            Uri.parse(user.profileImageUri))
+                        deleteImageBtn.visibility = View.VISIBLE
+                        isImageAttached = true
+                        imageUri = user.profileImageUri
+                    }
+                    else{
+                        imageViewProfile.setImageResource(R.drawable.ic_avatar)
+                        deleteImageBtn.visibility = View.INVISIBLE
+                        isImageAttached = false
+                        imageUri = R.drawable.ic_avatar.toString()
+                    }
                 }
-                else{
-                    imageViewProfile.setImageResource(R.drawable.ic_avatar)
-                    deleteImageBtn.visibility = View.INVISIBLE
+                else {
+                    if (user.userId in 1..3) {
+                        imageViewProfile.setImageResource(user.profileImageUri.toInt())
+                        imageUri = user.profileImageUri
+                    }
+                    else {
+                        imageViewProfile.setImageResource(R.drawable.ic_avatar)
+                        imageUri = R.drawable.ic_avatar.toString()
+                    }
                     isImageAttached = false
-                    imageUri = R.drawable.ic_avatar.toString()
                 }
+
 
                 firstName = user.firstName
                 lastName = user.lastName
@@ -142,7 +156,8 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
             //Last Name
             lastNameEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(lastName: Editable) {
-                    if (lastName.toString().trim().isNotEmpty() and ProfileValidator.validateName(lastName.toString().trim())) lastNameEditText.error = null
+                    if (lastName.isEmpty()) lastNameEditText.error = null
+                    else if (ProfileValidator.validateName(lastName.toString().trim())) lastNameEditText.error = null
                     else lastNameEditText.error = "Invalid Last Name"
                 }
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -155,11 +170,9 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
             emailEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable) {
 
-                    if (s.toString().trim().isNotEmpty() and s.toString().trim().matches(emailPattern)) {
-                        emailEditText.error = null
-                    } else {
-                        emailEditText.error = "Invalid Email"
-                    }
+                    if (s.toString().trim().isEmpty()) { emailEditText.error = null }
+                    else if (s.toString().trim().matches(emailPattern)) { emailEditText.error = null }
+                    else { emailEditText.error = "Invalid Email" }
                 }
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -168,7 +181,8 @@ class EditProfileActivity : AppCompatActivity(), ConfirmationDialogFragment.Conf
             //Mobile
             mobileNoEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(mobileNo: Editable) {
-                    if (mobileNo.toString().trim().isNotEmpty() and ProfileValidator.validateMobileNo(mobileNo.toString().trim()) ) mobileNoEditText.error = null
+                    if (mobileNo.toString().trim().isEmpty()) mobileNoEditText.error = null
+                    else if (ProfileValidator.validateMobileNo(mobileNo.toString().trim())) mobileNoEditText.error = null
                     else mobileNoEditText.error = "Invalid Phone/Mobile Number"
                 }
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

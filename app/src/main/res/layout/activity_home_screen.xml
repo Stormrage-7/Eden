@@ -13,7 +13,6 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:id="@+id/homeScreen"
-        android:theme="@style/Theme.Eden.HomeScreen"
         tools:context=".ui.HomeScreenActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
