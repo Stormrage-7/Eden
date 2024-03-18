@@ -37,6 +37,14 @@ class UserProfileCommentsFragment: Fragment() {
                 }
             }
 
+            override fun onUpvoteClick(comment: CommentModel) {
+                viewModel.upvoteComment(comment)
+            }
+
+            override fun onDownvoteClick(comment: CommentModel) {
+                viewModel.downvoteComment(comment)
+            }
+
             override fun onUserClick(userId: Int) {
                 openProfile(userId)
             }

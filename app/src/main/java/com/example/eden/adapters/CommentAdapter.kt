@@ -31,6 +31,8 @@ class CommentAdapter(
         init {
             binding.imageViewUser.setOnClickListener { commentClickListener.onUserClick(commentList[bindingAdapterPosition].posterId) }
             binding.imageViewUser.setOnClickListener { commentClickListener.onUserClick(commentList[bindingAdapterPosition].posterId) }
+            binding.likeBtn.setOnClickListener { commentClickListener.onUpvoteClick(commentList[bindingAdapterPosition]) }
+            binding.dislikeBtn.setOnClickListener { commentClickListener.onDownvoteClick(commentList[bindingAdapterPosition]) }
             itemView.setOnClickListener { commentClickListener.onCommentClick(commentList[bindingAdapterPosition]) }
         }
     }
@@ -93,6 +95,11 @@ class CommentAdapter(
                     textView.visibility = View.VISIBLE
                 }
             }
+            else{
+                likeBtn.setIconResource(comment.voteStatus.upvoteIconDrawable)
+                dislikeBtn.setIconResource(comment.voteStatus.downvoteIconDrawable)
+                textViewVoteCounter.setTextColor(ContextCompat.getColor(context, comment.voteStatus.textViewColor))
+            }
         }
     }
 
@@ -109,6 +116,8 @@ class CommentAdapter(
 
     interface CommentClickListener{
         fun onCommentClick(comment: CommentModel)
+        fun onUpvoteClick(comment: CommentModel)
+        fun onDownvoteClick(comment: CommentModel)
         fun onUserClick(userId: Int)
     }
 }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.R
 import com.example.eden.adapters.PostAdapter
 import com.example.eden.databinding.FragmentPostSearchBinding
+import com.example.eden.databinding.FragmentUserPostsBinding
 import com.example.eden.models.CommunityModel
 import com.example.eden.models.PostModel
 import com.example.eden.ui.viewmodels.PostInteractionsViewModel
@@ -19,7 +20,7 @@ import com.example.eden.ui.viewmodels.ProfileViewModel
 import com.example.eden.util.PostUriGenerator
 
 class UserProfilePostsFragment: Fragment() {
-    private lateinit var binding: FragmentPostSearchBinding
+    private lateinit var binding: FragmentUserPostsBinding
     private lateinit var viewModel: ProfileViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +28,7 @@ class UserProfilePostsFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_post_search, container, false
+            inflater, R.layout.fragment_user_posts, container, false
         )
         viewModel = (activity as UserProfileActivity).viewModel
 
@@ -52,8 +53,8 @@ class UserProfilePostsFragment: Fragment() {
                 openProfile(userId)
             }
 
-            override fun onUpvoteBtnClick(post: PostModel) {}
-            override fun onDownvoteBtnClick(post: PostModel) {}
+            override fun onUpvoteBtnClick(post: PostModel) { viewModel.upvotePost(post) }
+            override fun onDownvoteBtnClick(post: PostModel) { viewModel.downvotePost(post) }
             override fun onBookmarkClick(post: PostModel) {
                 viewModel.bookmarkPost(post)
             }
@@ -93,13 +94,15 @@ class UserProfilePostsFragment: Fragment() {
             it?.let {
                 if(it.isEmpty()){
                     binding.rvPosts.visibility = View.GONE
-                    binding.tempImgView.visibility = View.VISIBLE
-                    binding.tempTextView.visibility = View.VISIBLE
+                    binding.scrollView.visibility = View.VISIBLE
+//                    binding.tempImgView.visibility = View.VISIBLE
+//                    binding.tempTextView.visibility = View.VISIBLE
                 }
                 else {
                     binding.rvPosts.visibility = View.VISIBLE
-                    binding.tempImgView.visibility = View.GONE
-                    binding.tempTextView.visibility = View.GONE
+                    binding.scrollView.visibility = View.GONE
+//                    binding.tempImgView.visibility = View.GONE
+//                    binding.tempTextView.visibility = View.GONE
                 }
                 adapter.updatePostList(it)
             }

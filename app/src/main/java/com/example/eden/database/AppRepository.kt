@@ -221,9 +221,9 @@ class AppRepository(private val databaseDao: EdenDao) {
         databaseDao.updateCommunity(communityId, communityDescription)
     }
 
-    fun getCommentsOfUser(userId: Int) = databaseDao.getCommentsOfUser(userId)
+    fun getCommentsOfUser(loggedInUserId: Int, userId: Int) = databaseDao.getCommentsOfUser(loggedInUserId, userId)
 
-    fun getPostsOfUser(userId: Int) = databaseDao.getPostsOfUser(userId)
+    fun getPostsOfUser(loggedInUserId: Int, userId: Int) = databaseDao.getPostsOfUser(loggedInUserId, userId)
 
     fun getCommunityListForPostsOfUser(userId: Int) = databaseDao.getCommunityListForPostsOfUser(userId)
     fun getBookmarkedPostList(userId: Int) = databaseDao.getBookmarkedPostList(userId)

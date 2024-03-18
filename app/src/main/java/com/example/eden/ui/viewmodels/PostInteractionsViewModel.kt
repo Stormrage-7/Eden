@@ -15,7 +15,7 @@ class PostInteractionsViewModel(
 
     var upvotedPostList = repository.getUpvotedPosts(application.userId)
     var downvotedPostList = repository.getDownvotedPosts(application.userId)
-    var commentList = repository.getCommentsOfUser(application.userId)
+    var commentList = repository.getCommentsOfUser(application.userId, application.userId)
     val communityList = repository.getCommunityList(application.userId)
     var userList = repository.getUserList()
 

@@ -37,6 +37,9 @@ class MyCommentsFragment: Fragment() {
                 }
             }
 
+            override fun onUpvoteClick(comment: CommentModel) {}
+            override fun onDownvoteClick(comment: CommentModel) {}
+
             override fun onUserClick(userId: Int) {
                 openProfile(userId)
             }

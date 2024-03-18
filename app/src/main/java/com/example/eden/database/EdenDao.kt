@@ -134,25 +134,25 @@ interface EdenDao {
 
     @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
             " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, COALESCE(PostInteractions.isBookmarked, 0) as isBookmarked, " +
-            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId")
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId order by Post_Table.postId desc")
     fun getPosts(userId: Int) : LiveData<List<PostModel>>
 
     @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
             " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, COALESCE(PostInteractions.isBookmarked, 0) as isBookmarked, " +
             "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
-            "WHERE communityId = :communityId")
+            "WHERE communityId = :communityId order by Post_Table.postId desc")
     fun getPostsOfCommunity(communityId: Int, userId: Int): LiveData<List<PostModel>>
 
     @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
             " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, COALESCE(PostInteractions.isBookmarked, 0) as isBookmarked, " +
             "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
-            "WHERE PostInteractions.voteStatus = :voteStatus")
+            "WHERE PostInteractions.voteStatus = :voteStatus order by Post_Table.postId desc")
     fun getPosts(voteStatus: VoteStatus, userId: Int): LiveData<List<PostModel>>
 
     @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
             " COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, COALESCE(PostInteractions.isBookmarked, 0) as isBookmarked, " +
             "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
-            "WHERE title LIKE '%' || :searchQuery || '%' OR bodyText LIKE '%' || :searchQuery || '%'")
+            "WHERE title LIKE '%' || :searchQuery || '%' OR bodyText LIKE '%' || :searchQuery || '%' order by Post_Table.postId desc")
     fun getPostsMatchingQuery(searchQuery: String, userId: Int): LiveData<List<PostModel>>
 
     @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter," +
@@ -244,7 +244,7 @@ interface EdenDao {
             "from Community_Table left join (select * from Community_Interactions_Table where userId = :userId) as CommunityInteractions " +
             "" +
             "on Community_Table.communityId == CommunityInteractions.communityId " +
-            "WHERE CommunityInteractions.isJoined = 1) as JoinedCommunities on Posts.communityId = JoinedCommunities.communityId")
+            "WHERE CommunityInteractions.isJoined = 1) as JoinedCommunities on Posts.communityId = JoinedCommunities.communityId order by Posts.postId desc")
     fun getPostsOfJoinedCommunities(userId: Int) : LiveData<List<PostModel>>
 
     //****** UPDATING OF POST AND COMMUNITY ******//
@@ -255,15 +255,15 @@ interface EdenDao {
 
     @Query("select Comments_Table.commentId, commentText, imageUri, voteCounter, " +
             "COALESCE(CommentInteractions.voteStatus, 'NONE') as voteStatus, " +
-            "postId, postTitle, communityId, posterId from Comments_Table left join (select * from Comment_Interactions_Table where userId = :userId) as CommentInteractions on Comments_Table.commentId == CommentInteractions.commentId " +
-            "WHERE posterId = :userId")
-    fun getCommentsOfUser(userId: Int): LiveData<List<CommentModel>>
+            "postId, postTitle, communityId, posterId from Comments_Table left join (select * from Comment_Interactions_Table where userId = :loggedInUserId) as CommentInteractions on Comments_Table.commentId == CommentInteractions.commentId " +
+            "WHERE posterId = :userId order by Comments_Table.communityId desc")
+    fun getCommentsOfUser(loggedInUserId: Int, userId: Int): LiveData<List<CommentModel>>
 
     @Query("select Post_Table.postId, title, containsImage, isCustomImage, image_uri as imageUri, bodyText,voteCounter, " +
             "COALESCE(PostInteractions.voteStatus, 'NONE') as voteStatus, COALESCE(PostInteractions.isBookmarked, 0) as isBookmarked, " +
-            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :userId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
-            "where posterId = :userId")
-    fun getPostsOfUser(userId: Int): LiveData<List<PostModel>>
+            "communityId, posterId from Post_Table left join (select * from Post_Interactions_Table where userId = :loggedInUserId) as PostInteractions on Post_Table.postId == PostInteractions.postId " +
+            "where posterId = :userId order by Post_Table.postId desc")
+    fun getPostsOfUser(loggedInUserId:Int, userId: Int): LiveData<List<PostModel>>
 
     @Query("select Communities.communityId, Communities.communityName, Communities.description, Communities.noOfMembers, Communities.noOfPosts, " +
             "Communities.isCustomImage, Communities.imageUri, Communities.isJoined " +
