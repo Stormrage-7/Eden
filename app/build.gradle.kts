@@ -78,5 +78,8 @@ dependencies {
     //Timber Logging
     implementation ("com.jakewharton.timber:timber:5.0.1")
 
+    implementation("jp.wasabeef:blurry:4.0.1")
+    
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+
 }

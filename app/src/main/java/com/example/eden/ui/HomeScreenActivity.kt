@@ -2,10 +2,14 @@ package com.example.eden.ui
 
 import android.app.SearchManager
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
@@ -27,9 +31,30 @@ import com.example.eden.ui.viewmodels.HomeViewModel
 import com.example.eden.ui.viewmodels.HomeViewModelFactory
 import com.example.eden.util.PostUriValidator
 import com.example.eden.util.UriValidator
+import jp.wasabeef.blurry.Blurry
 import timber.log.Timber
 
 class HomeScreenActivity: AppCompatActivity(){
+    private var isFabExpanded = false
+    private val fromBottomFabAnim: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.from_bottom_fab)
+    }
+    private val toBottomFabAnim: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.to_bottom_fab)
+    }
+    private val rotateClockWiseFabAnim: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.rotate_clock_wise)
+    }
+    private val rotateAntiClockWiseFabAnim: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.rotate_anti_clock_wise)
+    }
+    private val fromBottomBgAnim: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim)
+    }
+    private val toBottomBgAnim: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim)
+    }
+
     private lateinit var activityHomeScreenBinding: ActivityHomeScreenBinding
     private lateinit var databaseDao: EdenDao
     private lateinit var viewModel: HomeViewModel
@@ -47,6 +72,28 @@ class HomeScreenActivity: AppCompatActivity(){
 
         activityHomeScreenBinding = ActivityHomeScreenBinding.inflate(layoutInflater)
         setContentView(activityHomeScreenBinding.root)
+
+        activityHomeScreenBinding.apply {
+            createFab.setOnClickListener {
+                if (isFabExpanded) { shrinkFab() }
+                else { expandFab() }
+            }
+
+            createPostFab.setOnClickListener {
+                shrinkFab()
+                Intent(this@HomeScreenActivity, NewPostActivity::class.java).apply { startActivity(this) }
+            }
+
+            createCommunityFab.setOnClickListener {
+                shrinkFab()
+                Intent(this@HomeScreenActivity, NewCommunityActivity::class.java).apply { startActivity(this) }
+            }
+
+            transparentBackgroundView.setOnClickListener {
+                if (isFabExpanded) shrinkFab()
+            }
+        }
+
 
         val headerView = activityHomeScreenBinding.navigationView.getHeaderView(0)
         val imageViewProfile = headerView.findViewById<ImageView>(R.id.imageViewNavDrawer)
@@ -74,19 +121,6 @@ class HomeScreenActivity: AppCompatActivity(){
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-        // Setup the bottom navigation view with navController
-//        activityHomeScreenBinding.bottomNavigationView.setupWithNavController(navController)
-
-
-//        val homeFragment = HomeFragment()
-//        val communitiesFragment = CommunitiesFragment()
-//        val yourFeedFragment = CustomFeedFragment()
-//        current = homeFragment
-//        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, communitiesFragment, "3").hide(communitiesFragment).commit()
-//        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, yourFeedFragment, "2").hide(yourFeedFragment).commit()
-//        supportFragmentManager.beginTransaction().add(activityHomeScreenBinding.navHostFragment.id, homeFragment, "1").commit()
-//        setCurrentFragment(homeFragment)
-
         setSupportActionBar(activityHomeScreenBinding.topAppBar)
         activityHomeScreenBinding.homeScreenSearchView.setupWithSearchBar(activityHomeScreenBinding.searchBar)
         activityHomeScreenBinding.searchBar.setNavigationOnClickListener {
@@ -95,11 +129,6 @@ class HomeScreenActivity: AppCompatActivity(){
 
         activityHomeScreenBinding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId){
-                R.id.add_community_btn -> {
-                    Intent(this, NewCommunityActivity::class.java).apply {
-                        startActivity(this)
-                    }
-                }
                 R.id.post_interactions_btn -> {
                     Intent(this, PostInteractionsActivity::class.java).apply {
                         startActivity(this)
@@ -155,12 +184,6 @@ class HomeScreenActivity: AppCompatActivity(){
                     }
                     true
                 }
-                R.id.miCreatePost -> {
-                    Intent(this, NewPostActivity::class.java).apply {
-                        startActivity(this)
-                    }
-                    false
-                }
                 R.id.miCustomFeed -> {
                     if( isValidDestination(R.id.customFeedFragment) and !navController.popBackStack(
                             R.id.customFeedFragment, false)) {
@@ -180,7 +203,10 @@ class HomeScreenActivity: AppCompatActivity(){
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (activityHomeScreenBinding.drawerLayout.isOpen){
+        if (isFabExpanded){
+            shrinkFab()
+        }
+        else if (activityHomeScreenBinding.drawerLayout.isOpen){
             activityHomeScreenBinding.drawerLayout.close()
         }
         else if (activityHomeScreenBinding.homeScreenSearchView.isShowing){
@@ -199,16 +225,17 @@ class HomeScreenActivity: AppCompatActivity(){
         }
     }
 
-//    private fun setCurrentFragment(fragment: Fragment) =
-//        supportFragmentManager.beginTransaction().apply {
-//            hide(current)
-//            show(fragment)
-//            commit()
+//    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+//        if (ev?.action == MotionEvent.ACTION_DOWN){
+//            if (isFabExpanded){
+//                val outRect = Rect()
+//                activityHomeScreenBinding.fabLayout.getGlobalVisibleRect(outRect)
+//                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) shrinkFab()
+//            }
 //        }
-//        supportFragmentManager.beginTransaction().apply {
-//            replace(R.id.nav_host_fragment, fragment)
-//            commit()
-//        }
+//
+//        return super.dispatchTouchEvent(ev)
+//    }
 
     private fun isValidDestination(destination: Int) : Boolean{
         return destination != Navigation.findNavController(this, R.id.fragment_container_view).currentDestination!!.id
@@ -260,5 +287,34 @@ class HomeScreenActivity: AppCompatActivity(){
         finish()
         startActivity(intent)
         overridePendingTransition(0, 1)
+    }
+
+    private fun shrinkFab(){
+
+        activityHomeScreenBinding.apply {
+            transparentBackgroundView.startAnimation(toBottomBgAnim)
+            transparentBackgroundView.visibility = View.GONE
+            createFab.startAnimation(rotateAntiClockWiseFabAnim)
+            createPostFab.startAnimation(toBottomFabAnim)
+            createCommunityFab.startAnimation(toBottomFabAnim)
+            createPostFab.visibility = View.GONE
+            createCommunityFab.visibility = View.GONE
+            transparentBackgroundView.isClickable = false
+        }
+
+        isFabExpanded = !isFabExpanded
+    }
+    private fun expandFab(){
+
+        activityHomeScreenBinding.apply {
+            createPostFab.visibility = View.VISIBLE
+            createCommunityFab.visibility = View.VISIBLE
+            transparentBackgroundView.startAnimation(fromBottomBgAnim)
+            createFab.startAnimation(rotateClockWiseFabAnim)
+            createPostFab.startAnimation(fromBottomFabAnim)
+            createCommunityFab.startAnimation(fromBottomFabAnim)
+            transparentBackgroundView.isClickable = true
+        }
+        isFabExpanded = !isFabExpanded
     }
 }

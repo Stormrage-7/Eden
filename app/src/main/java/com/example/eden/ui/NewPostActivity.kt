@@ -75,9 +75,7 @@ class NewPostActivity: AppCompatActivity(),
         }
 
         activityNewPostBinding.TitleEditTV.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                TODO("Not yet implemented")
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0?.trim()?.isNotEmpty() == true) {
@@ -93,9 +91,7 @@ class NewPostActivity: AppCompatActivity(),
                 }
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-//                TODO("Not yet implemented")
-            }
+            override fun afterTextChanged(p0: Editable?) {}
 
         })
 

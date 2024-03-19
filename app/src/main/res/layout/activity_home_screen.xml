@@ -8,18 +8,31 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:id="@+id/homeScreen"
         tools:context=".ui.HomeScreenActivity">
+
+        <View
+            android:id="@+id/transparent_background_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:elevation="8sp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="4dp"
             android:background="?attr/colorPrimary"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -29,14 +42,14 @@
                 android:layout_height="wrap_content"
                 android:hint="Search..."
                 app:collapseIcon="@drawable/ic_discover_24"
-                app:navigationIcon="@drawable/ic_menu_24"
-                />
+                app:navigationIcon="@drawable/ic_menu_24" />
         </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.search.SearchView
             android:id="@+id/homeScreenSearchView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:elevation="10sp"
             android:hint="Search...">
             <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
         </com.google.android.material.search.SearchView>
@@ -46,10 +59,10 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="0sp"
+            app:defaultNavHost="true"
             app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
             app:layout_constraintTop_toBottomOf="@id/topAppBar"
-            app:navGraph="@navigation/nav_graph"
-            app:defaultNavHost="true"/>
+            app:navGraph="@navigation/nav_graph" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
@@ -59,16 +72,49 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/home_screen_bottom_nav_menu" />
 
-<!--        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-<!--            android:id="@+id/extended_fab"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="16dp"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:contentDescription="Create"-->
-<!--            android:text="Create"-->
-<!--            app:icon="@drawable/ic_add_no_circle_24"/>-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="32sp"
+                android:elevation="8sp"
+                app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/create_Post_Fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Create Post"
+                    android:visibility="gone"
+                    android:layout_marginEnd="10dp"
+                    app:icon="@drawable/ic_post_add"
+                    app:layout_constraintBottom_toTopOf="@id/create_Community_Fab"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/create_Community_Fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Create Community"
+                    android:layout_marginVertical="16dp"
+                    android:visibility="gone"
+                    app:icon="@drawable/community_add_24"
+                    app:layout_constraintBottom_toTopOf="@id/createFab"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/createFab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:contentDescription="Create"
+                    android:src="@drawable/ic_add_no_circle_24"
+                    android:text="Create"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
