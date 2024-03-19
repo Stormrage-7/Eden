@@ -77,7 +77,7 @@
                 android:layout_width="56sp"
                 android:layout_height="56sp"
                 android:contentDescription="Image"
-                android:backgroundTint="#9FA6A6A6"
+                android:backgroundTint="?attr/colorPrimaryContainer"
                 android:src="@drawable/image_search_24"
                 android:layout_marginLeft="120sp"
                 android:layout_marginTop="20sp"
