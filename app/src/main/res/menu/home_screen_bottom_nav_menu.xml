@@ -5,13 +5,6 @@
         android:id="@+id/miHome"
         android:title="Home"
         android:icon="@drawable/ic_home_material"
-
-        />
-
-    <item
-        android:id="@+id/miCreatePost"
-        android:title="Create"
-        android:icon="@drawable/ic_new_post_24"
         />
 
     <item

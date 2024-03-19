@@ -60,6 +60,7 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
             application)
         viewModel = ViewModelProvider(this, factory)[DetailedCommunityViewModel::class.java]
 
+        detailedCommunityViewBinding.detailedCommunityToolbar.title = ""
         setSupportActionBar(detailedCommunityViewBinding.detailedCommunityToolbar)
 
         detailedCommunityViewBinding.appBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
