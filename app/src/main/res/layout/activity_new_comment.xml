@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:paddingVertical="10sp"
     android:theme="@style/Theme.Eden.CreatePostScreen">
 
@@ -21,7 +20,7 @@
             android:layout_width="48sp"
             android:layout_height="48sp"
             android:src="@drawable/ic_close_24"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/transparent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -33,8 +32,6 @@
             android:text="Add Comment"
             android:textSize="21sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@id/next_button"
             app:layout_constraintStart_toEndOf="@id/close_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -70,9 +67,9 @@
                 android:id="@+id/postTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/transparent"
                 android:hint="Post Title"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:paddingVertical="6sp"
@@ -108,7 +105,7 @@
                 android:id="@+id/commentEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/transparent"
                 android:textColor="@color/black"
                 android:hint="Enter your comment..."
                 android:gravity="top"

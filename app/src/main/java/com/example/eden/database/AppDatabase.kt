@@ -39,7 +39,7 @@ import java.util.Date
         CommentInteractions::class,
         CommunityInteractions::class
     ],
-    version = 75)
+    version = 78)
 @TypeConverters(Converters::class)
 
 abstract class AppDatabase : RoomDatabase() {
@@ -204,30 +204,30 @@ abstract class AppDatabase : RoomDatabase() {
             it.edenDao().upsertComment(
                 Comment(0, commentText = "Don't forget the negative of missing 4G and 5G bands.\n" +
                             "\n" +
-                            "Quite important in a phone!", postId = 6, communityId = 3, posterId = 1, postTitle = "Xiaomi 14 Pro is an extremely underrated phone."))
+                            "Quite important in a phone!", postId = 6, communityId = 3, posterId = 1, postTitle = "Xiaomi 14 Pro is an extremely underrated phone.", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "More like one new monitor and one older and smaller monitor from your previous build.",
-                    postId = 13, communityId = 6, posterId = 1, postTitle = "Dual monitor setups be like"))
+                    postId = 13, communityId = 6, posterId = 1, postTitle = "Dual monitor setups be like", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "I'm actually kinda the opposite. One monitor is high refresh rate, but not the best color accuracy. The other one is a standard 60hz, but best image quality I could buy at the price.",
-                    postId = 13, communityId = 6, posterId = 3, postTitle = "Dual monitor setups be like"))
+                    postId = 13, communityId = 6, posterId = 3, postTitle = "Dual monitor setups be like", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
-                Comment(0, commentText = "My 2nd is a TV", postId = 13, communityId = 6, posterId = 2, postTitle = "Dual monitor setups be like"))
+                Comment(0, commentText = "My 2nd is a TV", postId = 13, communityId = 6, posterId = 2, postTitle = "Dual monitor setups be like", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "Mount fuji has truly inspired a million photographs",
-                    postId = 3, communityId = 1, posterId = 3, postTitle = "Shizuoka, Japan"))
+                    postId = 3, communityId = 1, posterId = 3, postTitle = "Shizuoka, Japan", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "One day I’ll be able to stand for a minute under the most perfect Sakura. I imagine it’ll look just like this.",
-                    postId = 3, communityId = 1, posterId = 1, postTitle = "Shizuoka, Japan"))
+                    postId = 3, communityId = 1, posterId = 1, postTitle = "Shizuoka, Japan", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "When does cherry tree blossom? If i want to visit Japan? I wanna coordinate my visit.",
-                    postId = 3, communityId = 1, posterId = 2, postTitle = "Shizuoka, Japan"))
+                    postId = 3, communityId = 1, posterId = 2, postTitle = "Shizuoka, Japan", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
                 Comment(0, commentText = "I'm currently living in the suburbs of Tokyo and there are some spots where they have already started blooming, but most don't start to bloom until mid-March to early April.\n" +
@@ -235,14 +235,14 @@ abstract class AppDatabase : RoomDatabase() {
                         "You can check this site for when you plan your trip. They give good estimates on when they start to bloom in most places around Japan :)\n" +
                         "\n" +
                         "https://www.japan-guide.com/sakura/",
-                    postId = 3, communityId = 1, posterId = 1, postTitle = "Shizuoka, Japan"))
+                    postId = 3, communityId = 1, posterId = 1, postTitle = "Shizuoka, Japan", voteCounter = (0..25).random()))
 
             it.edenDao().upsertComment(
-                Comment(0, commentText = "This is the coolest picture of a cub I have ever seen.", postId = 1, communityId = 1, posterId = 1, postTitle = "A little lion snarling at my remote camera"))
+                Comment(0, commentText = "This is the coolest picture of a cub I have ever seen.", postId = 1, communityId = 1, posterId = 1, postTitle = "A little lion snarling at my remote camera", voteCounter = (0..25).random()))
 
             //**** USER ****//
             it.edenDao().upsertUser(User(0, "u/Sharan451", "Sharan", "Kumar", "sharankumar157@gmail.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar_profile_1.toString()))
-            it.edenDao().upsertUser(User(0, "u/Jane Doe", "Jane", "Doe", "janedoe@gmail.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar_profile_2.toString()))
+            it.edenDao().upsertUser(User(0, "u/Jane_Doe123", "Jane", "Doe", "janedoe@gmail.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar_profile_2.toString()))
             it.edenDao().upsertUser(User(0, "u/RandomUser", "Anonymous", "", "anonymous@gmail.com", "7845845617", Date(), Countries.NONE, false, R.drawable.ic_avatar_profile_3.toString()))
         }
 }

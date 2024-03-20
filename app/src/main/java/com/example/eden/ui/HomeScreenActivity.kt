@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -99,8 +100,14 @@ class HomeScreenActivity: AppCompatActivity(){
         val imageViewProfile = headerView.findViewById<ImageView>(R.id.imageViewNavDrawer)
         val textViewProfile = headerView.findViewById<TextView>(R.id.textViewNavDrawer)
         val btnChangeProfile = headerView.findViewById<Button>(R.id.changeProfileBtn)
-        imageViewProfile.setOnClickListener { openProfile() }
-        textViewProfile.setOnClickListener { openProfile() }
+        imageViewProfile.setOnClickListener {
+            openProfile()
+            activityHomeScreenBinding.drawerLayout.close()
+        }
+        textViewProfile.setOnClickListener {
+            openProfile()
+            activityHomeScreenBinding.drawerLayout.close()
+        }
         btnChangeProfile.setOnClickListener { v: View ->
             showMenu(v, R.menu.popup_menu)
         }
