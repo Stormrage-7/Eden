@@ -101,11 +101,13 @@
         android:textSize="14sp"
         android:autoLink="web"
         android:layout_marginHorizontal="6sp"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewPost"
-        android:paddingBottom="4sp"/>
+        android:paddingBottom="4sp"
+        android:focusable="true" />
 
 
     <com.google.android.material.button.MaterialButton

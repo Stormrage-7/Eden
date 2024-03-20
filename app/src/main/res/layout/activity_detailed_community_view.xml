@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="64sp"
+                android:visibility="invisible"
                 android:paddingHorizontal="20sp"
                 android:paddingBottom="20sp"
                 android:elevation="5sp">
@@ -151,8 +152,8 @@
 
     <ImageView
         android:id="@+id/tempImgView"
-        android:layout_width="140sp"
-        android:layout_height="140sp"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
         android:src="@drawable/icon_logo"
         android:layout_gravity="center"
         android:layout_marginTop="200sp"
@@ -162,9 +163,9 @@
         android:id="@+id/tempTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Posts"
-        android:textSize="25sp"
-        android:layout_marginTop="370sp"
+        android:text="No posts found"
+        android:textSize="26sp"
+        android:layout_marginTop="340sp"
         android:layout_gravity="center"/>
 
     <androidx.recyclerview.widget.RecyclerView

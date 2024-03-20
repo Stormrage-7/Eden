@@ -203,19 +203,26 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         }
 
         viewModel.community.observe(this) {
-            detailedCommunityViewBinding.apply {
-                if (it.isCustomImage) {
-                    if (UriValidator.validate(this@CommunityDetailedActivity, it.imageUri)) imageViewCommunity.setImageURI(
-                        Uri.parse(it.imageUri))
-                    else imageViewCommunity.setImageResource(R.drawable.icon_logo)
-                }
-                else imageViewCommunity.setImageResource(it.imageUri.toInt())
+            it?.let {
+                detailedCommunityViewBinding.apply {
+                    communityCard.visibility = View.VISIBLE
+                    if (it.isCustomImage) {
+                        if (UriValidator.validate(
+                                this@CommunityDetailedActivity,
+                                it.imageUri
+                            )
+                        ) imageViewCommunity.setImageURI(
+                            Uri.parse(it.imageUri)
+                        )
+                        else imageViewCommunity.setImageResource(R.drawable.icon_logo)
+                    } else imageViewCommunity.setImageResource(it.imageUri.toInt())
 
-                textViewCommunityName.text = it.communityName
-                detailedCommunityViewBinding.detailedCommunityToolbar.title = it.communityName
-                detailedCommunityViewBinding.detailedCommunityToolbar.setTitleTextColor(R.color.white)
-                textViewCommunityDescription.text = it.description
-                updateJoinStatus(it.isJoined)
+                    textViewCommunityName.text = it.communityName
+                    detailedCommunityViewBinding.detailedCommunityToolbar.title = it.communityName
+                    detailedCommunityViewBinding.detailedCommunityToolbar.setTitleTextColor(R.color.white)
+                    textViewCommunityDescription.text = it.description
+                    updateJoinStatus(it.isJoined)
+                }
             }
         }
 
@@ -224,11 +231,13 @@ class CommunityDetailedActivity: ConfirmationDialogFragment.ConfirmationDialogLi
         }
 
         viewModel.postList.observe(this) {
-            it.let {
+            it?.let {
                 if (it.isEmpty()) {
+//                    detailedCommunityViewBinding.scrollView.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempImgView.visibility = View.VISIBLE
                     detailedCommunityViewBinding.tempTextView.visibility = View.VISIBLE
                 } else {
+//                    detailedCommunityViewBinding.scrollView.visibility = View.GONE
                     detailedCommunityViewBinding.tempImgView.visibility = View.GONE
                     detailedCommunityViewBinding.tempTextView.visibility = View.GONE
                 }

@@ -111,10 +111,10 @@ class PostDetailedActivity: AppCompatActivity(),
                 activityDetailedPostViewBinding.rvComments.visibility = View.VISIBLE
                 adapter.post = it
                 adapter.notifyItemChanged(0)
-                if (it.posterId != application.userId){
+                if (it.posterId == application.userId){
                     activityDetailedPostViewBinding.apply {
-                        editButton.visibility = View.GONE
-                        deleteButton.visibility = View.GONE
+                        editButton.visibility = View.VISIBLE
+                        deleteButton.visibility = View.VISIBLE
                     }
                 }
             }
@@ -123,7 +123,7 @@ class PostDetailedActivity: AppCompatActivity(),
                 activityDetailedPostViewBinding.apply {
                     editButton.visibility = View.GONE
                     deleteButton.visibility = View.GONE
-                    bottomCommentBar.visibility = View.GONE
+                    addCommentFab.visibility = View.GONE
                     rvComments.visibility = View.GONE
                     noPostTextView.visibility = View.VISIBLE
                     noPostImgView.visibility = View.VISIBLE
@@ -157,7 +157,7 @@ class PostDetailedActivity: AppCompatActivity(),
                 finish()
             }
 
-            commentTextView.setOnClickListener {
+            addCommentFab.setOnClickListener {
                 Intent(this@PostDetailedActivity, NewCommentActivity::class.java).apply {
                     viewModel.post.value?.let {
                         putExtra("PostTitle", it.title)
