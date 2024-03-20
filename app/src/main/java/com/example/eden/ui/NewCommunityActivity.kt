@@ -40,7 +40,6 @@ class NewCommunityActivity: AppCompatActivity(),
     private lateinit var factory: CommunityViewModelFactory
     private var isImageAttached = false
     private var imageUri = R.drawable.icon_logo.toString()
-    private var communityNameList = mutableListOf<String>()
 
     private val PICK_IMAGE = 100
 
@@ -176,7 +175,7 @@ class NewCommunityActivity: AppCompatActivity(),
                     }
                     else {
                         val community = Community(0, communityName = communityName,
-                            description = communityDescription, isCustomImage = isImageAttached,
+                            description = communityDescription, isCustomImage = false,
                             imageUri = imageUri)
                         viewModel.upsertCommunity(community)
                     }
