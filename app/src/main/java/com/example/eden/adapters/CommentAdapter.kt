@@ -33,6 +33,7 @@ class CommentAdapter(
             binding.imageViewUser.setOnClickListener { commentClickListener.onUserClick(commentList[bindingAdapterPosition].posterId) }
             binding.likeBtn.setOnClickListener { commentClickListener.onUpvoteClick(commentList[bindingAdapterPosition]) }
             binding.dislikeBtn.setOnClickListener { commentClickListener.onDownvoteClick(commentList[bindingAdapterPosition]) }
+            binding.commentTextView.setOnClickListener { commentClickListener.onCommentClick(commentList[bindingAdapterPosition]) }
             itemView.setOnClickListener { commentClickListener.onCommentClick(commentList[bindingAdapterPosition]) }
         }
     }

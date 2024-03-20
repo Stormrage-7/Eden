@@ -39,7 +39,7 @@ import java.util.Date
         CommentInteractions::class,
         CommunityInteractions::class
     ],
-    version = 78)
+    version = 79)
 @TypeConverters(Converters::class)
 
 abstract class AppDatabase : RoomDatabase() {
