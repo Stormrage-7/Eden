@@ -19,7 +19,7 @@
             android:id="@+id/transparent_background_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
+            android:background="#C16C6A6A"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -108,9 +108,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
+                    android:backgroundTint="@color/purple"
                     android:contentDescription="Create"
+                    android:theme="@style/Theme.Material3.Dark"
                     android:src="@drawable/ic_add_no_circle_24"
                     android:text="Create"
+                    app:shapeAppearanceOverlay="@style/myFab"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 

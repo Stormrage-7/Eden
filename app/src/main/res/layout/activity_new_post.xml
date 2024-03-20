@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:paddingVertical="10sp"
-    android:theme="@style/Theme.Eden.CreatePostScreen">
+    android:paddingVertical="10sp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/TopBarConstraintLayout"
@@ -22,7 +20,7 @@
             android:layout_width="48sp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close_24"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/transparent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -33,10 +31,8 @@
             android:layout_height="wrap_content"
             android:text="Create Post"
             android:textSize="24sp"
-            android:textColor="@color/black"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/close_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -97,12 +93,12 @@
 
             </LinearLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TitleEditTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:hint="Title"
+                android:background="@color/transparent"
                 android:inputType="text"
                 android:scrollHorizontally="true"
                 android:textSize="24sp"
@@ -138,14 +134,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/removeImageButton"
                 app:shapeAppearanceOverlay="@style/roundedImageView" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bodyTextEditTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:hint="body text (optional)"
+                android:background="@color/transparent"
                 android:paddingHorizontal="15sp"
-                android:paddingVertical="3sp"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

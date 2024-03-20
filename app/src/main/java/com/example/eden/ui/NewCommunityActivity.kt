@@ -101,7 +101,7 @@ class NewCommunityActivity: AppCompatActivity(),
                 if (p0?.trim()?.isNotEmpty() == true) {
                     activityNewCommunityBinding.nextButton.isEnabled = true
                     activityNewCommunityBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
-                        ResourcesCompat.getColor(resources, R.color.azure, null)
+                        ResourcesCompat.getColor(resources, R.color.purple, null)
                     )
                 } else {
                     activityNewCommunityBinding.nextButton.isEnabled = false

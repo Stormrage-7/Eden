@@ -34,7 +34,7 @@ class UserProfileActivity: AppCompatActivity() {
     private lateinit var repository: AppRepository
     private lateinit var factory: ProfileViewModelFactory
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "LogNotTimber")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
@@ -117,12 +117,6 @@ class UserProfileActivity: AppCompatActivity() {
             invalidateOptionsMenu()
         }
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.profile_menu, menu)
-//        return true
-//    }
-//
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {

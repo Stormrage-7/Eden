@@ -81,7 +81,7 @@ class NewPostActivity: AppCompatActivity(),
                 if (p0?.trim()?.isNotEmpty() == true) {
                     activityNewPostBinding.nextButton.isEnabled = true
                     activityNewPostBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
-                        ResourcesCompat.getColor(resources, R.color.azure, null)
+                        ResourcesCompat.getColor(resources, R.color.purple, null)
                     )
                 } else {
                     activityNewPostBinding.nextButton.isEnabled = false

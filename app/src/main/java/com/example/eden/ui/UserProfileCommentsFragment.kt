@@ -12,11 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eden.R
 import com.example.eden.adapters.CommentAdapter
 import com.example.eden.databinding.FragmentCommentSearchBinding
+import com.example.eden.databinding.FragmentUserCommentsBinding
 import com.example.eden.models.CommentModel
 import com.example.eden.ui.viewmodels.ProfileViewModel
 
 class UserProfileCommentsFragment: Fragment() {
-    private lateinit var binding: FragmentCommentSearchBinding
+    private lateinit var binding: FragmentUserCommentsBinding
     private lateinit var viewModel: ProfileViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,7 +25,7 @@ class UserProfileCommentsFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_comment_search, container, false
+            inflater, R.layout.fragment_user_comments, container, false
         )
         viewModel = (requireActivity() as UserProfileActivity).viewModel
         binding.lifecycleOwner = this
@@ -63,12 +64,14 @@ class UserProfileCommentsFragment: Fragment() {
             if (it != null) {
                 if (it.isEmpty()) {
                     binding.rvComments.visibility = View.GONE
-                    binding.tempImgView.visibility = View.VISIBLE
-                    binding.tempTextView.visibility = View.VISIBLE
+                    binding.scrollView.visibility = View.VISIBLE
+//                    binding.tempImgView.visibility = View.VISIBLE
+//                    binding.tempTextView.visibility = View.VISIBLE
                 } else {
                     binding.rvComments.visibility = View.VISIBLE
-                    binding.tempImgView.visibility = View.GONE
-                    binding.tempTextView.visibility = View.GONE
+                    binding.scrollView.visibility = View.GONE
+//                    binding.tempImgView.visibility = View.GONE
+//                    binding.tempTextView.visibility = View.GONE
                 }
                 adapter.updateCommentList(it)
             }

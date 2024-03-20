@@ -65,7 +65,7 @@ class CommunityAdapter(private val context: Context, private val clickListener: 
             else{
                 joinButton.text = "Join"
                 joinButton.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(context.resources, R.color.azure, null)
+                    ResourcesCompat.getColor(context.resources, R.color.purple, null)
                 )
             }
 

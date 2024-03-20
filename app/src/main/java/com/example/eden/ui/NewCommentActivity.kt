@@ -74,7 +74,7 @@ class NewCommentActivity: AppCompatActivity(),
                 if (isPageEdited()) {
                     activityNewCommentBinding.nextButton.isEnabled = true
                     activityNewCommentBinding.nextButton.backgroundTintList = ColorStateList.valueOf(
-                        ResourcesCompat.getColor(resources, R.color.azure, null)
+                        ResourcesCompat.getColor(resources, R.color.purple, null)
                     )
                 } else {
                     activityNewCommentBinding.nextButton.isEnabled = false

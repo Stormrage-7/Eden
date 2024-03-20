@@ -14,6 +14,11 @@
     <style name="Theme.Eden.CreatePostScreen" parent="Theme.Material3.Light.NoActionBar">
     </style>
 
+    <style name="myFab" parent="Theme.Material3.Light.NoActionBar">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="roundedImageView" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
