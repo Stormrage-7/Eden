@@ -101,6 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Comment"
+        android:contentDescription="Add Comment"
         android:hint="Add Comment"
         android:visibility="visible"
         android:layout_marginBottom="30dp"

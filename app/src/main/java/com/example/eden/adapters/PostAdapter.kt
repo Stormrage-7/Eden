@@ -53,6 +53,7 @@ class PostAdapter(
                 bookmarkBtn.setOnClickListener { postListener.onBookmarkClick(postList[bindingAdapterPosition]) }
                 shareBtn.setSafeClickListener { postListener.onShareBtnClick(postList[bindingAdapterPosition].postId, postList[bindingAdapterPosition].communityId) }
                 textViewUserName.setSafeClickListener { postListener.onUserClick(postList[bindingAdapterPosition].posterId) }
+                textViewDescription.setSafeClickListener { postListener.onPostClick(postList[bindingAdapterPosition]) }
             }
             itemView.setSafeClickListener {
                 postListener.onPostClick(postList[bindingAdapterPosition])
